@@ -65,10 +65,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "capital-compass:build:production"
+              "buildTarget": "capital-compass:build:production"
             },
             "development": {
-              "browserTarget": "capital-compass:build:development"
+              "buildTarget": "capital-compass:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -76,7 +76,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "capital-compass:build"
+            "buildTarget": "capital-compass:build"
           }
         },
         "test": {
