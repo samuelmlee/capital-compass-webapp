@@ -3,13 +3,11 @@
 
     <span class="spacer"></span>
 
-    <ng-container *ngIf="isAuthenticated$ | async; else notLoggedIn">
-        <button mat-button (click)="logout()">Logout</button>
-    </ng-container>
-
-    <ng-template #notLoggedIn>
-        <button mat-button (click)="login()">Login</button>
-    </ng-template>
+    @if (isAuthenticated$ | async) {
+    <button mat-button (click)="logout()">Logout</button>
+    } @else {
+    <button mat-button (click)="login()">Login</button>
+    }
 </mat-toolbar>
 
 <div>Is Authenticated : {{ isAuthenticated$ | async }}</div>

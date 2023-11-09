@@ -1,5 +1,5 @@
 import { AuthConfig } from 'angular-oauth2-oidc';
-import { environment } from 'src/environment/environment.prod';
+import { environment } from 'src/environment/environment';
 
 export const AUTHCONFIG: AuthConfig = {
     issuer: environment.auth0.domain,
