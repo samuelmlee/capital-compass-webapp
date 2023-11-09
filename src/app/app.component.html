@@ -12,4 +12,6 @@
     </ng-template>
 </mat-toolbar>
 
-<span> Is Authenticated : {{ isAuthenticated$ | async }}</span>
+<div>Is Authenticated : {{ isAuthenticated$ | async }}</div>
+<button mat-button (click)="getAccessToken()">Show Token</button>
+<div>Access Token : {{ accesssToken }}</div>

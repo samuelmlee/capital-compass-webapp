@@ -23,11 +23,16 @@ export class AuthService {
         this.registerOAuthEventHandlers();
     }
 
+    public getAccessToken(): string {
+        return this.oauthService.getAccessToken();
+    }
+
     private registerOAuthEventHandlers() {
         const eventsToFilter = [
             'token_received',
             'session_terminated',
             'session_error',
+            'logout',
         ];
 
         this.oauthService.events
@@ -75,6 +80,6 @@ export class AuthService {
     }
 
     public logout(): void {
-        this.oauthService.revokeTokenAndLogout();
+        this.oauthService.logOut();
     }
 }

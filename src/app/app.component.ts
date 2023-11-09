@@ -9,6 +9,7 @@ import { AuthService } from './auth/auth.service';
 })
 export class AppComponent {
     title = 'Capital Compass';
+    accesssToken = '';
 
     isAuthenticated$: Observable<boolean> | undefined;
 
@@ -25,5 +26,9 @@ export class AppComponent {
 
     public logout() {
         return this.authService.logout();
+    }
+
+    public getAccessToken() {
+        this.accesssToken = this.authService.getAccessToken();
     }
 }
