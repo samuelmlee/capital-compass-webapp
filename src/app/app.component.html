@@ -1,9 +1,15 @@
 <mat-toolbar color="primary">
     <span>{{ title }}</span>
-    <span> Is Authenticated : {{ isAuthenticated$ | async }}</span>
+
     <span class="spacer"></span>
 
-    <button mat-button (click)="logout()">Logout</button>
+    <ng-container *ngIf="isAuthenticated$ | async; else notLoggedIn">
+        <button mat-button (click)="logout()">Logout</button>
+    </ng-container>
 
-    <button mat-button (click)="login()">Login</button>
+    <ng-template #notLoggedIn>
+        <button mat-button (click)="login()">Login</button>
+    </ng-template>
 </mat-toolbar>
+
+<span> Is Authenticated : {{ isAuthenticated$ | async }}</span>

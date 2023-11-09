@@ -10,8 +10,10 @@ export const AUTHCONFIG: AuthConfig = {
 
     responseType: 'code',
 
-    scope: 'openid profile email',
-    // scope: 'openid profile email user_scope:read',
+    scope: 'openid profile email offline_access',
+    // scope: 'openid profile email offline_access user_scope:read',
 
     showDebugInformation: true,
+
+    clearHashAfterLogin: true,
 };

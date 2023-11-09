@@ -8,7 +8,7 @@ import { AuthService } from './auth/auth.service';
     styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-    title = 'capital-compass';
+    title = 'Capital Compass';
 
     isAuthenticated$: Observable<boolean> | undefined;
 
@@ -20,7 +20,7 @@ export class AppComponent {
     }
 
     public login() {
-        return this.authService.login();
+        return this.authService.loginCode();
     }
 
     public logout() {

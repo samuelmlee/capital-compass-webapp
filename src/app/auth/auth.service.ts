@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { OAuthEvent, OAuthService } from 'angular-oauth2-oidc';
+import { OAuthService } from 'angular-oauth2-oidc';
 import { BehaviorSubject, Observable, combineLatest, filter, map } from 'rxjs';
 import { AUTHCONFIG } from './auth-config';
 
@@ -59,48 +59,22 @@ export class AuthService {
         return this.oauthService
             .loadDiscoveryDocument()
             .then(() => this.oauthService.tryLogin())
-            .then(() =>
+            .then(async () =>
                 this.oauthService.hasValidAccessToken()
                     ? Promise.resolve()
-                    : this.handleSilentRefresh()
+                    : await this.oauthService.silentRefresh()
             )
             .then(() => this.isLoadedSubject$.next(true));
     }
 
-    private handleSilentRefresh(): Promise<OAuthEvent | void> {
-        return this.oauthService.silentRefresh().catch((result) => {
-            const errorsRequiringInteraction = [
-                'interaction_required',
-                'login_required',
-                'account_selection_required',
-                'consent_required',
-            ];
-            if (
-                result &&
-                result.reason &&
-                errorsRequiringInteraction.includes(result.reason.error)
-            ) {
-                console.warn('User interaction is needed to log in.');
-                return Promise.resolve();
-            }
-            return Promise.reject(result);
-        });
-    }
-
-    public async login() {
+    async loginCode() {
         await this.oauthService.loadDiscoveryDocument();
-        const loginResult = await this.oauthService.tryLogin();
+        sessionStorage.setItem('flow', 'code');
 
-        if (!loginResult) {
-            await this.oauthService.initCodeFlow();
-        }
-
-        this.isAuthenticatedSubject$.next(
-            this.oauthService.hasValidAccessToken()
-        );
+        this.oauthService.initLoginFlow();
     }
 
     public logout(): void {
-        this.oauthService.logOut();
+        this.oauthService.revokeTokenAndLogout();
     }
 }
