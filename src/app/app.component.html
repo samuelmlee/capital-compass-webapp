@@ -4,12 +4,10 @@
     <span class="spacer"></span>
 
     @if (isAuthenticated$ | async) {
-    <button mat-button (click)="logout()">Logout</button>
+    <button mat-button color="cyan" (click)="logout()">Logout</button>
     } @else {
-    <button mat-button (click)="login()">Login</button>
+    <button mat-button (click)="logInClicked()">Login</button>
     }
 </mat-toolbar>
 
 <div>Is Authenticated : {{ isAuthenticated$ | async }}</div>
-<button mat-button (click)="getAccessToken()">Show Token</button>
-<div>Access Token : {{ accesssToken }}</div>

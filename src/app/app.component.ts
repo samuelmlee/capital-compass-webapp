@@ -1,6 +1,8 @@
+import { HttpXsrfTokenExtractor } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { AuthService } from './auth/auth.service';
+import { User } from './users/user';
 
 @Component({
     selector: 'app-root',
@@ -11,24 +13,33 @@ export class AppComponent {
     title = 'Capital Compass';
     accesssToken = '';
 
-    isAuthenticated$: Observable<boolean> | undefined;
+    isAuthenticated$ = new BehaviorSubject<boolean>(false);
+    user: User | undefined;
 
-    constructor(private authService: AuthService) {
-        this.authService.runInitialLoginSequence().catch((error) => {
-            console.error('Error during initial login sequence', error);
+    constructor(
+        private authService: AuthService,
+        private httpXsrfTokenExtractor: HttpXsrfTokenExtractor
+    ) {}
+
+    ngOnInit(): void {
+        this.authService.authenticate().subscribe((user) => {
+            if (user) {
+                console.log('authenticated user :', user);
+                this.isAuthenticated$.next(true);
+                this.user = user;
+            }
         });
-        this.isAuthenticated$ = authService.isAuthenticated$;
     }
 
-    public login() {
-        return this.authService.loginCode();
+    logInClicked(): void {
+        this.authService.login();
     }
 
-    public logout() {
-        return this.authService.logout();
+    logout() {
+        this.authService.logout();
     }
 
-    public getAccessToken() {
-        this.accesssToken = this.authService.getAccessToken();
+    csrfToken(): string | null {
+        return this.httpXsrfTokenExtractor.getToken();
     }
 }
