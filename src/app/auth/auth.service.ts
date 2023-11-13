@@ -37,6 +37,7 @@ export class AuthService {
         this.httpClient
             .post<any>(
                 `${this.apiUrl}/logout`,
+                // TODO: send csrd token
                 {},
                 {
                     withCredentials: true,
