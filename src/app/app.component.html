@@ -4,7 +4,6 @@
     <span class="spacer"></span>
 
     @if (isAuthenticated$ | async) {
-
     <button mat-button (click)="logOutClicked()">Logout</button>
     } @else {
     <button mat-button (click)="logInClicked()">Login</button>
