@@ -1,14 +1,14 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http'
+import { Injectable } from '@angular/core'
+import { Observable } from 'rxjs'
 
 @Injectable({
-    providedIn: 'root',
+  providedIn: 'root'
 })
 export class UsersServiceService {
-    constructor(private http: HttpClient) {}
+  public constructor (private readonly http: HttpClient) {}
 
-    getUserProfile(): Observable<any> {
-        return this.http.get(`/users`);
-    }
+  public getUserProfile (): Observable<any> {
+    return this.http.get('/users')
+  }
 }
