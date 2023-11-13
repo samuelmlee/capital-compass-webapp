@@ -1,14 +1,2 @@
-<mat-toolbar color="primary">
-    <span>{{ title }}</span>
 
-    <span class="spacer"></span>
-
-    @if (isAuthenticated$ | async) {
-    <button mat-button (click)="logOutClicked()">Logout</button>
-    } @else {
-    <button mat-button (click)="logInClicked()">Login</button>
-    }
-</mat-toolbar>
-
-<div>Is Authenticated : {{ isAuthenticated$ | async }}</div>
-<div>User : {{ user$ | async | json }}</div>
+<app-toolbar [title]="title"></app-toolbar>

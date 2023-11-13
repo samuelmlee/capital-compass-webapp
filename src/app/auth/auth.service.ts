@@ -1,14 +1,14 @@
 import { HttpClient } from '@angular/common/http'
-import { Injectable } from '@angular/core'
-import { BehaviorSubject, type Observable } from 'rxjs'
+import { Injectable, signal } from '@angular/core'
+import { type Observable } from 'rxjs'
 import { type User } from '../users/user'
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  public isAuthenticated$ = new BehaviorSubject<boolean>(false)
-  public user$ = new BehaviorSubject<User | undefined>(undefined)
+  public readonly isAuthenticated = signal<boolean>(false)
+  public readonly user = signal<User | null>(null)
 
   public constructor (private readonly httpClient: HttpClient) {}
 
@@ -17,8 +17,8 @@ export class AuthService {
   public initAuthentication (): void {
     this.authenticate().subscribe((user) => {
       if (user != null) {
-        this.isAuthenticated$.next(true)
-        this.user$.next(user)
+        this.isAuthenticated.set(true)
+        this.user.set(user)
       }
     })
   }
@@ -44,8 +44,8 @@ export class AuthService {
                 }
     )
       .subscribe(() => {
-        this.isAuthenticated$.next(false)
-        this.user$.next(undefined)
+        this.isAuthenticated.set(false)
+        this.user.set(null)
       })
   }
 }
