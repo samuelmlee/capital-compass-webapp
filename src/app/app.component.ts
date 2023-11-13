@@ -30,6 +30,9 @@ export class AppComponent {
     }
 
     logOutClicked() {
-        this.authService.logout().subscribe(() => {});
+        this.authService.logout().subscribe(() => {
+            this.isAuthenticated$.next(false);
+            this.user$.next(undefined);
+        });
     }
 }
