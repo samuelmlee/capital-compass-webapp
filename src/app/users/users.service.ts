@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
@@ -7,14 +7,11 @@ import { environment } from '../../environments/environment';
     providedIn: 'root',
 })
 export class UsersServiceService {
-    private apiUrl = environment.apiGatewayUrl;
+    private apiUrl = environment.apiUrl;
 
     constructor(private http: HttpClient) {}
 
     getUserProfile(): Observable<any> {
-        let hdr = new HttpHeaders();
-        // Request to users micro service
-
-        return this.http.get(`${this.apiUrl}/`, { headers: hdr });
+        return this.http.get(`${this.apiUrl}/`);
     }
 }

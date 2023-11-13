@@ -1,4 +1,3 @@
-import { HttpXsrfTokenExtractor } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { AuthService } from './auth/auth.service';
@@ -11,22 +10,17 @@ import { User } from './users/user';
 })
 export class AppComponent {
     title = 'Capital Compass';
-    accesssToken = '';
 
     isAuthenticated$ = new BehaviorSubject<boolean>(false);
-    user: User | undefined;
+    user$ = new BehaviorSubject<User | undefined>(undefined);
 
-    constructor(
-        private authService: AuthService,
-        private httpXsrfTokenExtractor: HttpXsrfTokenExtractor
-    ) {}
+    constructor(private authService: AuthService) {}
 
     ngOnInit(): void {
         this.authService.authenticate().subscribe((user) => {
             if (user) {
-                console.log('authenticated user :', user);
                 this.isAuthenticated$.next(true);
-                this.user = user;
+                this.user$.next(user);
             }
         });
     }
@@ -35,11 +29,7 @@ export class AppComponent {
         this.authService.login();
     }
 
-    logout() {
-        this.authService.logout();
-    }
-
-    csrfToken(): string | null {
-        return this.httpXsrfTokenExtractor.getToken();
+    logOutClicked() {
+        this.authService.logout().subscribe(() => {});
     }
 }
