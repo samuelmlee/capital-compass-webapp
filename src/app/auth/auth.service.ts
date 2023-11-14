@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable, signal } from '@angular/core'
-import { Subject, type Observable } from 'rxjs'
+import { type Observable } from 'rxjs'
 import { type User } from '../users/user'
 
 @Injectable({
@@ -9,9 +9,6 @@ import { type User } from '../users/user'
 export class AuthService {
   public readonly isAuthenticated = signal<boolean>(false)
   public readonly user = signal<User | null>(null)
-
-  private readonly isLoggedOut = new Subject<void>()
-  public readonly isLoggedOut$ = this.isLoggedOut.asObservable()
 
   public constructor(private readonly httpClient: HttpClient) {}
 
