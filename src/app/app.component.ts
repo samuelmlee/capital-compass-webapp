@@ -1,5 +1,5 @@
-import { Component } from '@angular/core'
-import { AuthService } from './auth/auth.service'
+import { Component } from '@angular/core';
+import { AuthService } from './auth/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -7,11 +7,10 @@ import { AuthService } from './auth/auth.service'
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  public title = 'Capital Compass'
+  public title = 'Capital Compass';
+  public constructor(private readonly authService: AuthService) {}
 
-  public constructor (private readonly authService: AuthService) {}
-
-  public ngOnInit (): void {
-    this.authService.initAuthentication()
+  public ngOnInit(): void {
+    this.authService.initAuthentication();
   }
 }

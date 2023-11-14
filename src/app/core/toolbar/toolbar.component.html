@@ -1,15 +1,21 @@
-<mat-toolbar color="primary" class="toolbar">
-    <div>{{ title }}</div>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <span class="navbar-brand">{{ title }}</span>
 
+        <div class="d-flex ms-auto">
+            @if (isAuthenticated()) {
+            <span class="navbar-text me-3">
+                Welcome {{ user()?.firstName }}
+            </span>
 
-    @if (isAuthenticated()) {
-    <div class="navbar-text mr-3">Welcome {{ user()?.firstName }}</div>
-    }
-
-
-    @if (isAuthenticated()) {
-    <button mat-button (click)="logOutClicked()">Logout</button>
-    } @else {
-    <button mat-button (click)="logInClicked()">Login</button>
-    }
-</mat-toolbar>
+            <button class="btn btn-outline-primary" (click)="logOutClicked()">
+                Logout
+            </button>
+            } @else {
+            <button class="btn btn-outline-primary" (click)="logInClicked()">
+                Login
+            </button>
+            }
+        </div>
+    </div>
+</nav>
