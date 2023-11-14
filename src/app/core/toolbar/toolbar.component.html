@@ -1,21 +1,15 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
-        <span class="navbar-brand">{{ title }}</span>
+<nav class="navbar navbar-transparent">
+  <div class="container-fluid">
+    <span class="navbar-brand">{{ title }}</span>
 
-        <div class="d-flex ms-auto">
-            @if (isAuthenticated()) {
-            <span class="navbar-text me-3">
-                Welcome {{ user()?.firstName }}
-            </span>
+    <div class="d-flex ms-auto">
+      @if (isAuthenticated()) {
+        <span class="navbar-text me-3"> Welcome {{ user()?.firstName }} </span>
 
-            <button class="btn btn-outline-primary" (click)="logOutClicked()">
-                Logout
-            </button>
-            } @else {
-            <button class="btn btn-outline-primary" (click)="logInClicked()">
-                Login
-            </button>
-            }
-        </div>
+        <button class="btn btn-outline-primary" (click)="logOutClicked()">Logout</button>
+      } @else {
+        <button class="btn btn-primary" (click)="logInClicked()">Login</button>
+      }
     </div>
+  </div>
 </nav>
