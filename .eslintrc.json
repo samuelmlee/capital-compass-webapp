@@ -5,15 +5,15 @@
     "es2022": true,
     "jest": true
   },
-  "extends": ["eslint:recommended", "plugin:prettier/recommended"],
+  "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
   "plugins": ["prettier"],
   "overrides": [],
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
   "rules": {
-    "prettier/prettier": 2,
     "@typescript-eslint/consistent-type-imports": "off",
     "@typescript-eslint/explicit-member-accessibility": ["error"]
   }

@@ -13,13 +13,13 @@ export class ToolbarComponent {
   public isAuthenticated = this.authService.isAuthenticated
   public user = this.authService.user
 
-  public constructor (private readonly authService: AuthService) {}
+  public constructor(private readonly authService: AuthService) {}
 
-  public logInClicked (): void {
+  public logInClicked(): void {
     this.authService.login()
   }
 
-  public logOutClicked (): void {
+  public logOutClicked(): void {
     this.authService.logout()
   }
 }
