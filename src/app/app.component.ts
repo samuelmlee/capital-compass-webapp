@@ -1,4 +1,5 @@
-import { Component } from '@angular/core'
+import { Component, effect } from '@angular/core'
+import { Router } from '@angular/router'
 import { AuthService } from './auth/auth.service'
 
 @Component({
@@ -8,7 +9,18 @@ import { AuthService } from './auth/auth.service'
 })
 export class AppComponent {
   public title = 'Capital Compass'
-  public constructor(private readonly authService: AuthService) {}
+  public isAuthenticated = this.authService.isAuthenticated
+
+  public constructor(
+    private readonly authService: AuthService,
+    private router: Router
+  ) {
+    effect(() => {
+      if (this.isAuthenticated() == false) {
+        this.router.navigate(['/'])
+      }
+    })
+  }
 
   public ngOnInit(): void {
     this.authService.initAuthentication()

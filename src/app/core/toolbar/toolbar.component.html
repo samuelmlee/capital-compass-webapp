@@ -1,6 +1,8 @@
 <nav class="navbar navbar-transparent">
   <div class="container-fluid">
-    <span class="navbar-brand">{{ title }}</span>
+    <a routerLink="/" class="navbar-brand shadow-none">
+      <span>{{ title }}</span>
+    </a>
 
     <div class="d-flex ms-auto">
       @if (isAuthenticated()) {

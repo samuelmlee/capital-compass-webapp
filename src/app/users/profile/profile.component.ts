@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common'
+import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { AuthService } from 'src/app/auth/auth.service'
 
 @Component({
   selector: 'app-profile',
@@ -10,5 +11,7 @@ import { CommonModule } from '@angular/common';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProfileComponent {
+  public user = this.authService.user
 
+  public constructor(private readonly authService: AuthService) {}
 }
