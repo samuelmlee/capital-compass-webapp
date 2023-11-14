@@ -4,7 +4,7 @@ import { LandingComponent } from './core/landing/landing.component'
 const routes: Routes = [
   { path: '', component: LandingComponent },
   {
-    path: '/profile',
+    path: 'profile',
     loadComponent: () => import('./users/profile/profile.component').then((mod) => mod.ProfileComponent)
   }
 ]

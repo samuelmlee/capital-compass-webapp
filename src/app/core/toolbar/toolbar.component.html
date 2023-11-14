@@ -4,7 +4,9 @@
 
     <div class="d-flex ms-auto">
       @if (isAuthenticated()) {
-        <span class="navbar-text me-3"> Welcome {{ user()?.firstName }} </span>
+        <a routerLink="/profile" class="btn navbar-text me-3 text-decoration-none" aria-pressed="true">
+          Welcome {{ user()?.firstName }}
+        </a>
 
         <button class="btn btn-outline-primary" (click)="logOutClicked()">Logout</button>
       } @else {
