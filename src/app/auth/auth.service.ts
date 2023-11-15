@@ -47,8 +47,8 @@ export class AuthService {
         })
       )
       .subscribe((response) => {
-        const logoutUrl = `${response.logoutUrl}?client_id=${this.clientId}&post_logout_redirect_uri=${this.logoutUri}`
-        window.open(logoutUrl, '_self')
+        const keycloakLogoutUrl = `${response.logoutUrl}?client_id=${this.clientId}&post_logout_redirect_uri=${this.logoutUri}`
+        window.open(keycloakLogoutUrl, '_self')
       })
   }
 }
