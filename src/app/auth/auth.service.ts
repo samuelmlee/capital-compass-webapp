@@ -1,7 +1,9 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable, signal } from '@angular/core'
-import { type Observable } from 'rxjs'
+import { catchError, throwError, type Observable } from 'rxjs'
 import { type User } from '../users/user'
+
+type LogOutApiResponse = { logoutUrl: string; idToken: string }
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +15,8 @@ export class AuthService {
   public constructor(private readonly httpClient: HttpClient) {}
 
   private readonly apiUrl = 'http://localhost:8082'
+  private readonly logoutUri = 'http://localhost:4200'
+  private readonly clientId = 'capital-compass-gateway-client'
 
   public initAuthentication(): void {
     this.authenticate().subscribe((user) => {
@@ -35,17 +39,16 @@ export class AuthService {
 
   public logout(): void {
     this.httpClient
-      .post<void>(
-        `${this.apiUrl}/logout`,
-        // TODO: send csrf token
-        {},
-        {
-          withCredentials: true
-        }
+      .get<LogOutApiResponse>(`${this.apiUrl}/api/logout`, { withCredentials: true })
+      .pipe(
+        catchError((e) => {
+          console.log('Logout error:', e)
+          return throwError(() => new Error(e))
+        })
       )
-      .subscribe(() => {
-        this.isAuthenticated.set(false)
-        this.user.set(null)
+      .subscribe((response) => {
+        const logoutUrl = `${response.logoutUrl}?client_id=${this.clientId}&post_logout_redirect_uri=${this.logoutUri}`
+        window.open(logoutUrl, '_self')
       })
   }
 }
