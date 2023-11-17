@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable, signal } from '@angular/core'
-import { catchError, throwError } from 'rxjs'
+import { tap } from 'rxjs'
 import { environment } from 'src/environments/environment'
-import { type User } from '../../users/user'
+import { type User } from '../../users/model/user'
 
 type LogOutApiResponse = { logoutUrl: string; idToken: string }
 
@@ -25,12 +25,10 @@ export class AuthService {
         withCredentials: true
       })
       .pipe(
-        catchError((e) => {
-          console.log('Unauthenticated or Error fetching User :', e)
-          if (e.status === 401) {
-            return throwError(() => new Error('User unauthenticated. Please login'))
+        tap({
+          error: (e) => {
+            console.log('Unauthenticated or Error fetching User :', e)
           }
-          return throwError(() => new Error('Error fetching user'))
         })
       )
       .subscribe((user) => {
@@ -49,9 +47,10 @@ export class AuthService {
     this.httpClient
       .get<LogOutApiResponse>(`${this.apiUrl}/api/logout`, { withCredentials: true })
       .pipe(
-        catchError((e) => {
-          console.log('Logout error:', e)
-          return throwError(() => new Error(e))
+        tap({
+          error: (e) => {
+            console.log('Logout error from Gateway:', e)
+          }
         })
       )
       .subscribe((response) => {
