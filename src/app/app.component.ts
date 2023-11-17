@@ -1,6 +1,6 @@
 import { Component, effect } from '@angular/core'
 import { Router } from '@angular/router'
-import { AuthService } from './auth/auth.service'
+import { AuthService } from './auth/service/auth.service'
 
 @Component({
   selector: 'app-root',
@@ -23,6 +23,6 @@ export class AppComponent {
   }
 
   public ngOnInit(): void {
-    this.authService.initAuthentication()
+    this.authService.authenticate()
   }
 }
