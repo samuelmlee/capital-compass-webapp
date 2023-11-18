@@ -8,6 +8,12 @@ const routes: Routes = [
     path: 'profile',
     loadComponent: () => import('./users/component/profile/profile.component').then((mod) => mod.ProfileComponent),
     canActivate: [authGuard]
+  },
+  {
+    path: 'search',
+    loadComponent: () =>
+      import('./tickers/component/tickers-table/tickers-table.component').then((mod) => mod.TickersTableComponent),
+    canActivate: [authGuard]
   }
 ]
 

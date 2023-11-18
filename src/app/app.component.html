@@ -1,7 +1,9 @@
 <div class="d-flex flex-column min-vh-100">
   <app-toolbar [title]="title"></app-toolbar>
-
-  <div class="flex-grow-1">
-    <router-outlet></router-outlet>
+  <div class="d-flex">
+    <app-nav-bar> </app-nav-bar>
+    <div style="flex-grow: 1">
+      <router-outlet></router-outlet>
+    </div>
   </div>
 </div>
