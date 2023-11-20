@@ -1,4 +1,4 @@
-<div class="table-container mh-100">
+<div class="mh-100 overflow-y-auto">
   <table mat-table [dataSource]="dataSource()">
     @for (column of columnDefs; track column.key) {
       <ng-container matColumnDef="{{ column.key }}">

@@ -19,8 +19,8 @@ export class TickersTableComponent implements OnInit {
     { key: 'ticker', title: 'Ticker' },
     { key: 'name', title: 'Name' },
     { key: 'market', title: 'Market' },
-    { key: 'currency-name', title: 'Currency Name' },
-    { key: 'primary-exchange', title: 'Primary Exchange' }
+    { key: 'currency_name', title: 'Currency Name' },
+    { key: 'primary_exchange', title: 'Primary Exchange' }
   ]
 
   public rowDefs = this.columnDefs.map((c) => c.key)
