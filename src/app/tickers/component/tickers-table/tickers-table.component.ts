@@ -4,6 +4,8 @@ import { MatTableModule } from '@angular/material/table'
 import { TickersResult } from '../../model/tickers-response'
 import { TickerService } from '../../service/tickers.service'
 
+type ColumnDef = { key: string; title: string }
+
 @Component({
   selector: 'app-tickers-table',
   standalone: true,
@@ -13,7 +15,16 @@ import { TickerService } from '../../service/tickers.service'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TickersTableComponent implements OnInit {
-  public displayedColumns: string[] = ['ticker', 'name', 'market', 'currency-name', 'primary-exchange']
+  public columnDefs: ColumnDef[] = [
+    { key: 'ticker', title: 'Ticker' },
+    { key: 'name', title: 'Name' },
+    { key: 'market', title: 'Market' },
+    { key: 'currency-name', title: 'Currency Name' },
+    { key: 'primary-exchange', title: 'Primary Exchange' }
+  ]
+
+  public rowDefs = this.columnDefs.map((c) => c.key)
+
   public dataSource = signal<TickersResult[]>([])
 
   public constructor(private tickerService: TickerService) {}
