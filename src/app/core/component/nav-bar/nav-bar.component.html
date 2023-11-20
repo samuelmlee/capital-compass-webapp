@@ -1,16 +1,12 @@
 <mat-sidenav #sidenav mode="side" opened="true">
   <mat-nav-list>
-    <mat-list-item routerLink="/portfolio">
-      <mat-icon>folder</mat-icon>
-      Portfolio
-    </mat-list-item>
-    <mat-list-item routerLink="/watchlist">
-      <mat-icon>visibility</mat-icon>
-      Watchlist
-    </mat-list-item>
-    <mat-list-item routerLink="/search">
-      <mat-icon>search</mat-icon>
-      Search
-    </mat-list-item>
+    @for (element of navElements(); track element.title) {
+      <mat-list-item routerLink="{{ element.link }}">
+        <div class="d-flex">
+          <mat-icon>{{ element.icon }}</mat-icon>
+          {{ element.title }}
+        </div>
+      </mat-list-item>
+    }
   </mat-nav-list>
 </mat-sidenav>

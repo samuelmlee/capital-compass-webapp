@@ -13,7 +13,7 @@ import { TickerService } from '../../service/tickers.service'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TickersTableComponent implements OnInit {
-  public displayedColumns: string[] = ['ticker']
+  public displayedColumns: string[] = ['ticker', 'name', 'market', 'currency-name', 'primary-exchange']
   public dataSource = signal<TickersResult[]>([])
 
   public constructor(private tickerService: TickerService) {}
