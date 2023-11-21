@@ -27,9 +27,10 @@ export class TickersTableComponent implements OnInit {
   public rowDefs = this.columnDefs.map((c) => c.key)
 
   public dataSource = new MatTableDataSource<TickersResult>([])
-  public totalCount = 0
   public pageIndex = 0
-  public pageSize = 0
+  public pageSize = 50
+
+  private nextCursor = ''
 
   public constructor(private tickerService: TickerService) {}
 
@@ -44,10 +45,17 @@ export class TickersTableComponent implements OnInit {
   public ngOnInit(): void {
     this.tickerService.getTickers({ resultsCount: 100 }).subscribe((response) => {
       this.dataSource.data = [...response.results]
+      this.nextCursor = response.nextCursor
     })
   }
 
   public onPageChange(event: PageEvent) {
-    console.log(event)
+    this.pageIndex = event.pageIndex
+    this.pageSize = event.pageSize
+
+    this.tickerService.getTickersByCursor(this.nextCursor).subscribe((response) => {
+      this.dataSource.data = [...this.dataSource.data, ...response.results]
+      this.nextCursor = response.nextCursor
+    })
   }
 }

@@ -3,7 +3,7 @@
     @for (element of navElements(); track element.title) {
       <mat-list-item routerLink="{{ element.link }}">
         <div class="d-flex">
-          <mat-icon>{{ element.icon }}</mat-icon>
+          <mat-icon class="me-4">{{ element.icon }}</mat-icon>
           {{ element.title }}
         </div>
       </mat-list-item>

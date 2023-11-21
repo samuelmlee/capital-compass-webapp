@@ -27,4 +27,12 @@ export class TickerService {
       })
     )
   }
+
+  public getTickersByCursor(cursor: string): Observable<TickersResponse> {
+    return this.http.get<TickersResponse>(`${this.apiUrl}/stocks/tickers/${cursor}`).pipe(
+      catchError((e) => {
+        return throwError(() => new Error(e))
+      })
+    )
+  }
 }

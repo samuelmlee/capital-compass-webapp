@@ -12,12 +12,5 @@
   </table>
 </div>
 
-<mat-paginator
-  fixed
-  [length]="totalCount"
-  [pageIndex]="pageIndex"
-  [pageSize]="pageSize"
-  [pageSizeOptions]="[100, 150, 200]"
-  (page)="onPageChange($event)"
->
+<mat-paginator [pageIndex]="pageIndex" [pageSize]="pageSize" [hidePageSize]="true" (page)="onPageChange($event)">
 </mat-paginator>
