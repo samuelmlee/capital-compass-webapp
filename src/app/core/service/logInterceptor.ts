@@ -1,4 +1,4 @@
-import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http'
+import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Observable, tap } from 'rxjs'
 
@@ -8,8 +8,8 @@ export class HttpInterceptorImpl implements HttpInterceptor {
     return next.handle(request).pipe(
       tap(
         () => {},
-        (err: unknown) => {
-          console.log('Error occured for HTTP request : ', err)
+        (err: HttpErrorResponse) => {
+          console.error(`Request to ${request.urlWithParams} failed: `, err.message)
         }
       )
     )

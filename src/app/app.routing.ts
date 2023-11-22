@@ -12,7 +12,7 @@ const routes: Routes = [
   {
     path: 'search',
     loadComponent: () =>
-      import('./tickers/component/tickers-table/tickers-table.component').then((mod) => mod.TickersTableComponent),
+      import('./tickers/component/tickers-panel/tickers-panel.component').then((mod) => mod.TickersPanelComponent),
     canActivate: [authGuard]
   }
 ]
