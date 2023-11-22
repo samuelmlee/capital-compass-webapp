@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core'
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild, signal } from '@angular/core'
 import { MatPaginator, MatPaginatorIntl, MatPaginatorModule, PageEvent } from '@angular/material/paginator'
 import { MatTableDataSource, MatTableModule } from '@angular/material/table'
-import { BehaviorSubject, Observable, catchError } from 'rxjs'
+import { Observable, Subscription, catchError } from 'rxjs'
 import { TickersResponse, TickersResult } from '../../model/tickers-response'
 import { TickersResultsCount } from '../../model/tickers-search-config'
 import { TickerService } from '../../service/tickers.service'
@@ -19,7 +19,7 @@ type ColumnDef = { key: string; title: string }
   styleUrl: './tickers-table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TickersTableComponent implements OnInit {
+export class TickersTableComponent implements OnInit, OnDestroy {
   public columnDefs: ColumnDef[] = [
     { key: 'ticker', title: 'Ticker' },
     { key: 'name', title: 'Name' },
@@ -29,25 +29,26 @@ export class TickersTableComponent implements OnInit {
   ]
   public rowDefs = this.columnDefs.map((c) => c.key)
   public pageSize = 50
-  public tickersDataSource$: Observable<MatTableDataSource<TickersResult>>
+  public tickersDataSource
 
   private dataSource: MatTableDataSource<TickersResult>
-  public tickersDataSource: BehaviorSubject<MatTableDataSource<TickersResult>>
   private fetchSize: TickersResultsCount = 100
   private nextCursor = ''
+  private tickersSubscription: Subscription | undefined
 
   @ViewChild(MatPaginator) public paginator: MatPaginator | null = null
 
   public constructor(private tickerService: TickerService) {
     this.dataSource = new MatTableDataSource<TickersResult>([])
-    this.tickersDataSource = new BehaviorSubject<MatTableDataSource<TickersResult>>(
-      new MatTableDataSource<TickersResult>([])
-    )
-    this.tickersDataSource$ = this.tickersDataSource.asObservable()
+    this.tickersDataSource = signal<MatTableDataSource<TickersResult>>(this.dataSource)
   }
 
   public ngOnInit(): void {
     this.fetchData()
+  }
+
+  public ngOnDestroy(): void {
+    throw this.tickersSubscription?.unsubscribe()
   }
 
   public ngAfterViewInit(): void {
@@ -63,6 +64,7 @@ export class TickersTableComponent implements OnInit {
 
   private fetchData(cursor?: string): void {
     let dataObservable: Observable<TickersResponse>
+    this.tickersSubscription?.unsubscribe()
 
     if (cursor) {
       dataObservable = this.tickerService.getTickersByCursor(cursor)
@@ -70,11 +72,11 @@ export class TickersTableComponent implements OnInit {
       dataObservable = this.tickerService.getTickers({ resultsCount: this.fetchSize })
     }
 
-    dataObservable
+    this.tickersSubscription = dataObservable
       .pipe(
         catchError((error) => {
           console.error('Error fetching tickers:', error)
-          this.tickersDataSource.next(new MatTableDataSource<TickersResult>())
+          this.tickersDataSource.set(this.dataSource)
           throw error
         })
       )
@@ -82,7 +84,7 @@ export class TickersTableComponent implements OnInit {
         const newData = cursor ? [...this.dataSource.data, ...response.results] : [...response.results]
         this.dataSource.data = newData
         this.nextCursor = response.nextCursor
-        this.tickersDataSource.next(this.dataSource)
+        this.tickersDataSource.set(this.dataSource)
       })
   }
 }

@@ -1,5 +1,5 @@
 <div class="table-container overflow-y-auto">
-  <table mat-table [dataSource]="(tickersDataSource$ | async)!">
+  <table mat-table [dataSource]="tickersDataSource()">
     @for (column of columnDefs; track column.key) {
       <ng-container matColumnDef="{{ column.key }}">
         <th mat-header-cell *matHeaderCellDef>{{ column.title }}</th>
