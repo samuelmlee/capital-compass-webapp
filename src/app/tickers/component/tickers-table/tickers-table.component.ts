@@ -76,8 +76,7 @@ export class TickersTableComponent implements OnInit, OnDestroy {
       .pipe(
         catchError((error) => {
           console.error('Error fetching tickers:', error)
-          this.tickersDataSource.set(this.dataSource)
-          throw error
+          return of({ results: [], nextCursor: '' })
         })
       )
       .subscribe((response) => {
