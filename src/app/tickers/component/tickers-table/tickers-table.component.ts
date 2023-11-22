@@ -36,7 +36,12 @@ export class TickersTableComponent implements OnInit {
 
   @ViewChild(MatPaginator) public paginator: MatPaginator | null = null
 
-  public ngAfterViewInit() {
+  public ngAfterViewInit(): void {
+    if (this.paginator != null) {
+      this.paginator._intl.getRangeLabel = (page: number): string => {
+        return `Page ${page + 1}`
+      }
+    }
     if (this.dataSource) {
       this.dataSource.paginator = this.paginator
     }
@@ -49,9 +54,11 @@ export class TickersTableComponent implements OnInit {
     })
   }
 
-  public onPageChange(event: PageEvent) {
+  public onPageChange(event: PageEvent): void {
+    if (event.pageIndex < this.dataSource.data.length / this.pageSize - 1) {
+      return
+    }
     this.pageIndex = event.pageIndex
-    this.pageSize = event.pageSize
 
     this.tickerService.getTickersByCursor(this.nextCursor).subscribe((response) => {
       this.dataSource.data = [...this.dataSource.data, ...response.results]
