@@ -1,9 +1,12 @@
 import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core'
-import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator'
+import { MatPaginator, MatPaginatorIntl, MatPaginatorModule, PageEvent } from '@angular/material/paginator'
 import { MatTableDataSource, MatTableModule } from '@angular/material/table'
-import { TickersResult } from '../../model/tickers-response'
+import { BehaviorSubject, Observable, catchError } from 'rxjs'
+import { TickersResponse, TickersResult } from '../../model/tickers-response'
+import { TickersResultsCount } from '../../model/tickers-search-config'
 import { TickerService } from '../../service/tickers.service'
+import { NoTotalItemsPaginatorIntl } from './no-total-items-paginator-intl'
 
 type ColumnDef = { key: string; title: string }
 
@@ -11,6 +14,7 @@ type ColumnDef = { key: string; title: string }
   selector: 'app-tickers-table',
   standalone: true,
   imports: [CommonModule, MatTableModule, MatPaginatorModule],
+  providers: [{ provide: MatPaginatorIntl, useClass: NoTotalItemsPaginatorIntl }],
   templateUrl: './tickers-table.component.html',
   styleUrl: './tickers-table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -23,46 +27,62 @@ export class TickersTableComponent implements OnInit {
     { key: 'currency_name', title: 'Currency Name' },
     { key: 'primary_exchange', title: 'Primary Exchange' }
   ]
-
   public rowDefs = this.columnDefs.map((c) => c.key)
-
-  public dataSource = new MatTableDataSource<TickersResult>([])
-  public pageIndex = 0
   public pageSize = 50
+  public tickersDataSource$: Observable<MatTableDataSource<TickersResult>>
 
+  private dataSource: MatTableDataSource<TickersResult>
+  public tickersDataSource: BehaviorSubject<MatTableDataSource<TickersResult>>
+  private fetchSize: TickersResultsCount = 100
   private nextCursor = ''
-
-  public constructor(private tickerService: TickerService) {}
 
   @ViewChild(MatPaginator) public paginator: MatPaginator | null = null
 
-  public ngAfterViewInit(): void {
-    if (this.paginator != null) {
-      this.paginator._intl.getRangeLabel = (page: number): string => {
-        return `Page ${page + 1}`
-      }
-    }
-    if (this.dataSource) {
-      this.dataSource.paginator = this.paginator
-    }
+  public constructor(private tickerService: TickerService) {
+    this.dataSource = new MatTableDataSource<TickersResult>([])
+    this.tickersDataSource = new BehaviorSubject<MatTableDataSource<TickersResult>>(
+      new MatTableDataSource<TickersResult>([])
+    )
+    this.tickersDataSource$ = this.tickersDataSource.asObservable()
   }
 
   public ngOnInit(): void {
-    this.tickerService.getTickers({ resultsCount: 100 }).subscribe((response) => {
-      this.dataSource.data = [...response.results]
-      this.nextCursor = response.nextCursor
-    })
+    this.fetchData()
+  }
+
+  public ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator
   }
 
   public onPageChange(event: PageEvent): void {
     if (event.pageIndex < this.dataSource.data.length / this.pageSize - 1) {
       return
     }
-    this.pageIndex = event.pageIndex
+    this.fetchData(this.nextCursor)
+  }
 
-    this.tickerService.getTickersByCursor(this.nextCursor).subscribe((response) => {
-      this.dataSource.data = [...this.dataSource.data, ...response.results]
-      this.nextCursor = response.nextCursor
-    })
+  private fetchData(cursor?: string): void {
+    let dataObservable: Observable<TickersResponse>
+
+    if (cursor) {
+      dataObservable = this.tickerService.getTickersByCursor(cursor)
+    } else {
+      dataObservable = this.tickerService.getTickers({ resultsCount: this.fetchSize })
+    }
+
+    dataObservable
+      .pipe(
+        catchError((error) => {
+          console.error('Error fetching tickers:', error)
+          this.tickersDataSource.next(new MatTableDataSource<TickersResult>())
+          throw error
+        })
+      )
+      .subscribe((response) => {
+        const newData = cursor ? [...this.dataSource.data, ...response.results] : [...response.results]
+        this.dataSource.data = newData
+        this.nextCursor = response.nextCursor
+        this.tickersDataSource.next(this.dataSource)
+      })
   }
 }
