@@ -21,7 +21,6 @@ export class TickerService {
       params: new HttpParams()
         .set('ticker', searchConfig.ticker ?? '')
         .set('search-term', searchConfig.searchTerm ?? '')
-        .set('results-count', searchConfig.resultsCount ?? '')
     }
     return this.http.get<TickersResponse>(`${this.apiUrl}/stocks/tickers`, options).pipe(
       catchError(() => {
@@ -39,7 +38,8 @@ export class TickerService {
   }
 
   public fetchDataWithConfig(config: TickersSearchConfig): void {
-    this.getTickers({ searchTerm: config.searchTerm })
+    //
+    this.getTickers({ searchTerm: config?.searchTerm })
       .pipe(
         catchError((error) => {
           console.error('Error fetching tickers:', error)
@@ -49,7 +49,6 @@ export class TickerService {
       .subscribe((response) => {
         this.tickersResponseNewSignal.set(response)
       })
-      .unsubscribe()
   }
 
   public fetchDataWithCursor(cursor: string): void {
@@ -63,6 +62,5 @@ export class TickerService {
       .subscribe((response) => {
         this.tickersResponseUpdateSignal.set(response)
       })
-      .unsubscribe()
   }
 }

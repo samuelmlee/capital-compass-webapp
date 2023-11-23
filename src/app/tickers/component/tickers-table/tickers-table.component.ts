@@ -43,13 +43,19 @@ export class TickersTableComponent implements OnInit {
     this.dataSource = new MatTableDataSource<TickersResult>([])
     this.tickersDataSource = signal<MatTableDataSource<TickersResult>>(this.dataSource)
 
-    effect(() => {
-      this.updateDataSourceConfigResponse()
-    })
+    effect(
+      () => {
+        this.updateDataSourceConfigResponse()
+      },
+      { allowSignalWrites: true }
+    )
 
-    effect(() => {
-      this.updateDataSourceCursorResponse()
-    })
+    effect(
+      () => {
+        this.updateDataSourceCursorResponse()
+      },
+      { allowSignalWrites: true }
+    )
   }
 
   public ngOnInit(): void {
