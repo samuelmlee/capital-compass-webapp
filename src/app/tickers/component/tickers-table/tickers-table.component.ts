@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild, signal } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewChild, signal } from '@angular/core'
 import { MatPaginator, MatPaginatorIntl, MatPaginatorModule, PageEvent } from '@angular/material/paginator'
 import { MatTableDataSource, MatTableModule } from '@angular/material/table'
 import { Observable, Subscription, catchError, of } from 'rxjs'
 import { TickersResponse, TickersResult } from '../../model/tickers-response'
-import { TickersResultsCount } from '../../model/tickers-search-config'
+import { TickersResultsCount, TickersSearchConfig } from '../../model/tickers-search-config'
 import { TickerService } from '../../service/tickers.service'
 import { NoTotalItemsPaginatorIntl } from './no-total-items-paginator-intl'
 
@@ -20,6 +20,8 @@ type ColumnDef = { key: string; title: string }
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TickersTableComponent implements OnInit, OnDestroy {
+  @Input() public searchConfig: TickersSearchConfig = {}
+
   public columnDefs: ColumnDef[] = [
     { key: 'ticker', title: 'Ticker' },
     { key: 'name', title: 'Name' },

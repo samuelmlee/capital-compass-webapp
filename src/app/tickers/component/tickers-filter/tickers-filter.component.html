@@ -1,14 +1,13 @@
-<div class="mt-3">
-  <form [formGroup]="formGroup">
-    <mat-form-field class="w-50 me-3">
-      <input formControlName="searchTerm" matInput placeholder="Find by name, ticker or description" />
-    </mat-form-field>
+<form [formGroup]="formGroup">
+  <mat-form-field class="w-50 me-3">
+    <input formControlName="searchTerm" matInput [placeholder]="searchPlaceholder" />
+  </mat-form-field>
 
-    <mat-form-field>
-      <mat-select formControlName="type">
-        <mat-option>-- None --</mat-option>
-        <mat-option value="option">Option</mat-option>
-      </mat-select>
-    </mat-form-field>
-  </form>
-</div>
+  <mat-form-field>
+    <!-- Get options from API -->
+    <mat-select formControlName="type">
+      <mat-option>-- None --</mat-option>
+      <mat-option value="CS">Stocks</mat-option>
+    </mat-select>
+  </mat-form-field>
+</form>

@@ -16,7 +16,7 @@ export class TickerService {
   public getTickers(searchConfig: TickersSearchConfig): Observable<TickersResponse> {
     const options = {
       params: new HttpParams()
-        .set('ticker', searchConfig.tickerSymbol ?? '')
+        .set('ticker', searchConfig.ticker ?? '')
         .set('search-term', searchConfig.searchTerm ?? '')
         .set('results-count', searchConfig.resultsCount ?? '')
     }
