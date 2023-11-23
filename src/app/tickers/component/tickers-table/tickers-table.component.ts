@@ -1,10 +1,9 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewChild, signal } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, OnInit, ViewChild, effect, signal } from '@angular/core'
 import { MatPaginator, MatPaginatorIntl, MatPaginatorModule, PageEvent } from '@angular/material/paginator'
 import { MatTableDataSource, MatTableModule } from '@angular/material/table'
-import { Observable, Subscription, catchError, of } from 'rxjs'
 import { TickersResponse, TickersResult } from '../../model/tickers-response'
-import { TickersResultsCount, TickersSearchConfig } from '../../model/tickers-search-config'
+import { TickersSearchConfig } from '../../model/tickers-search-config'
 import { TickerService } from '../../service/tickers.service'
 import { NoTotalItemsPaginatorIntl } from './no-total-items-paginator-intl'
 
@@ -19,7 +18,7 @@ type ColumnDef = { key: string; title: string }
   styleUrl: './tickers-table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TickersTableComponent implements OnInit, OnDestroy {
+export class TickersTableComponent implements OnInit {
   @Input() public searchConfig: TickersSearchConfig = {}
 
   public columnDefs: ColumnDef[] = [
@@ -34,23 +33,27 @@ export class TickersTableComponent implements OnInit, OnDestroy {
   public tickersDataSource
 
   private dataSource: MatTableDataSource<TickersResult>
-  private fetchSize: TickersResultsCount = 100
   private nextCursor = ''
-  private tickersSubscription: Subscription | undefined
+  private tickersResponseConfigSignal = this.tickerService.tickersResponseNewSignal
+  private tickersResponseCursorSignal = this.tickerService.tickersResponseUpdateSignal
 
   @ViewChild(MatPaginator) public paginator: MatPaginator | null = null
 
   public constructor(private tickerService: TickerService) {
     this.dataSource = new MatTableDataSource<TickersResult>([])
     this.tickersDataSource = signal<MatTableDataSource<TickersResult>>(this.dataSource)
+
+    effect(() => {
+      this.updateDataSourceConfigResponse()
+    })
+
+    effect(() => {
+      this.updateDataSourceCursorResponse()
+    })
   }
 
   public ngOnInit(): void {
-    this.fetchData()
-  }
-
-  public ngOnDestroy(): void {
-    throw this.tickersSubscription?.unsubscribe()
+    this.tickerService.fetchDataWithConfig(this.searchConfig)
   }
 
   public ngAfterViewInit(): void {
@@ -61,31 +64,24 @@ export class TickersTableComponent implements OnInit, OnDestroy {
     if (event.pageIndex < this.dataSource.data.length / this.pageSize - 1) {
       return
     }
-    this.fetchData(this.nextCursor)
+    this.tickerService.fetchDataWithCursor(this.nextCursor)
   }
 
-  private fetchData(cursor?: string): void {
-    let dataObservable: Observable<TickersResponse>
-    this.tickersSubscription?.unsubscribe()
+  private updateDataSourceConfigResponse(): void {
+    const response: TickersResponse = this.tickersResponseConfigSignal()
+    const newData = [...response.results]
+    this.updateDataSource(newData, response)
+  }
 
-    if (cursor) {
-      dataObservable = this.tickerService.getTickersByCursor(cursor)
-    } else {
-      dataObservable = this.tickerService.getTickers({ resultsCount: this.fetchSize })
-    }
+  private updateDataSourceCursorResponse(): void {
+    const response: TickersResponse = this.tickersResponseCursorSignal()
+    const newData = [...this.dataSource.data, ...response.results]
+    this.updateDataSource(newData, response)
+  }
 
-    this.tickersSubscription = dataObservable
-      .pipe(
-        catchError((error) => {
-          console.error('Error fetching tickers:', error)
-          return of({ results: [], nextCursor: '' })
-        })
-      )
-      .subscribe((response) => {
-        const newData = cursor ? [...this.dataSource.data, ...response.results] : [...response.results]
-        this.dataSource.data = newData
-        this.nextCursor = response.nextCursor
-        this.tickersDataSource.set(this.dataSource)
-      })
+  private updateDataSource(newData: TickersResult[], response: TickersResponse): void {
+    this.dataSource.data = newData
+    this.nextCursor = response.cursor
+    this.tickersDataSource.set(this.dataSource)
   }
 }
