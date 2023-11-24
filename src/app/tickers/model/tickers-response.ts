@@ -6,9 +6,15 @@ export type TickersResult = {
   primary_exchange: string | null
 }
 
+export enum TickersResponseSource {
+  CONFIG,
+  CURSOR
+}
+
 export type TickersResponse = {
   results: TickersResult[]
   nextCursor: string
+  source: TickersResponseSource | null
 }
 
 export type TickersResponseResult = {

@@ -2,19 +2,15 @@ import { HttpClient, HttpParams } from '@angular/common/http'
 import { Injectable, Signal, signal } from '@angular/core'
 import { catchError, map, of } from 'rxjs'
 import { environment } from 'src/environments/environment'
-import { TickersResponse, TickersResponseResult } from '../model/tickers-response'
+import { TickersResponse, TickersResponseResult, TickersResponseSource } from '../model/tickers-response'
 import { TickersSearchConfig } from '../model/tickers-search-config'
 
 @Injectable({
   providedIn: 'root'
 })
 export class TickerService {
-  private tickersResponseConfigSignal = signal<TickersResponseResult>({
-    value: { results: [], nextCursor: '' },
-    error: null
-  })
-  private tickersResponseCursorSignal = signal<TickersResponseResult>({
-    value: { results: [], nextCursor: '' },
+  private tickersResponseSignal = signal<TickersResponseResult>({
+    value: { results: [], nextCursor: '', source: null },
     error: null
   })
 
@@ -22,12 +18,8 @@ export class TickerService {
 
   public constructor(private http: HttpClient) {}
 
-  public get tickersResponseConfig(): Signal<TickersResponseResult> {
-    return this.tickersResponseConfigSignal.asReadonly()
-  }
-
-  public get tickersResponseCursor(): Signal<TickersResponseResult> {
-    return this.tickersResponseCursorSignal.asReadonly()
+  public get tickersResponse(): Signal<TickersResponseResult> {
+    return this.tickersResponseSignal.asReadonly()
   }
 
   public getTickersByConfig(searchConfig: TickersSearchConfig): void {
@@ -41,11 +33,11 @@ export class TickerService {
       .get<TickersResponse>(`${this.apiUrl}/stocks/tickers`, options)
       .pipe(
         map(
-          (response) => ({ value: response, error: null }),
+          (response) => ({ value: { ...response, source: TickersResponseSource.CONFIG }, error: null }),
           catchError((err) => of({ value: null, error: err }))
         )
       )
-      .subscribe((response) => this.tickersResponseConfigSignal.set(response))
+      .subscribe((response) => this.tickersResponseSignal.set(response))
   }
 
   public getTickersByCursor(cursor: string): void {
@@ -53,10 +45,10 @@ export class TickerService {
       .get<TickersResponse>(`${this.apiUrl}/stocks/tickers/${cursor}`)
       .pipe(
         map(
-          (response) => ({ value: response, error: null }),
+          (response) => ({ value: { ...response, source: TickersResponseSource.CURSOR }, error: null }),
           catchError((err) => of({ value: null, error: err }))
         )
       )
-      .subscribe((response) => this.tickersResponseCursorSignal.set(response))
+      .subscribe((response) => this.tickersResponseSignal.set(response))
   }
 }
