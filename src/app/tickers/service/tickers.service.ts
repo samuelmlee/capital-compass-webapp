@@ -2,18 +2,18 @@ import { HttpClient, HttpParams } from '@angular/common/http'
 import { Injectable, signal } from '@angular/core'
 import { catchError, map, of } from 'rxjs'
 import { environment } from 'src/environments/environment'
-import { TickersResponse, TickersResponseWrapper } from '../model/tickers-response'
+import { TickersResponse, TickersResponseResult } from '../model/tickers-response'
 import { TickersSearchConfig } from '../model/tickers-search-config'
 
 @Injectable({
   providedIn: 'root'
 })
 export class TickerService {
-  public tickersResponseConfigSignal = signal<TickersResponseWrapper>({
+  public tickersResponseConfigSignal = signal<TickersResponseResult>({
     value: { results: [], cursor: '' },
     error: null
   })
-  public tickersResponseCursorSignal = signal<TickersResponseWrapper>({
+  public tickersResponseCursorSignal = signal<TickersResponseResult>({
     value: { results: [], cursor: '' },
     error: null
   })

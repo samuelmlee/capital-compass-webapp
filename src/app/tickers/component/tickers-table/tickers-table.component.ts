@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input, OnInit, ViewChild, effect, signal } from '@angular/core'
 import { MatPaginator, MatPaginatorIntl, MatPaginatorModule, PageEvent } from '@angular/material/paginator'
 import { MatTableDataSource, MatTableModule } from '@angular/material/table'
-import { TickersResponse, TickersResponseWrapper, TickersResult } from '../../model/tickers-response'
+import { TickersResponse, TickersResponseResult, TickersResult } from '../../model/tickers-response'
 import { TickersSearchConfig } from '../../model/tickers-search-config'
 import { TickerService } from '../../service/tickers.service'
 import { NoTotalItemsPaginatorIntl } from './no-total-items-paginator-intl'
@@ -72,23 +72,23 @@ export class TickersTableComponent implements OnInit {
   }
 
   private updateDataSourceConfigResponse(): void {
-    const wrapper: TickersResponseWrapper = this.tickerService.tickersResponseConfigSignal()
-    if (wrapper.error) {
+    const result: TickersResponseResult = this.tickerService.tickersResponseConfigSignal()
+    if (result.error) {
       // show in toast
       return
     }
-    const response = wrapper.value
+    const response = result.value
     const newData = [...response.results]
     this.updateDataSource(newData, response)
   }
 
   private updateDataSourceCursorResponse(): void {
-    const wrapper: TickersResponseWrapper = this.tickerService.tickersResponseCursorSignal()
-    if (wrapper.error) {
+    const result: TickersResponseResult = this.tickerService.tickersResponseCursorSignal()
+    if (result.error) {
       // show in toast
       return
     }
-    const response = wrapper.value
+    const response = result.value
     const newData = [...this.dataSource.data, ...response.results]
     this.updateDataSource(newData, response)
   }

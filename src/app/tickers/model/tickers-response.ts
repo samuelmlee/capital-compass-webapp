@@ -11,7 +11,7 @@ export type TickersResponse = {
   cursor: string
 }
 
-export type TickersResponseWrapper = {
+export type TickersResponseResult = {
   value: TickersResponse
   error: unknown
 }
