@@ -10,11 +10,11 @@ import { TickersSearchConfig } from '../model/tickers-search-config'
 })
 export class TickerService {
   private tickersResponseConfigSignal = signal<TickersResponseResult>({
-    value: { results: [], cursor: '' },
+    value: { results: [], nextCursor: '' },
     error: null
   })
   private tickersResponseCursorSignal = signal<TickersResponseResult>({
-    value: { results: [], cursor: '' },
+    value: { results: [], nextCursor: '' },
     error: null
   })
 

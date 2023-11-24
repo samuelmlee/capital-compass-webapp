@@ -94,7 +94,7 @@ export class TickersTableComponent implements OnInit {
   }
 
   private updateDataSource(newData: TickersResult[], response: TickersResponse): void {
-    this.nextCursor = response.cursor
+    this.nextCursor = response.nextCursor
     this.dataSource.data = newData
     this.tickersDataSource.set(this.dataSource)
   }

@@ -8,7 +8,7 @@ export type TickersResult = {
 
 export type TickersResponse = {
   results: TickersResult[]
-  cursor: string
+  nextCursor: string
 }
 
 export type TickersResponseResult = {
