@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core'
 import { AuthService } from 'src/app/auth/service/auth.service'
 
 @Component({
@@ -11,7 +11,7 @@ import { AuthService } from 'src/app/auth/service/auth.service'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProfileComponent {
-  public user = this.authService.user
+  public user = computed(() => this.authService.getUser().value)
 
   public constructor(private readonly authService: AuthService) {}
 }

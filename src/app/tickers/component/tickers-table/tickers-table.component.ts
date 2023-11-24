@@ -2,14 +2,10 @@ import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input, OnInit, ViewChild, computed } from '@angular/core'
 import { MatPaginator, MatPaginatorIntl, MatPaginatorModule, PageEvent } from '@angular/material/paginator'
 import { MatTableDataSource, MatTableModule } from '@angular/material/table'
-import {
-  TickersResponse,
-  TickersResponseResult,
-  TickersResponseSource,
-  TickersResult
-} from '../../model/tickers-response'
+import { Result } from 'src/app/core/model/result'
+import { TickersResponse, TickersResponseSource, TickersResult } from '../../model/tickers-response'
 import { TickersSearchConfig } from '../../model/tickers-search-config'
-import { TickerService } from '../../service/tickers.service'
+import { TickersService } from '../../service/tickers.service'
 import { NoTotalItemsPaginatorIntl } from './no-total-items-paginator-intl'
 
 type ColumnDef = { key: string; title: string }
@@ -42,7 +38,7 @@ export class TickersTableComponent implements OnInit {
 
   @ViewChild(MatPaginator) public paginator: MatPaginator | null = null
 
-  public constructor(private tickerService: TickerService) {
+  public constructor(private tickerService: TickersService) {
     this.dataSource = new MatTableDataSource<TickersResult>([])
   }
 
@@ -55,13 +51,13 @@ export class TickersTableComponent implements OnInit {
   }
 
   public convertResponseToDataSource(): MatTableDataSource<TickersResult> {
-    const result: TickersResponseResult = this.tickerService.tickersResponse()
+    const result: Result<TickersResponse> = this.tickerService.tickersResponse()
     if (result.error) {
       // show in toast
       return this.dataSource
     }
     const response = result.value
-    if (response.source == null) {
+    if (response?.source == null) {
       return this.dataSource
     }
     return this.updateDataSource(response)

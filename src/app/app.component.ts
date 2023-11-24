@@ -9,14 +9,13 @@ import { AuthService } from './auth/service/auth.service'
 })
 export class AppComponent {
   public title = 'Capital Compass'
-  public isAuthenticated = this.authService.isAuthenticated
 
   public constructor(
     private readonly authService: AuthService,
     private router: Router
   ) {
     effect(() => {
-      if (this.isAuthenticated() == false) {
+      if (this.authService.getIsAuthenticated().value == false) {
         this.router.navigate(['/'])
       }
     })

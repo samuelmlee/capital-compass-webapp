@@ -16,8 +16,3 @@ export type TickersResponse = {
   nextCursor: string
   source: TickersResponseSource | null
 }
-
-export type TickersResponseResult = {
-  value: TickersResponse
-  error: unknown
-}

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core'
 import { AuthService } from '../../service/auth.service'
 
 @Component({
@@ -11,7 +11,7 @@ import { AuthService } from '../../service/auth.service'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AuthComponent {
-  public isAuthenticated = this.authService.isAuthenticated
+  public isAuthenticated = computed(() => this.authService.getIsAuthenticated().value)
 
   public constructor(private readonly authService: AuthService) {}
 

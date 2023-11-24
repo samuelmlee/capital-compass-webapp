@@ -1,15 +1,16 @@
 import { HttpClient, HttpParams } from '@angular/common/http'
 import { Injectable, OnDestroy, Signal, signal } from '@angular/core'
 import { Subscription, catchError, map, of } from 'rxjs'
+import { Result } from 'src/app/core/model/result'
 import { environment } from 'src/environments/environment'
-import { TickersResponse, TickersResponseResult, TickersResponseSource } from '../model/tickers-response'
+import { TickersResponse, TickersResponseSource } from '../model/tickers-response'
 import { TickersSearchConfig } from '../model/tickers-search-config'
 
 @Injectable({
   providedIn: 'root'
 })
-export class TickerService implements OnDestroy {
-  private tickersResponseSignal = signal<TickersResponseResult>({
+export class TickersService implements OnDestroy {
+  private tickersResponseSignal = signal<Result<TickersResponse>>({
     value: { results: [], nextCursor: '', source: null },
     error: null
   })
@@ -23,7 +24,7 @@ export class TickerService implements OnDestroy {
     this.tickersSubsription?.unsubscribe()
   }
 
-  public get tickersResponse(): Signal<TickersResponseResult> {
+  public get tickersResponse(): Signal<Result<TickersResponse>> {
     return this.tickersResponseSignal.asReadonly()
   }
 

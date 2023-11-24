@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http'
-import { Injectable, signal } from '@angular/core'
-import { catchError, throwError } from 'rxjs'
+import { Injectable, Signal, signal } from '@angular/core'
+import { catchError, map, of } from 'rxjs'
+import { Result } from 'src/app/core/model/result'
 import { environment } from 'src/environments/environment'
 import { type User } from '../../users/model/user'
 
@@ -10,15 +11,22 @@ type LogOutApiResponse = { logoutUrl: string; idToken: string }
   providedIn: 'root'
 })
 export class AuthService {
-  public readonly isAuthenticated = signal<boolean>(false)
-  public readonly user = signal<User | null>(null)
-  public readonly authenticationError = signal<string | null>(null)
-
-  public constructor(private readonly httpClient: HttpClient) {}
+  private readonly isAuthenticated = signal<Result<boolean>>({ value: false, error: null })
+  private readonly user = signal<Result<User | null>>({ value: null, error: null })
 
   private readonly apiUrl = environment.apiUrl
   private readonly clientId = environment.gatewayClientId
   private readonly logoutUri = location.origin
+
+  public constructor(private readonly httpClient: HttpClient) {}
+
+  public get getIsAuthenticated(): Signal<Result<boolean>> {
+    return this.isAuthenticated.asReadonly()
+  }
+
+  public get getUser(): Signal<Result<User | null>> {
+    return this.user.asReadonly()
+  }
 
   public authenticate(): void {
     this.httpClient
@@ -26,16 +34,14 @@ export class AuthService {
         withCredentials: true
       })
       .pipe(
-        catchError((e) => {
-          this.authenticationError.set(e)
-          return throwError(() => new Error(e))
-        })
+        map(
+          (user) => user,
+          catchError((err) => of({ value: false, error: err }))
+        )
       )
       .subscribe((user) => {
-        if (user != null) {
-          this.isAuthenticated.set(true)
-          this.user.set(user)
-        }
+        this.isAuthenticated.set({ value: user != null, error: null })
+        this.user.set({ value: user, error: null })
       })
   }
 
@@ -47,13 +53,13 @@ export class AuthService {
     this.httpClient
       .get<LogOutApiResponse>(`${this.apiUrl}/api/logout`, { withCredentials: true })
       .pipe(
-        catchError((e) => {
-          this.authenticationError.set(e)
-          return throwError(() => new Error(e))
-        })
+        map(
+          (response) => ({ value: response, error: null }),
+          catchError((err) => of({ value: null, error: err }))
+        )
       )
-      .subscribe((response) => {
-        const keycloakLogoutUrl = `${response.logoutUrl}?client_id=${this.clientId}&post_logout_redirect_uri=${this.logoutUri}`
+      .subscribe((result) => {
+        const keycloakLogoutUrl = `${result.value.logoutUrl}?client_id=${this.clientId}&post_logout_redirect_uri=${this.logoutUri}`
         window.open(keycloakLogoutUrl, '_self')
       })
   }
