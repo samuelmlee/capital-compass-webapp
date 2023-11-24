@@ -1,66 +1,54 @@
 import { HttpClient, HttpParams } from '@angular/common/http'
 import { Injectable, signal } from '@angular/core'
-import { Observable, catchError, of, throwError } from 'rxjs'
+import { catchError, map, of } from 'rxjs'
 import { environment } from 'src/environments/environment'
-import { TickersResponse } from '../model/tickers-response'
+import { TickersResponse, TickersResponseWrapper } from '../model/tickers-response'
 import { TickersSearchConfig } from '../model/tickers-search-config'
 
 @Injectable({
   providedIn: 'root'
 })
 export class TickerService {
-  public tickersResponseNewSignal = signal<TickersResponse>({ results: [], cursor: '' })
-  public tickersResponseUpdateSignal = signal<TickersResponse>({ results: [], cursor: '' })
+  public tickersResponseConfigSignal = signal<TickersResponseWrapper>({
+    value: { results: [], cursor: '' },
+    error: null
+  })
+  public tickersResponseCursorSignal = signal<TickersResponseWrapper>({
+    value: { results: [], cursor: '' },
+    error: null
+  })
 
   private apiUrl = environment.apiUrl
 
   public constructor(private http: HttpClient) {}
 
-  public getTickers(searchConfig: TickersSearchConfig): Observable<TickersResponse> {
+  public getTickersByConfig(searchConfig: TickersSearchConfig): void {
     const options = {
       params: new HttpParams()
-        .set('ticker', searchConfig.ticker ?? '')
-        .set('search-term', searchConfig.searchTerm ?? '')
+        .set('ticker', searchConfig?.ticker ?? '')
+        .set('search-term', searchConfig?.searchTerm ?? '')
     }
-    return this.http.get<TickersResponse>(`${this.apiUrl}/stocks/tickers`, options).pipe(
-      catchError(() => {
-        return throwError(() => new Error('Failed to fetch tickers by filter'))
-      })
-    )
-  }
 
-  public getTickersByCursor(cursor: string): Observable<TickersResponse> {
-    return this.http.get<TickersResponse>(`${this.apiUrl}/stocks/tickers/${cursor}`).pipe(
-      catchError(() => {
-        return throwError(() => new Error('Failed to fetch tickers by cursor'))
-      })
-    )
-  }
-
-  public fetchDataWithConfig(config: TickersSearchConfig): void {
-    //
-    this.getTickers({ searchTerm: config?.searchTerm })
+    this.http
+      .get<TickersResponse>(`${this.apiUrl}/stocks/tickers`, options)
       .pipe(
-        catchError((error) => {
-          console.error('Error fetching tickers:', error)
-          return of({ results: [], cursor: '' })
-        })
+        map(
+          (response) => ({ value: response, error: null }),
+          catchError((err) => of({ value: null, error: err }))
+        )
       )
-      .subscribe((response) => {
-        this.tickersResponseNewSignal.set(response)
-      })
+      .subscribe((response) => this.tickersResponseConfigSignal.set(response))
   }
 
-  public fetchDataWithCursor(cursor: string): void {
-    this.getTickersByCursor(cursor)
+  public getTickersByCursor(cursor: string): void {
+    this.http
+      .get<TickersResponse>(`${this.apiUrl}/stocks/tickers/${cursor}`)
       .pipe(
-        catchError((error) => {
-          console.error('Error fetching tickers:', error)
-          return of({ results: [], cursor: '' })
-        })
+        map(
+          (response) => ({ value: response, error: null }),
+          catchError((err) => of({ value: null, error: err }))
+        )
       )
-      .subscribe((response) => {
-        this.tickersResponseUpdateSignal.set(response)
-      })
+      .subscribe((response) => this.tickersResponseCursorSignal.set(response))
   }
 }

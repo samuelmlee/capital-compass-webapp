@@ -10,3 +10,8 @@ export type TickersResponse = {
   results: TickersResult[]
   cursor: string
 }
+
+export type TickersResponseWrapper = {
+  value: TickersResponse
+  error: unknown
+}

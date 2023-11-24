@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input, OnInit, ViewChild, effect, signal } from '@angular/core'
 import { MatPaginator, MatPaginatorIntl, MatPaginatorModule, PageEvent } from '@angular/material/paginator'
 import { MatTableDataSource, MatTableModule } from '@angular/material/table'
-import { TickersResponse, TickersResult } from '../../model/tickers-response'
+import { TickersResponse, TickersResponseWrapper, TickersResult } from '../../model/tickers-response'
 import { TickersSearchConfig } from '../../model/tickers-search-config'
 import { TickerService } from '../../service/tickers.service'
 import { NoTotalItemsPaginatorIntl } from './no-total-items-paginator-intl'
@@ -34,8 +34,6 @@ export class TickersTableComponent implements OnInit {
 
   private dataSource: MatTableDataSource<TickersResult>
   private nextCursor = ''
-  private tickersResponseConfigSignal = this.tickerService.tickersResponseNewSignal
-  private tickersResponseCursorSignal = this.tickerService.tickersResponseUpdateSignal
 
   @ViewChild(MatPaginator) public paginator: MatPaginator | null = null
 
@@ -59,7 +57,7 @@ export class TickersTableComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.tickerService.fetchDataWithConfig(this.searchConfig)
+    this.tickerService.getTickersByConfig(this.searchConfig)
   }
 
   public ngAfterViewInit(): void {
@@ -70,24 +68,34 @@ export class TickersTableComponent implements OnInit {
     if (event.pageIndex < this.dataSource.data.length / this.pageSize - 1) {
       return
     }
-    this.tickerService.fetchDataWithCursor(this.nextCursor)
+    this.tickerService.getTickersByCursor(this.nextCursor)
   }
 
   private updateDataSourceConfigResponse(): void {
-    const response: TickersResponse = this.tickersResponseConfigSignal()
+    const wrapper: TickersResponseWrapper = this.tickerService.tickersResponseConfigSignal()
+    if (wrapper.error) {
+      // show in toast
+      return
+    }
+    const response = wrapper.value
     const newData = [...response.results]
     this.updateDataSource(newData, response)
   }
 
   private updateDataSourceCursorResponse(): void {
-    const response: TickersResponse = this.tickersResponseCursorSignal()
+    const wrapper: TickersResponseWrapper = this.tickerService.tickersResponseCursorSignal()
+    if (wrapper.error) {
+      // show in toast
+      return
+    }
+    const response = wrapper.value
     const newData = [...this.dataSource.data, ...response.results]
     this.updateDataSource(newData, response)
   }
 
   private updateDataSource(newData: TickersResult[], response: TickersResponse): void {
-    this.dataSource.data = newData
     this.nextCursor = response.cursor
+    this.dataSource.data = newData
     this.tickersDataSource.set(this.dataSource)
   }
 }
