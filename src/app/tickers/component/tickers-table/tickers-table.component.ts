@@ -43,14 +43,14 @@ export class TickersTableComponent implements OnInit {
 
     effect(
       () => {
-        this.updateDataSourceConfigResponse()
+        this.updateDataSourceConfig()
       },
       { allowSignalWrites: true }
     )
 
     effect(
       () => {
-        this.updateDataSourceCursorResponse()
+        this.updateDataSourceCursor()
       },
       { allowSignalWrites: true }
     )
@@ -71,8 +71,8 @@ export class TickersTableComponent implements OnInit {
     this.tickerService.getTickersByCursor(this.nextCursor)
   }
 
-  private updateDataSourceConfigResponse(): void {
-    const result: TickersResponseResult = this.tickerService.tickersResponseConfigSignal()
+  private updateDataSourceConfig(): void {
+    const result: TickersResponseResult = this.tickerService.tickersResponseConfig()
     if (result.error) {
       // show in toast
       return
@@ -82,8 +82,8 @@ export class TickersTableComponent implements OnInit {
     this.updateDataSource(newData, response)
   }
 
-  private updateDataSourceCursorResponse(): void {
-    const result: TickersResponseResult = this.tickerService.tickersResponseCursorSignal()
+  private updateDataSourceCursor(): void {
+    const result: TickersResponseResult = this.tickerService.tickersResponseCursor()
     if (result.error) {
       // show in toast
       return

@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http'
-import { Injectable, signal } from '@angular/core'
+import { Injectable, Signal, signal } from '@angular/core'
 import { catchError, map, of } from 'rxjs'
 import { environment } from 'src/environments/environment'
 import { TickersResponse, TickersResponseResult } from '../model/tickers-response'
@@ -9,11 +9,11 @@ import { TickersSearchConfig } from '../model/tickers-search-config'
   providedIn: 'root'
 })
 export class TickerService {
-  public tickersResponseConfigSignal = signal<TickersResponseResult>({
+  private tickersResponseConfigSignal = signal<TickersResponseResult>({
     value: { results: [], cursor: '' },
     error: null
   })
-  public tickersResponseCursorSignal = signal<TickersResponseResult>({
+  private tickersResponseCursorSignal = signal<TickersResponseResult>({
     value: { results: [], cursor: '' },
     error: null
   })
@@ -21,6 +21,14 @@ export class TickerService {
   private apiUrl = environment.apiUrl
 
   public constructor(private http: HttpClient) {}
+
+  public get tickersResponseConfig(): Signal<TickersResponseResult> {
+    return this.tickersResponseConfigSignal.asReadonly()
+  }
+
+  public get tickersResponseCursor(): Signal<TickersResponseResult> {
+    return this.tickersResponseCursorSignal.asReadonly()
+  }
 
   public getTickersByConfig(searchConfig: TickersSearchConfig): void {
     const options = {
