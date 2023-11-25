@@ -11,7 +11,7 @@ import { AuthService } from 'src/app/auth/service/auth.service'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProfileComponent {
-  public user = computed(() => this.authService.getUser().value)
+  public user = computed(() => this.authService.user.value())
 
   public constructor(private readonly authService: AuthService) {}
 }

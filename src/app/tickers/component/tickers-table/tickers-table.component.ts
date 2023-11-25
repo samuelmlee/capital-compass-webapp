@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input, OnInit, ViewChild, computed } from '@angular/core'
 import { MatPaginator, MatPaginatorIntl, MatPaginatorModule, PageEvent } from '@angular/material/paginator'
 import { MatTableDataSource, MatTableModule } from '@angular/material/table'
-import { Result } from 'src/app/shared/model/result'
+
 import { TickersResponse, TickersResponseSource, TickersResult } from '../../model/tickers-response'
 import { TickersSearchConfig } from '../../model/tickers-search-config'
 import { TickersService } from '../../service/tickers.service'
@@ -51,13 +51,13 @@ export class TickersTableComponent implements OnInit {
   }
 
   public convertResponseToDataSource(): MatTableDataSource<TickersResult> {
-    const result: Result<TickersResponse> = this.tickerService.tickersResponse()
-    if (result.error) {
+    const error: unknown = this.tickerService.tickersConfigSignal.error()
+    if (error) {
       // show in toast
       return this.dataSource
     }
-    const response = result.value
-    if (response?.source == null) {
+    const response = this.tickerService.tickersConfigSignal.value()
+    if (!response) {
       return this.dataSource
     }
     return this.updateDataSource(response)

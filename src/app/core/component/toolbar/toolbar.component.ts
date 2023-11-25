@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectionStrategy, Component, Input, computed } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import { MatButtonModule } from '@angular/material/button'
 import { MatToolbarModule } from '@angular/material/toolbar'
 import { RouterModule } from '@angular/router'
@@ -17,8 +17,7 @@ import { AuthService } from 'src/app/auth/service/auth.service'
 export class ToolbarComponent {
   @Input() public title: string = ''
 
-  public isAuthenticated = computed(() => this.authService.getIsAuthenticated().value)
-  public user = computed(() => this.authService.getUser().value)
+  public user = this.authService.user.value
 
   public constructor(private readonly authService: AuthService) {}
 }

@@ -1,8 +1,9 @@
-import { Signal, computed } from '@angular/core'
+import { computed } from '@angular/core'
 import { toSignal } from '@angular/core/rxjs-interop'
 import { Observable, catchError, map, of } from 'rxjs'
+import { Result } from '../model/result'
 
-export function fromObsToSignal<T>(obs$: Observable<T>): { value: Signal<T | undefined>; error: Signal<unknown> } {
+export function fromObsToSignal<T>(obs$: Observable<T>): Result<T> {
   const source = toSignal(
     obs$.pipe(
       map((value) => ({ value, error: null })),

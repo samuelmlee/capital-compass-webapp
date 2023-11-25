@@ -11,7 +11,7 @@ import { AuthService } from '../../service/auth.service'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AuthComponent {
-  public isAuthenticated = computed(() => this.authService.getIsAuthenticated().value)
+  public isAuthenticated = computed(() => this.authService.user.value() != null)
 
   public constructor(private readonly authService: AuthService) {}
 

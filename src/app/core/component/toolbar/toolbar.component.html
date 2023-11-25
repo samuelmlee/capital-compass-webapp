@@ -5,7 +5,7 @@
     </a>
 
     <div class="d-flex ms-auto">
-      @if (isAuthenticated()) {
+      @if (user()) {
         <a routerLink="/profile" class="btn navbar-text me-3 text-decoration-none" aria-pressed="true">
           Welcome {{ user()?.firstName }}
         </a>
