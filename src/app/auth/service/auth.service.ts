@@ -14,38 +14,38 @@ type LogOutApiResponse = { logoutUrl: string; idToken: string }
 export class AuthService {
   public user: Result<User>
 
-  private readonly apiUrl = environment.apiUrl
-  private readonly clientId = environment.gatewayClientId
-  private readonly logoutUri = location.origin
-  private readonly authenticateSubject = new Subject<void>()
+  private readonly _apiUrl = environment.apiUrl
+  private readonly _clientId = environment.gatewayClientId
+  private readonly _logoutUri = location.origin
+  private readonly _authenticateSubject = new Subject<void>()
 
   public constructor(private readonly httpClient: HttpClient) {
-    this.user = fromObsToSignal<User>(this.authenticateSubject.pipe(switchMap(() => this.getUserDetails())))
+    this.user = fromObsToSignal<User>(this._authenticateSubject.pipe(switchMap(() => this.getUserDetails())))
   }
 
   public authenticate(): void {
-    this.authenticateSubject.next()
+    this._authenticateSubject.next()
   }
 
   public getUserDetails(): Observable<User> {
-    return this.httpClient.get<User>(`${this.apiUrl}/user`, {
+    return this.httpClient.get<User>(`${this._apiUrl}/user`, {
       withCredentials: true
     })
   }
 
   public login(): void {
-    window.open(`${this.apiUrl}/oauth2/authorization/keycloak`, '_self')
+    window.open(`${this._apiUrl}/oauth2/authorization/keycloak`, '_self')
   }
 
   public logout(): void {
     this.httpClient
-      .get<LogOutApiResponse>(`${this.apiUrl}/api/logout`, { withCredentials: true })
+      .get<LogOutApiResponse>(`${this._apiUrl}/api/logout`, { withCredentials: true })
       .pipe(
         map((response) => ({ value: response, error: null })),
         catchError((err) => of({ value: null, error: err }))
       )
       .subscribe((result) => {
-        const keycloakLogoutUrl = `${result.value?.logoutUrl}?client_id=${this.clientId}&post_logout_redirect_uri=${this.logoutUri}`
+        const keycloakLogoutUrl = `${result.value?.logoutUrl}?client_id=${this._clientId}&post_logout_redirect_uri=${this._logoutUri}`
         window.open(keycloakLogoutUrl, '_self')
       })
   }
