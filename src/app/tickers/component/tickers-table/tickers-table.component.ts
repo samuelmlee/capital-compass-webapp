@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input, OnInit, ViewChild, computed } from '@angular/core'
 import { MatPaginator, MatPaginatorIntl, MatPaginatorModule, PageEvent } from '@angular/material/paginator'
 import { MatTableDataSource, MatTableModule } from '@angular/material/table'
-import { Result } from 'src/app/core/model/result'
+import { Result } from 'src/app/shared/model/result'
 import { TickersResponse, TickersResponseSource, TickersResult } from '../../model/tickers-response'
 import { TickersSearchConfig } from '../../model/tickers-search-config'
 import { TickersService } from '../../service/tickers.service'
@@ -43,7 +43,7 @@ export class TickersTableComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.tickerService.getTickersByConfig(this.searchConfig)
+    this.tickerService.fetchTickersByConfig(this.searchConfig)
   }
 
   public ngAfterViewInit(): void {
@@ -76,6 +76,6 @@ export class TickersTableComponent implements OnInit {
     if (event.pageIndex < this.dataSource.data.length / this.pageSize - 1) {
       return
     }
-    this.tickerService.getTickersByCursor(this.nextCursor)
+    this.tickerService.fetchTickersByCursor(this.nextCursor)
   }
 }

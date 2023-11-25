@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable, Signal, signal } from '@angular/core'
 import { catchError, map, of } from 'rxjs'
-import { Result } from 'src/app/core/model/result'
+import { Result } from 'src/app/shared/model/result'
 import { environment } from 'src/environments/environment'
 import { type User } from '../../users/model/user'
 
@@ -34,14 +34,12 @@ export class AuthService {
         withCredentials: true
       })
       .pipe(
-        map(
-          (user) => user,
-          catchError((err) => of({ value: false, error: err }))
-        )
+        map((user) => ({ value: user, error: null })),
+        catchError((err) => of({ value: false, error: err }))
       )
-      .subscribe((user) => {
-        this.isAuthenticated.set({ value: user != null, error: null })
-        this.user.set({ value: user, error: null })
+      .subscribe((result) => {
+        this.isAuthenticated.set({ value: typeof result.value == User, error: null })
+        this.user.set(result)
       })
   }
 
@@ -53,13 +51,11 @@ export class AuthService {
     this.httpClient
       .get<LogOutApiResponse>(`${this.apiUrl}/api/logout`, { withCredentials: true })
       .pipe(
-        map(
-          (response) => ({ value: response, error: null }),
-          catchError((err) => of({ value: null, error: err }))
-        )
+        map((response) => ({ value: response, error: null })),
+        catchError((err) => of({ value: null, error: err }))
       )
       .subscribe((result) => {
-        const keycloakLogoutUrl = `${result.value.logoutUrl}?client_id=${this.clientId}&post_logout_redirect_uri=${this.logoutUri}`
+        const keycloakLogoutUrl = `${result.value?.logoutUrl}?client_id=${this.clientId}&post_logout_redirect_uri=${this.logoutUri}`
         window.open(keycloakLogoutUrl, '_self')
       })
   }

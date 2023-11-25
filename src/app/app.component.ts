@@ -15,7 +15,7 @@ export class AppComponent {
     private router: Router
   ) {
     effect(() => {
-      if (this.authService.getIsAuthenticated().value == false) {
+      if (!this.authService.getIsAuthenticated().value) {
         this.router.navigate(['/'])
       }
     })

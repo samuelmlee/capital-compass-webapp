@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component } from '@angular/core'
-import { ChartComponent } from '../chart/chart.component'
+import { ChartComponent } from '../../../shared/component/chart/chart.component'
 
 @Component({
   selector: 'app-landing',
