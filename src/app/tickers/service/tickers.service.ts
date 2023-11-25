@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { Observable, Subject, map, switchMap } from 'rxjs'
+import { Observable, Subject, map, merge, switchMap } from 'rxjs'
 
 import { Result } from 'src/app/shared/model/result'
 import { fromObsToSignal } from 'src/app/shared/utils/fromObsToSignal'
@@ -12,20 +12,18 @@ import { TickersSearchConfig } from '../model/tickers-search-config'
   providedIn: 'root'
 })
 export class TickersService {
-  public tickersConfigSignal: Result<TickersResponse>
-  public tickersCursorSignal: Result<TickersResponse>
+  public tickersSignal: Result<TickersResponse>
 
   private cursorSubject = new Subject<string>()
   private configSubject = new Subject<TickersSearchConfig>()
   private apiUrl = environment.apiUrl
 
   public constructor(private http: HttpClient) {
-    this.tickersConfigSignal = fromObsToSignal<TickersResponse>(
-      this.configSubject.pipe(switchMap((config) => this.getTickersByConfig(config)))
-    )
-
-    this.tickersCursorSignal = fromObsToSignal<TickersResponse>(
-      this.cursorSubject.pipe(switchMap((cursor) => this.getTickersByCursor(cursor)))
+    this.tickersSignal = fromObsToSignal<TickersResponse>(
+      merge(
+        this.configSubject.pipe(switchMap((config) => this.getTickersByConfig(config))),
+        this.cursorSubject.pipe(switchMap((cursor) => this.getTickersByCursor(cursor)))
+      )
     )
   }
 

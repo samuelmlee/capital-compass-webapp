@@ -51,12 +51,12 @@ export class TickersTableComponent implements OnInit {
   }
 
   public convertResponseToDataSource(): MatTableDataSource<TickersResult> {
-    const error: unknown = this.tickerService.tickersConfigSignal.error()
+    const error: unknown = this.tickerService.tickersSignal.error()
     if (error) {
       // show in toast
       return this.dataSource
     }
-    const response = this.tickerService.tickersConfigSignal.value()
+    const response = this.tickerService.tickersSignal.value()
     if (!response) {
       return this.dataSource
     }
