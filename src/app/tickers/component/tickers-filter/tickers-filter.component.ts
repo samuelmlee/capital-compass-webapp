@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectionStrategy, Component, EventEmitter, Output, Signal, effect } from '@angular/core'
+import { ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output, Signal, effect } from '@angular/core'
 import { toSignal } from '@angular/core/rxjs-interop'
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms'
 import { MatFormFieldModule } from '@angular/material/form-field'
@@ -8,6 +8,7 @@ import { MatInputModule } from '@angular/material/input'
 import { MatSelectModule } from '@angular/material/select'
 import { combineLatest, debounceTime, distinctUntilChanged, map, startWith } from 'rxjs'
 import { TickersSearchConfig } from '../../model/tickers-search-config'
+import { TickersService } from '../../service/tickers.service'
 
 @Component({
   selector: 'app-tickers-filter',
@@ -17,40 +18,58 @@ import { TickersSearchConfig } from '../../model/tickers-search-config'
   styleUrl: './tickers-filter.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TickersFilterComponent {
+export class TickersFilterComponent implements OnInit {
   public formGroup: FormGroup
   public searchPlaceholder = 'Find by name, ticker or description'
+  public tickerPlaceholder = 'Specify a ticker symbol'
 
   @Output('newConfig')
   public configUpdatedEvent = new EventEmitter<TickersSearchConfig>()
+  public tickerTypes = this.tickersService.tickerTypesSignal
 
   private _searchTermControl = new FormControl('')
   private _typeControl = new FormControl('')
-  private _formValues: Signal<string[] | undefined>
+  private _tickerControl = new FormControl('')
+  private _formValues: Signal<string[] | undefined> | undefined
 
-  public constructor(private formBuilder: FormBuilder) {
+  public constructor(
+    private formBuilder: FormBuilder,
+    private tickersService: TickersService
+  ) {
     this.formGroup = this.formBuilder.group({
       searchTerm: this._searchTermControl,
-      type: this._typeControl
+      type: this._typeControl,
+      ticker: this._tickerControl
     })
 
-    this._formValues = toSignal(
-      combineLatest([
-        this._searchTermControl.valueChanges.pipe(debounceTime(500), distinctUntilChanged()).pipe(startWith('')),
-        this._typeControl.valueChanges.pipe(distinctUntilChanged()).pipe(startWith(''))
-      ]).pipe(map(([searchTerm, type]) => [searchTerm ?? '', type ?? '']))
-    )
+    this.initFormValues()
 
     effect(() => {
-      const [searchTerm = '', type = ''] = this._formValues() || []
-      if (this.formGroup.valid) {
-        const config: TickersSearchConfig = { searchTerm, type }
-        this.configUpdatedEvent.emit(config)
+      if (!this.formGroup.valid || !this._formValues) {
+        return
       }
+      const [searchTerm = '', type = '', ticker = ''] = this._formValues() || []
+      const config: TickersSearchConfig = { searchTerm, type, ticker }
+      this.configUpdatedEvent.emit(config)
     })
   }
 
-  public clearSearchTerm(): void {
-    this._searchTermControl.setValue('')
+  public ngOnInit(): void {
+    this.tickersService.fetchTickerTypes()
+  }
+
+  private initFormValues(): void {
+    this._formValues = toSignal(
+      combineLatest([
+        this._searchTermControl.valueChanges.pipe(debounceTime(500), distinctUntilChanged()).pipe(startWith('')),
+        this._typeControl.valueChanges.pipe(distinctUntilChanged()).pipe(startWith('')),
+        this._tickerControl.valueChanges.pipe(debounceTime(500), distinctUntilChanged()).pipe(startWith(''))
+      ]).pipe(map(([searchTerm, type]) => [searchTerm ?? '', type ?? '']))
+    )
+  }
+
+  public clearControl(controlName: string): void {
+    const control = this.formGroup.get(controlName)
+    control?.setValue('')
   }
 }
