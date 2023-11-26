@@ -20,7 +20,8 @@ type ColumnDef = { key: string; title: string }
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TickersTableComponent {
-  @Input() public set searchConfig(config: TickersSearchConfig) {
+  @Input()
+  public set searchConfig(config: TickersSearchConfig) {
     this.tickerService.fetchTickersByConfig(config)
   }
 

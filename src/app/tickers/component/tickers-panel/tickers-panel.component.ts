@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectionStrategy, Component, Signal, signal } from '@angular/core'
+import { ChangeDetectionStrategy, Component } from '@angular/core'
 import { TickersSearchConfig } from '../../model/tickers-search-config'
 import { TickersFilterComponent } from '../tickers-filter/tickers-filter.component'
 import { TickersTableComponent } from '../tickers-table/tickers-table.component'
@@ -13,13 +13,9 @@ import { TickersTableComponent } from '../tickers-table/tickers-table.component'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TickersPanelComponent {
-  private _searchConfig = signal<TickersSearchConfig>({})
-
-  public get searchConfig(): Signal<TickersSearchConfig> {
-    return this._searchConfig.asReadonly()
-  }
+  public searchConfig: TickersSearchConfig = { searchTerm: '', type: '' }
 
   public updateSearchConfig(config: TickersSearchConfig): void {
-    this._searchConfig.set(config)
+    this.searchConfig = { ...config }
   }
 }
