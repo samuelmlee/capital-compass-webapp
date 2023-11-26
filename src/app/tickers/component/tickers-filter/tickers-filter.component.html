@@ -1,6 +1,9 @@
 <form [formGroup]="formGroup">
   <mat-form-field class="w-50 me-3">
-    <input formControlName="searchTerm" matInput [placeholder]="searchPlaceholder" />
+    <input #searchTerm formControlName="searchTerm" matInput [placeholder]="searchPlaceholder" />
+    @if (searchTerm.value) {
+      <mat-icon class="clear-icon" matSuffix (click)="clearSearchTerm()">close</mat-icon>
+    }
   </mat-form-field>
 
   <mat-form-field>

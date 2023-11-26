@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Output, Signal, effec
 import { toSignal } from '@angular/core/rxjs-interop'
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms'
 import { MatFormFieldModule } from '@angular/material/form-field'
+import { MatIconModule } from '@angular/material/icon'
 import { MatInputModule } from '@angular/material/input'
 import { MatSelectModule } from '@angular/material/select'
 import { combineLatest, debounceTime, distinctUntilChanged, map, startWith } from 'rxjs'
@@ -11,7 +12,7 @@ import { TickersSearchConfig } from '../../model/tickers-search-config'
 @Component({
   selector: 'app-tickers-filter',
   standalone: true,
-  imports: [CommonModule, MatFormFieldModule, MatInputModule, MatSelectModule, ReactiveFormsModule],
+  imports: [CommonModule, MatFormFieldModule, MatIconModule, MatInputModule, MatSelectModule, ReactiveFormsModule],
   templateUrl: './tickers-filter.component.html',
   styleUrl: './tickers-filter.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -47,5 +48,9 @@ export class TickersFilterComponent {
         this.configUpdatedEvent.emit(config)
       }
     })
+  }
+
+  public clearSearchTerm(): void {
+    this._searchTermControl.setValue('')
   }
 }

@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { Subject } from 'rxjs'
 import { TickersSearchConfig } from '../../model/tickers-search-config'
 import { TickersFilterComponent } from '../tickers-filter/tickers-filter.component'
 import { TickersTableComponent } from '../tickers-table/tickers-table.component'
@@ -13,9 +14,10 @@ import { TickersTableComponent } from '../tickers-table/tickers-table.component'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TickersPanelComponent {
-  public searchConfig: TickersSearchConfig = { searchTerm: '', type: '' }
+  private searchConfig = new Subject<TickersSearchConfig>()
+  public searchConfig$ = this.searchConfig.asObservable()
 
   public updateSearchConfig(config: TickersSearchConfig): void {
-    this.searchConfig = { ...config }
+    this.searchConfig.next(config)
   }
 }

@@ -21,7 +21,10 @@ type ColumnDef = { key: string; title: string }
 })
 export class TickersTableComponent {
   @Input()
-  public set searchConfig(config: TickersSearchConfig) {
+  public set searchConfig(config: TickersSearchConfig | null) {
+    if (!config) {
+      return
+    }
     this.tickerService.fetchTickersByConfig(config)
   }
 
