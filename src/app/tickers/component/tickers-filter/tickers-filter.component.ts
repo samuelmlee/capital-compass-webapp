@@ -45,10 +45,13 @@ export class TickersFilterComponent implements OnInit {
     this.initFormValues()
 
     effect(() => {
-      if (!this.formGroup.valid || !this._formValues) {
+      if (!this._formValues) {
         return
       }
       const [searchTerm = '', type = '', ticker = ''] = this._formValues() || []
+      if (!this.formGroup.valid) {
+        return
+      }
       const config: TickersSearchConfig = { searchTerm, type, ticker }
       this.configUpdatedEvent.emit(config)
     })
@@ -71,5 +74,6 @@ export class TickersFilterComponent implements OnInit {
   public clearControl(controlName: string): void {
     const control = this.formGroup.get(controlName)
     control?.setValue('')
+    this.formGroup.updateValueAndValidity()
   }
 }
