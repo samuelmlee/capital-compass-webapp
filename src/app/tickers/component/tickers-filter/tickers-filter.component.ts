@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output, Signal, effect } from '@angular/core'
 import { toSignal } from '@angular/core/rxjs-interop'
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms'
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatIconModule } from '@angular/material/icon'
 import { MatInputModule } from '@angular/material/input'
@@ -29,7 +29,7 @@ export class TickersFilterComponent implements OnInit {
 
   private _searchTermControl = new FormControl('')
   private _typeControl = new FormControl('')
-  private _tickerControl = new FormControl('')
+  private _tickerControl = new FormControl('', [Validators.maxLength(5)])
   private _formValues: Signal<string[] | undefined> | undefined
 
   public constructor(
@@ -64,7 +64,7 @@ export class TickersFilterComponent implements OnInit {
         this._searchTermControl.valueChanges.pipe(debounceTime(500), distinctUntilChanged()).pipe(startWith('')),
         this._typeControl.valueChanges.pipe(distinctUntilChanged()).pipe(startWith('')),
         this._tickerControl.valueChanges.pipe(debounceTime(500), distinctUntilChanged()).pipe(startWith(''))
-      ]).pipe(map(([searchTerm, type]) => [searchTerm ?? '', type ?? '']))
+      ]).pipe(map(([searchTerm, type, ticker]) => [searchTerm ?? '', type ?? '', ticker ?? '']))
     )
   }
 

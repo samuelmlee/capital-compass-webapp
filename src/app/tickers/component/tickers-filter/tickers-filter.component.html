@@ -9,8 +9,9 @@
   <mat-form-field class="me-3">
     <!-- Get options from API -->
     <mat-select formControlName="type">
+      <mat-option>None</mat-option>
       @for (type of tickerTypes.value()?.results; track type.code) {
-        <mat-option>{{ type.description }}</mat-option>
+        <mat-option [value]="type.code">{{ type.description }}</mat-option>
       }
     </mat-select>
   </mat-form-field>
