@@ -1,4 +1,4 @@
-<div class="h-100 pt-3">
+<div class="h-100 pt-4 px-4">
   <app-tickers-filter (newConfig)="updateSearchConfig($event)"></app-tickers-filter>
   <app-tickers-table [searchConfig]="searchConfig$ | async"></app-tickers-table>
 </div>
