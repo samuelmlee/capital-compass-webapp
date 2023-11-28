@@ -8,9 +8,16 @@ import { TickersSearchConfig } from '../../model/tickers-search-config'
 import { TickersService } from '../../service/tickers.service'
 import { NoTotalItemsPaginatorIntl } from './no-total-items-paginator-intl'
 
-export type TickersTableConfig = { pageSize: number }
+export type TickersTableConfig = { pageSize: number; columnDefs: ColumnDef[] }
 
-type ColumnDef = { key: string; title: string; class: string[] }
+type ColumnDef = {
+  key: string
+  title: string
+  class: string[]
+  isAction?: boolean
+  actionCallback?: (element: unknown) => void
+  actionLabel?: string
+}
 
 @Component({
   selector: 'app-tickers-table',
@@ -31,16 +38,18 @@ export class TickersTableComponent {
   }
 
   @Input()
-  public tableConfig: TickersTableConfig = { pageSize: 50 }
+  public tickersTableConfig: TickersTableConfig = {
+    pageSize: 50,
+    columnDefs: [
+      { key: 'ticker', title: 'Ticker', class: ['w-25'] },
+      { key: 'name', title: 'Name', class: ['w-50'] },
+      { key: 'market', title: 'Market', class: [] },
+      { key: 'currency_name', title: 'Currency Name', class: [] },
+      { key: 'primary_exchange', title: 'Primary Exchange', class: [] }
+    ]
+  }
 
-  public columnDefs: ColumnDef[] = [
-    { key: 'ticker', title: 'Ticker', class: ['w-25'] },
-    { key: 'name', title: 'Name', class: ['w-50'] },
-    { key: 'market', title: 'Market', class: [] },
-    { key: 'currency_name', title: 'Currency Name', class: [] },
-    { key: 'primary_exchange', title: 'Primary Exchange', class: [] }
-  ]
-  public rowDefs = this.columnDefs.map((c) => c.key)
+  public rowDefs: string[]
   public tickersDataSource = computed(() => this.convertResponseToDataSource())
 
   private _dataSource: MatTableDataSource<TickersResult>
@@ -50,6 +59,8 @@ export class TickersTableComponent {
 
   public constructor(private _tickerService: TickersService) {
     this._dataSource = new MatTableDataSource<TickersResult>([])
+
+    this.rowDefs = this.tickersTableConfig.columnDefs.map((c) => c.key)
   }
 
   public ngAfterViewInit(): void {
@@ -79,7 +90,7 @@ export class TickersTableComponent {
   }
 
   public onPageChange(event: PageEvent): void {
-    if (event.pageIndex < this._dataSource.data.length / this.tableConfig.pageSize - 1) {
+    if (event.pageIndex < this._dataSource.data.length / this.tickersTableConfig.pageSize - 1) {
       return
     }
     this._tickerService.fetchTickersByCursor(this._nextCursor)

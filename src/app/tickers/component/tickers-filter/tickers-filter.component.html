@@ -1,5 +1,5 @@
 <form>
-  @for (field of filterConfig.fields; track field) {
+  @for (field of tickersFilterConfig.fields; track field) {
     <ng-container
       *ngIf="field === 'searchTerm'"
       [ngTemplateOutlet]="searchTermTemplate"

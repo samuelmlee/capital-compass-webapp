@@ -22,7 +22,7 @@ export type TickersFilterConfig = { fields: string[] }
 })
 export class TickersFilterComponent implements OnInit {
   @Input()
-  public filterConfig: TickersFilterConfig = { fields: ['searchTerm', 'type', 'ticker'] }
+  public tickersFilterConfig: TickersFilterConfig = { fields: ['searchTerm', 'type', 'ticker'] }
 
   public formGroup: FormGroup
   public searchPlaceholder = 'Find by name, ticker or description'

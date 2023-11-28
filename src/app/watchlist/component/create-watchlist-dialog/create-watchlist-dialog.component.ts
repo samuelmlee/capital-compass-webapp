@@ -14,6 +14,7 @@ import {
   TickersTableComponent,
   TickersTableConfig
 } from 'src/app/tickers/component/tickers-table/tickers-table.component'
+import { TickersResult } from 'src/app/tickers/model/tickers-response'
 import { TickersSearchConfig } from 'src/app/tickers/model/tickers-search-config'
 
 @Component({
@@ -35,7 +36,24 @@ import { TickersSearchConfig } from 'src/app/tickers/model/tickers-search-config
 })
 export class CreateWatchlistDialogComponent {
   public tickersFilterConfig: TickersFilterConfig = { fields: ['searchTerm', 'type'] }
-  public tickersTableConfig: TickersTableConfig = { pageSize: 5 }
+  public tickersTableConfig: TickersTableConfig = {
+    pageSize: 5,
+    columnDefs: [
+      { key: 'ticker', title: 'Ticker', class: ['w-25'] },
+      { key: 'name', title: 'Name', class: ['w-50'] },
+      { key: 'market', title: 'Market', class: [] },
+      { key: 'currency_name', title: 'Currency Name', class: [] },
+      { key: 'primary_exchange', title: 'Primary Exchange', class: [] },
+      {
+        key: 'add',
+        title: 'Action',
+        class: [],
+        isAction: true,
+        actionCallback: (ticker): void => this.addTickerToWatchList(ticker as TickersResult),
+        actionLabel: 'Add'
+      }
+    ]
+  }
   public nameControl = new FormControl('')
 
   private _searchConfig = new Subject<TickersSearchConfig>()
@@ -46,4 +64,6 @@ export class CreateWatchlistDialogComponent {
   public updateSearchConfig(config: TickersSearchConfig): void {
     this._searchConfig.next(config)
   }
+
+  public addTickerToWatchList(ticker: TickersResult): void {}
 }
