@@ -1,24 +1,46 @@
-<form [formGroup]="formGroup">
+<form>
+  @for (field of tickersFilterConfig.fields; track field) {
+    <ng-container
+      *ngIf="field === 'searchTerm'"
+      [ngTemplateOutlet]="searchTermTemplate"
+      [ngTemplateOutletContext]="{ placeholder: searchPlaceholder }"
+    ></ng-container>
+
+    <ng-container *ngIf="field === 'type'" [ngTemplateOutlet]="typeTemplate"></ng-container>
+
+    <ng-container
+      *ngIf="field === 'ticker'"
+      [ngTemplateOutlet]="tickerTemplate"
+      [ngTemplateOutletContext]="{ placeholder: tickerPlaceholder }"
+    ></ng-container>
+  }
+</form>
+
+<ng-template #searchTermTemplate let-placeholder="placeholder">
   <mat-form-field class="w-50 me-3">
-    <input #searchTerm formControlName="searchTerm" matInput [placeholder]="searchPlaceholder" />
+    <input #searchTerm [formControl]="searchTermControl" matInput [placeholder]="placeholder" />
     @if (searchTerm.value) {
       <mat-icon matSuffix role="button" (click)="clearControl('searchTerm')">close</mat-icon>
     }
   </mat-form-field>
+</ng-template>
 
+<ng-template #typeTemplate>
   <mat-form-field class="me-3">
-    <mat-select formControlName="type">
+    <mat-select [formControl]="typeControl">
       <mat-option>None</mat-option>
       @for (type of tickerTypes.value()?.results; track type.code) {
         <mat-option [value]="type.code">{{ type.description }}</mat-option>
       }
     </mat-select>
   </mat-form-field>
+</ng-template>
 
-  <mat-form-field class="w-25">
-    <input #tikcer formControlName="ticker" matInput [placeholder]="tickerPlaceholder" />
+<ng-template #tickerTemplate let-placeholder="placeholder">
+  <mat-form-field class="w-25 me-3">
+    <input #tikcer [formControl]="tickerControl" matInput [placeholder]="placeholder" />
     @if (tikcer.value) {
       <mat-icon matSuffix role="button" (click)="clearControl('searchTerm')">close</mat-icon>
     }
   </mat-form-field>
-</form>
+</ng-template>
