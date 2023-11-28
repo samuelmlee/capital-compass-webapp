@@ -10,7 +10,10 @@ import {
   TickersFilterComponent,
   TickersFilterConfig
 } from 'src/app/tickers/component/tickers-filter/tickers-filter.component'
-import { TickersTableComponent } from 'src/app/tickers/component/tickers-table/tickers-table.component'
+import {
+  TickersTableComponent,
+  TickersTableConfig
+} from 'src/app/tickers/component/tickers-table/tickers-table.component'
 import { TickersSearchConfig } from 'src/app/tickers/model/tickers-search-config'
 
 @Component({
@@ -32,6 +35,7 @@ import { TickersSearchConfig } from 'src/app/tickers/model/tickers-search-config
 })
 export class CreateWatchlistDialogComponent {
   public tickersFilterConfig: TickersFilterConfig = { fields: ['searchTerm', 'type'] }
+  public tickersTableConfig: TickersTableConfig = { pageSize: 5 }
   public nameControl = new FormControl('')
 
   private _searchConfig = new Subject<TickersSearchConfig>()

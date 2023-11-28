@@ -11,7 +11,7 @@
     (newSearchConfig)="updateSearchConfig($event)"
     [filterConfig]="tickersFilterConfig"
   ></app-tickers-filter>
-  <app-tickers-table [searchConfig]="searchConfig$ | async"></app-tickers-table>
+  <app-tickers-table [searchConfig]="searchConfig$ | async" [tableConfig]="tickersTableConfig"></app-tickers-table>
 
   <mat-dialog-actions align="end">
     <button mat-dialog-close type="button" class="btn btn-light me-2">Cancel</button>

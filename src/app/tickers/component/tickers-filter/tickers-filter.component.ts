@@ -22,12 +22,7 @@ export type TickersFilterConfig = { fields: string[] }
 })
 export class TickersFilterComponent implements OnInit {
   @Input()
-  public set filterConfig(config: TickersFilterConfig) {
-    if (!config) {
-      return
-    }
-    this._tickersFilterConfig = config
-  }
+  public filterConfig: TickersFilterConfig = { fields: ['searchTerm', 'type', 'ticker'] }
 
   public formGroup: FormGroup
   public searchPlaceholder = 'Find by name, ticker or description'
@@ -40,7 +35,6 @@ export class TickersFilterComponent implements OnInit {
   public typeControl = new FormControl('')
   public tickerControl = new FormControl('', [Validators.maxLength(5)])
 
-  private _tickersFilterConfig: TickersFilterConfig = { fields: ['searchTerm', 'type', 'ticker'] }
   private _formValues: Signal<string[] | undefined> | undefined
 
   public constructor(
@@ -70,10 +64,6 @@ export class TickersFilterComponent implements OnInit {
 
   public ngOnInit(): void {
     this._tickersService.fetchTickerTypes()
-  }
-
-  public get tickersFilterConfig(): TickersFilterConfig {
-    return this._tickersFilterConfig
   }
 
   private initFormValues(): void {

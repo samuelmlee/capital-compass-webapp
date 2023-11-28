@@ -8,6 +8,8 @@ import { TickersSearchConfig } from '../../model/tickers-search-config'
 import { TickersService } from '../../service/tickers.service'
 import { NoTotalItemsPaginatorIntl } from './no-total-items-paginator-intl'
 
+export type TickersTableConfig = { pageSize: number }
+
 type ColumnDef = { key: string; title: string; class: string[] }
 
 @Component({
@@ -28,6 +30,9 @@ export class TickersTableComponent {
     this._tickerService.fetchTickersByConfig(config)
   }
 
+  @Input()
+  public tableConfig: TickersTableConfig = { pageSize: 50 }
+
   public columnDefs: ColumnDef[] = [
     { key: 'ticker', title: 'Ticker', class: ['w-25'] },
     { key: 'name', title: 'Name', class: ['w-50'] },
@@ -36,7 +41,6 @@ export class TickersTableComponent {
     { key: 'primary_exchange', title: 'Primary Exchange', class: [] }
   ]
   public rowDefs = this.columnDefs.map((c) => c.key)
-  public pageSize = 50
   public tickersDataSource = computed(() => this.convertResponseToDataSource())
 
   private _dataSource: MatTableDataSource<TickersResult>
@@ -75,7 +79,7 @@ export class TickersTableComponent {
   }
 
   public onPageChange(event: PageEvent): void {
-    if (event.pageIndex < this._dataSource.data.length / this.pageSize - 1) {
+    if (event.pageIndex < this._dataSource.data.length / this.tableConfig.pageSize - 1) {
       return
     }
     this._tickerService.fetchTickersByCursor(this._nextCursor)
