@@ -5,9 +5,11 @@
         <th mat-header-cell *matHeaderCellDef [ngClass]="column.class.join(' ')">{{ column.title }}</th>
 
         @if (column.isAction) {
-          <button *ngIf="column.actionCallback" (click)="column.actionCallback(column)">
-            {{ column.actionLabel }}
-          </button>
+          <td mat-cell *matCellDef="let element">
+            <button *ngIf="column.actionCallback" (click)="column.actionCallback(column)">
+              {{ column.actionLabel }}
+            </button>
+          </td>
         } @else {
           <td mat-cell *matCellDef="let element">{{ element[column.key] }}</td>
         }
