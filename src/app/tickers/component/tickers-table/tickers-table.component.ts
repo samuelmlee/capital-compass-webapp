@@ -8,7 +8,7 @@ import { TickersSearchConfig } from '../../model/tickers-search-config'
 import { TickersService } from '../../service/tickers.service'
 import { NoTotalItemsPaginatorIntl } from './no-total-items-paginator-intl'
 
-type ColumnDef = { key: string; title: string }
+type ColumnDef = { key: string; title: string; class: string[] }
 
 @Component({
   selector: 'app-tickers-table',
@@ -29,11 +29,11 @@ export class TickersTableComponent {
   }
 
   public columnDefs: ColumnDef[] = [
-    { key: 'ticker', title: 'Ticker' },
-    { key: 'name', title: 'Name' },
-    { key: 'market', title: 'Market' },
-    { key: 'currency_name', title: 'Currency Name' },
-    { key: 'primary_exchange', title: 'Primary Exchange' }
+    { key: 'ticker', title: 'Ticker', class: ['w-25'] },
+    { key: 'name', title: 'Name', class: ['w-50'] },
+    { key: 'market', title: 'Market', class: [] },
+    { key: 'currency_name', title: 'Currency Name', class: [] },
+    { key: 'primary_exchange', title: 'Primary Exchange', class: [] }
   ]
   public rowDefs = this.columnDefs.map((c) => c.key)
   public pageSize = 50

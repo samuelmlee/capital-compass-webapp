@@ -13,6 +13,14 @@ const routes: Routes = [
     loadComponent: () =>
       import('./tickers/component/tickers-panel/tickers-panel.component').then((mod) => mod.TickersPanelComponent)
     // canActivate: [authGuard]
+  },
+  {
+    path: 'watchlist',
+    loadComponent: () =>
+      import('./watchlist/component/watchlist-panel/watchlist-panel.component').then(
+        (mod) => mod.WatchListPanelComponent
+      )
+    // canActivate: [authGuard]
   }
 ]
 
