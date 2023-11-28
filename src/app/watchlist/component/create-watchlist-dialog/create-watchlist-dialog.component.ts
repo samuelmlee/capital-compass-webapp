@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core'
 import { FormControl, ReactiveFormsModule } from '@angular/forms'
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog'
 import { MatFormFieldModule } from '@angular/material/form-field'
@@ -35,8 +35,8 @@ import { TickersSearchConfig } from 'src/app/tickers/model/tickers-search-config
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CreateWatchlistDialogComponent {
-  public tickersFilterConfig: TickersFilterConfig = { fields: ['searchTerm', 'type'] }
-  public tickersTableConfig: TickersTableConfig = {
+  public tickersFilterConfig = signal<TickersFilterConfig>({ fields: ['searchTerm', 'type'] })
+  public tickersTableConfig = signal<TickersTableConfig>({
     pageSize: 5,
     columnDefs: [
       { key: 'ticker', title: 'Ticker', class: ['w-25'] },
@@ -53,7 +53,7 @@ export class CreateWatchlistDialogComponent {
         actionLabel: 'Add'
       }
     ]
-  }
+  })
   public nameControl = new FormControl('')
 
   private _searchConfig = new Subject<TickersSearchConfig>()

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectionStrategy, Component, Input, ViewChild, computed } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, Signal, ViewChild, computed, signal } from '@angular/core'
 import { MatPaginator, MatPaginatorIntl, MatPaginatorModule, PageEvent } from '@angular/material/paginator'
 import { MatTableDataSource, MatTableModule } from '@angular/material/table'
 
@@ -38,7 +38,11 @@ export class TickersTableComponent {
   }
 
   @Input()
-  public tickersTableConfig: TickersTableConfig = {
+  public set tableConfig(config: TickersTableConfig) {
+    this._tickersTableConfig.set(config)
+  }
+
+  private _tickersTableConfig = signal<TickersTableConfig>({
     pageSize: 50,
     columnDefs: [
       { key: 'ticker', title: 'Ticker', class: ['w-25'] },
@@ -47,9 +51,9 @@ export class TickersTableComponent {
       { key: 'currency_name', title: 'Currency Name', class: [] },
       { key: 'primary_exchange', title: 'Primary Exchange', class: [] }
     ]
-  }
+  })
 
-  public rowDefs: string[]
+  public rowDefs = computed(() => this._tickersTableConfig().columnDefs.map((c) => c.key))
   public tickersDataSource = computed(() => this.convertResponseToDataSource())
 
   private _dataSource: MatTableDataSource<TickersResult>
@@ -59,12 +63,14 @@ export class TickersTableComponent {
 
   public constructor(private _tickerService: TickersService) {
     this._dataSource = new MatTableDataSource<TickersResult>([])
-
-    this.rowDefs = this.tickersTableConfig.columnDefs.map((c) => c.key)
   }
 
   public ngAfterViewInit(): void {
     this._dataSource.paginator = this.paginator
+  }
+
+  public get tickersTableConfig(): Signal<TickersTableConfig> {
+    return this._tickersTableConfig.asReadonly()
   }
 
   public convertResponseToDataSource(): MatTableDataSource<TickersResult> {
@@ -90,7 +96,7 @@ export class TickersTableComponent {
   }
 
   public onPageChange(event: PageEvent): void {
-    if (event.pageIndex < this._dataSource.data.length / this.tickersTableConfig.pageSize - 1) {
+    if (event.pageIndex < this._dataSource.data.length / this._tickersTableConfig().pageSize - 1) {
       return
     }
     this._tickerService.fetchTickersByCursor(this._nextCursor)

@@ -1,6 +1,6 @@
 <div class="table-container overflow-y-auto">
   <table mat-table [dataSource]="tickersDataSource()">
-    @for (column of tickersTableConfig.columnDefs; track column.key) {
+    @for (column of tickersTableConfig().columnDefs; track column.key) {
       <ng-container matColumnDef="{{ column.key }}">
         <th mat-header-cell *matHeaderCellDef [ngClass]="column.class.join(' ')">{{ column.title }}</th>
 
@@ -14,10 +14,10 @@
       </ng-container>
     }
 
-    <tr mat-header-row *matHeaderRowDef="rowDefs; sticky: true"></tr>
-    <tr mat-row *matRowDef="let row; columns: rowDefs"></tr>
+    <tr mat-header-row *matHeaderRowDef="rowDefs(); sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: rowDefs()"></tr>
   </table>
 </div>
 
-<mat-paginator [pageSize]="tickersTableConfig.pageSize" [hidePageSize]="true" (page)="onPageChange($event)">
+<mat-paginator [pageSize]="tickersTableConfig().pageSize" [hidePageSize]="true" (page)="onPageChange($event)">
 </mat-paginator>

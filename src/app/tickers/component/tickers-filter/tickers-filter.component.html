@@ -40,7 +40,7 @@
   <mat-form-field class="w-25 me-3">
     <input #tikcer [formControl]="tickerControl" matInput [placeholder]="placeholder" />
     @if (tikcer.value) {
-      <mat-icon matSuffix role="button" (click)="clearControl('searchTerm')">close</mat-icon>
+      <mat-icon matSuffix role="button" (click)="clearControl('ticker')">close</mat-icon>
     }
   </mat-form-field>
 </ng-template>
