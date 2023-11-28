@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Signal, signal } from '@angular/core'
 import { FormControl, ReactiveFormsModule } from '@angular/forms'
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog'
 import { MatFormFieldModule } from '@angular/material/form-field'
@@ -42,7 +42,6 @@ export class CreateWatchlistDialogComponent {
       { key: 'ticker', title: 'Ticker', class: ['w-25'] },
       { key: 'name', title: 'Name', class: ['w-50'] },
       { key: 'market', title: 'Market', class: [] },
-      { key: 'currency_name', title: 'Currency Name', class: [] },
       { key: 'primary_exchange', title: 'Primary Exchange', class: [] },
       {
         key: 'add',
@@ -56,14 +55,25 @@ export class CreateWatchlistDialogComponent {
   })
   public nameControl = new FormControl('')
 
+  private _tickersSelected = signal<Set<TickersResult>>(new Set<TickersResult>())
   private _searchConfig = new Subject<TickersSearchConfig>()
   public searchConfig$ = this._searchConfig.asObservable()
 
   public constructor(private _dialogRef: MatDialogRef<CreateWatchlistDialogComponent>) {}
 
+  public get tickersSelected(): Signal<Set<TickersResult>> {
+    return this._tickersSelected.asReadonly()
+  }
+
   public updateSearchConfig(config: TickersSearchConfig): void {
     this._searchConfig.next(config)
   }
 
-  public addTickerToWatchList(ticker: TickersResult): void {}
+  public addTickerToWatchList(ticker: TickersResult): void {
+    this._tickersSelected.update((selected) => selected.add(ticker))
+  }
+
+  public removeTickerFromWatchList(ticker: TickersResult): void {
+    console.log('ticker to remove :', ticker)
+  }
 }
