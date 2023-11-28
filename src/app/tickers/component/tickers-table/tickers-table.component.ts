@@ -25,7 +25,7 @@ export class TickersTableComponent {
     if (!config) {
       return
     }
-    this.tickerService.fetchTickersByConfig(config)
+    this._tickerService.fetchTickersByConfig(config)
   }
 
   public columnDefs: ColumnDef[] = [
@@ -44,7 +44,7 @@ export class TickersTableComponent {
 
   @ViewChild(MatPaginator) public paginator: MatPaginator | null = null
 
-  public constructor(private tickerService: TickersService) {
+  public constructor(private _tickerService: TickersService) {
     this._dataSource = new MatTableDataSource<TickersResult>([])
   }
 
@@ -53,12 +53,12 @@ export class TickersTableComponent {
   }
 
   public convertResponseToDataSource(): MatTableDataSource<TickersResult> {
-    const error: unknown = this.tickerService.tickersSignal.error()
+    const error: unknown = this._tickerService.tickersSignal.error()
     if (error) {
       // show in toast
       return this._dataSource
     }
-    const response = this.tickerService.tickersSignal.value()
+    const response = this._tickerService.tickersSignal.value()
     if (!response) {
       return this._dataSource
     }
@@ -78,6 +78,6 @@ export class TickersTableComponent {
     if (event.pageIndex < this._dataSource.data.length / this.pageSize - 1) {
       return
     }
-    this.tickerService.fetchTickersByCursor(this._nextCursor)
+    this._tickerService.fetchTickersByCursor(this._nextCursor)
   }
 }

@@ -17,7 +17,7 @@ import { AuthService } from 'src/app/auth/service/auth.service'
 export class ToolbarComponent {
   @Input() public title: string = ''
 
-  public user = this.authService.user.value
+  public user = this._authService.user.value
 
-  public constructor(private readonly authService: AuthService) {}
+  public constructor(private readonly _authService: AuthService) {}
 }

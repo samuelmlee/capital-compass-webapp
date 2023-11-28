@@ -11,15 +11,15 @@ import { AuthService } from '../../service/auth.service'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AuthComponent {
-  public isAuthenticated = computed(() => this.authService.user.value() != null)
+  public isAuthenticated = computed(() => this._authService.user.value() != null)
 
-  public constructor(private readonly authService: AuthService) {}
+  public constructor(private readonly _authService: AuthService) {}
 
   public logInClicked(): void {
-    this.authService.login()
+    this._authService.login()
   }
 
   public logOutClicked(): void {
-    this.authService.logout()
+    this._authService.logout()
   }
 }

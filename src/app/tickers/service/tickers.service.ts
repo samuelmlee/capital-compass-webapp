@@ -21,7 +21,7 @@ export class TickersService {
   private typesSubject = new Subject<void>()
   private apiUrl = environment.apiUrl
 
-  public constructor(private http: HttpClient) {
+  public constructor(private _http: HttpClient) {
     this.tickersSignal = fromObsToSignal<TickersResponse>(
       merge(
         this.tickersConfigSubject.pipe(switchMap((config) => this.getTickersByConfig(config))),
@@ -53,18 +53,18 @@ export class TickersService {
         .set('search-term', searchConfig?.searchTerm ?? '')
         .set('ticker', searchConfig?.ticker ?? '')
     }
-    return this.http
+    return this._http
       .get<TickersResponse>(`${this.apiUrl}/stocks/tickers`, options)
       .pipe(map((response) => ({ ...response, source: TickersResponseSource.CONFIG })))
   }
 
   private getTickersByCursor(cursor: string): Observable<TickersResponse> {
-    return this.http
+    return this._http
       .get<TickersResponse>(`${this.apiUrl}/stocks/tickers/${cursor}`)
       .pipe(map((response) => ({ ...response, source: TickersResponseSource.CURSOR })))
   }
 
   private getTickerTypes(): Observable<TickerTypesResponse> {
-    return this.http.get<TickerTypesResponse>(`${this.apiUrl}/stocks/tickers/types`)
+    return this._http.get<TickerTypesResponse>(`${this.apiUrl}/stocks/tickers/types`)
   }
 }

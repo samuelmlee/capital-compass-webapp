@@ -19,7 +19,7 @@ export class AuthService {
   private readonly _logoutUri = location.origin
   private readonly _authenticateSubject = new Subject<void>()
 
-  public constructor(private readonly httpClient: HttpClient) {
+  public constructor(private readonly _httpClient: HttpClient) {
     this.user = fromObsToSignal<User>(this._authenticateSubject.pipe(switchMap(() => this.getUserDetails())))
   }
 
@@ -28,7 +28,7 @@ export class AuthService {
   }
 
   public getUserDetails(): Observable<User> {
-    return this.httpClient.get<User>(`${this._apiUrl}/user`, {
+    return this._httpClient.get<User>(`${this._apiUrl}/user`, {
       withCredentials: true
     })
   }
@@ -38,7 +38,7 @@ export class AuthService {
   }
 
   public logout(): void {
-    this.httpClient
+    this._httpClient
       .get<LogOutApiResponse>(`${this._apiUrl}/api/logout`, { withCredentials: true })
       .pipe(
         map((response) => ({ value: response, error: null })),

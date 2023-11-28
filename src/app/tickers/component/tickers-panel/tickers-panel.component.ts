@@ -14,10 +14,10 @@ import { TickersTableComponent } from '../tickers-table/tickers-table.component'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TickersPanelComponent {
-  private searchConfig = new Subject<TickersSearchConfig>()
-  public searchConfig$ = this.searchConfig.asObservable()
+  private _searchConfig = new Subject<TickersSearchConfig>()
+  public searchConfig$ = this._searchConfig.asObservable()
 
   public updateSearchConfig(config: TickersSearchConfig): void {
-    this.searchConfig.next(config)
+    this._searchConfig.next(config)
   }
 }

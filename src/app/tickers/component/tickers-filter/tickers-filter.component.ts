@@ -25,7 +25,7 @@ export class TickersFilterComponent implements OnInit {
 
   @Output('newConfig')
   public configUpdatedEvent = new EventEmitter<TickersSearchConfig>()
-  public tickerTypes = this.tickersService.tickerTypesSignal
+  public tickerTypes = this._tickersService.tickerTypesSignal
 
   private _searchTermControl = new FormControl('')
   private _typeControl = new FormControl('')
@@ -33,10 +33,10 @@ export class TickersFilterComponent implements OnInit {
   private _formValues: Signal<string[] | undefined> | undefined
 
   public constructor(
-    private formBuilder: FormBuilder,
-    private tickersService: TickersService
+    private _formBuilder: FormBuilder,
+    private _tickersService: TickersService
   ) {
-    this.formGroup = this.formBuilder.group({
+    this.formGroup = this._formBuilder.group({
       searchTerm: this._searchTermControl,
       type: this._typeControl,
       ticker: this._tickerControl
@@ -58,7 +58,7 @@ export class TickersFilterComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.tickersService.fetchTickerTypes()
+    this._tickersService.fetchTickerTypes()
   }
 
   private initFormValues(): void {

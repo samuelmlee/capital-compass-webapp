@@ -11,17 +11,17 @@ export class AppComponent {
   public title = 'Capital Compass'
 
   public constructor(
-    private readonly authService: AuthService,
-    private router: Router
+    private _authService: AuthService,
+    private _router: Router
   ) {
     effect(() => {
-      if (!this.authService.user.value()) {
-        this.router.navigate(['/'])
+      if (!this._authService.user.value()) {
+        this._router.navigate(['/'])
       }
     })
   }
 
   public ngOnInit(): void {
-    this.authService.authenticate()
+    this._authService.authenticate()
   }
 }
