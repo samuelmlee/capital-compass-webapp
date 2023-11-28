@@ -12,8 +12,8 @@
       @for (ticker of tickersSelected(); track ticker.ticker) {
         <tr>
           <th scope="row"></th>
-          <td>{{ ticker.name }}</td>
           <td>{{ ticker.ticker }}</td>
+          <td>{{ ticker.name }}</td>
           <td>
             <button type="button" class="btn btn-secondary btn-sm" (click)="removeTickerFromWatchList(ticker)">
               Remove

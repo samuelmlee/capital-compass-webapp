@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Signal, signal } from '@angular/core'
-import { FormControl, ReactiveFormsModule } from '@angular/forms'
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms'
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatIconModule } from '@angular/material/icon'
@@ -53,7 +53,7 @@ export class CreateWatchlistDialogComponent {
       }
     ]
   })
-  public nameControl = new FormControl('')
+  public nameControl = new FormControl('', Validators.required)
 
   private _tickersSelected = signal<Set<TickersResult>>(new Set<TickersResult>())
   private _searchConfig = new Subject<TickersSearchConfig>()
@@ -74,6 +74,9 @@ export class CreateWatchlistDialogComponent {
   }
 
   public removeTickerFromWatchList(ticker: TickersResult): void {
-    console.log('ticker to remove :', ticker)
+    this._tickersSelected.update((selected) => {
+      selected.delete(ticker)
+      return selected
+    })
   }
 }
