@@ -6,12 +6,7 @@
 
         @if (column.isAction) {
           <td mat-cell *matCellDef="let element">
-            <button
-              *ngIf="column.actionCallback"
-              type="button"
-              class="btn btn-secondary btn-sm"
-              (click)="column.actionCallback(element)"
-            >
+            <button type="button" class="btn btn-secondary btn-sm" (click)="column.actionCallback?.(element)">
               {{ column.actionLabel }}
             </button>
           </td>
