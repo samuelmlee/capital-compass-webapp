@@ -19,5 +19,5 @@ export class ToolbarComponent {
 
   public user = this._authService.user.value
 
-  public constructor(private readonly _authService: AuthService) {}
+  constructor(private readonly _authService: AuthService) {}
 }

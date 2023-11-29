@@ -10,7 +10,7 @@ import { AuthService } from './auth/service/auth.service'
 export class AppComponent {
   public title = 'Capital Compass'
 
-  public constructor(
+  constructor(
     private _authService: AuthService,
     private _router: Router
   ) {

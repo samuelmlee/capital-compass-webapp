@@ -63,7 +63,7 @@ export class TickersTableComponent {
 
   @ViewChild(MatPaginator) public paginator: MatPaginator | null = null
 
-  public constructor(private _tickerService: TickersService) {
+  constructor(private _tickerService: TickersService) {
     this._dataSource = new MatTableDataSource<TickersResult>([])
   }
 

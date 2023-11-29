@@ -1,4 +1,4 @@
-export type CreateWatchListConfig = {
+export type EditWatchListConfig = {
   name: string
   tickers: string[]
 }

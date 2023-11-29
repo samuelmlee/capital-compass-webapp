@@ -13,7 +13,7 @@ import { AuthService } from '../../service/auth.service'
 export class AuthComponent {
   public isAuthenticated = computed(() => this._authService.user.value() != null)
 
-  public constructor(private readonly _authService: AuthService) {}
+  constructor(private readonly _authService: AuthService) {}
 
   public logInClicked(): void {
     this._authService.login()

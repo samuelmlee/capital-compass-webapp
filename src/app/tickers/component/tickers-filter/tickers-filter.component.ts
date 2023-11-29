@@ -37,7 +37,7 @@ export class TickersFilterComponent implements OnInit {
 
   private _formValues: Signal<string[] | undefined> | undefined
 
-  public constructor(
+  constructor(
     private _formBuilder: FormBuilder,
     private _tickersService: TickersService
   ) {

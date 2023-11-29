@@ -16,34 +16,34 @@ export class TickersService {
   public tickersSignal: Result<TickersResponse>
   public tickerTypesSignal: Result<TickerTypesResponse>
 
-  private tickersCursorSubject = new Subject<string>()
-  private tickersConfigSubject = new Subject<TickersSearchConfig>()
-  private typesSubject = new Subject<void>()
+  private _tickersCursorSubject = new Subject<string>()
+  private _tickersConfigSubject = new Subject<TickersSearchConfig>()
+  private _typesSubject = new Subject<void>()
   private apiUrl = environment.apiUrl
 
-  public constructor(private _http: HttpClient) {
+  constructor(private _http: HttpClient) {
     this.tickersSignal = fromObsToSignal<TickersResponse>(
       merge(
-        this.tickersConfigSubject.pipe(switchMap((config) => this.getTickersByConfig(config))),
-        this.tickersCursorSubject.pipe(switchMap((cursor) => this.getTickersByCursor(cursor)))
+        this._tickersConfigSubject.pipe(switchMap((config) => this.getTickersByConfig(config))),
+        this._tickersCursorSubject.pipe(switchMap((cursor) => this.getTickersByCursor(cursor)))
       )
     )
 
     this.tickerTypesSignal = fromObsToSignal<TickerTypesResponse>(
-      this.typesSubject.pipe(switchMap(() => this.getTickerTypes()))
+      this._typesSubject.pipe(switchMap(() => this.getTickerTypes()))
     )
   }
 
   public fetchTickersByConfig(config: TickersSearchConfig): void {
-    this.tickersConfigSubject.next(config)
+    this._tickersConfigSubject.next(config)
   }
 
   public fetchTickersByCursor(cursor: string): void {
-    this.tickersCursorSubject.next(cursor)
+    this._tickersCursorSubject.next(cursor)
   }
 
   public fetchTickerTypes(): void {
-    this.typesSubject.next()
+    this._typesSubject.next()
   }
 
   private getTickersByConfig(searchConfig: TickersSearchConfig): Observable<TickersResponse> {

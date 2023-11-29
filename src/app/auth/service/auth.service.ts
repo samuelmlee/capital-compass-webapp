@@ -19,7 +19,7 @@ export class AuthService {
   private readonly _logoutUri = location.origin
   private readonly _authenticateSubject = new Subject<void>()
 
-  public constructor(private readonly _httpClient: HttpClient) {
+  constructor(private readonly _httpClient: HttpClient) {
     this.user = fromObsToSignal<User>(this._authenticateSubject.pipe(switchMap(() => this.getUserDetails())))
   }
 

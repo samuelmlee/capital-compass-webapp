@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component } from '@angular/core'
 import { MatDialog } from '@angular/material/dialog'
-import { CreateWatchListConfig } from '../../model/create-watchlist-config'
+import { EditWatchListConfig } from '../../model/create-watchlist-config'
 import { CreateWatchlistDialogComponent } from '../create-watchlist-dialog/create-watchlist-dialog.component'
 
 @Component({
@@ -13,7 +13,7 @@ import { CreateWatchlistDialogComponent } from '../create-watchlist-dialog/creat
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WatchListPanelComponent {
-  public constructor(private _dialog: MatDialog) {}
+  constructor(private _dialog: MatDialog) {}
 
   public openCreateDialog(): void {
     const dialogRef = this._dialog.open(CreateWatchlistDialogComponent, {
@@ -21,7 +21,7 @@ export class WatchListPanelComponent {
       hasBackdrop: true
     })
 
-    dialogRef.afterClosed().subscribe((data: CreateWatchListConfig) => {
+    dialogRef.afterClosed().subscribe((data: EditWatchListConfig) => {
       console.log(data)
     })
   }
