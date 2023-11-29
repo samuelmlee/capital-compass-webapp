@@ -16,6 +16,7 @@ import {
 } from 'src/app/tickers/component/tickers-table/tickers-table.component'
 import { TickersResult } from 'src/app/tickers/model/tickers-response'
 import { TickersSearchConfig } from 'src/app/tickers/model/tickers-search-config'
+import { CreateWatchListConfig } from '../../model/create-watchlist-config'
 
 @Component({
   selector: 'app-create-watchlist-dialog',
@@ -35,6 +36,9 @@ import { TickersSearchConfig } from 'src/app/tickers/model/tickers-search-config
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CreateWatchlistDialogComponent {
+  private _tickersSelected = signal<Set<TickersResult>>(new Set())
+  private _searchConfig = new Subject<TickersSearchConfig>()
+
   public tickersFilterConfig = signal<TickersFilterConfig>({ fields: ['searchTerm', 'type'] })
   public tickersTableConfig = signal<TickersTableConfig>({
     pageSize: 5,
@@ -54,15 +58,23 @@ export class CreateWatchlistDialogComponent {
     ]
   })
   public nameControl = new FormControl('', Validators.required)
-
-  private _tickersSelected = signal<Set<TickersResult>>(new Set<TickersResult>())
-  private _searchConfig = new Subject<TickersSearchConfig>()
   public searchConfig$ = this._searchConfig.asObservable()
 
   public constructor(private _dialogRef: MatDialogRef<CreateWatchlistDialogComponent>) {}
 
   public get tickersSelected(): Signal<Set<TickersResult>> {
     return this._tickersSelected.asReadonly()
+  }
+
+  public saveWatchList(): void {
+    if (!this.nameControl.valid || !this.nameControl.value) {
+      return
+    }
+    const config: CreateWatchListConfig = {
+      name: this.nameControl.value,
+      tickers: Array.from(this._tickersSelected()).map((ticker) => ticker.ticker)
+    }
+    this._dialogRef.close(config)
   }
 
   public updateSearchConfig(config: TickersSearchConfig): void {

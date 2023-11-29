@@ -1,14 +1,14 @@
 import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input, Signal, ViewChild, computed, signal } from '@angular/core'
 import { MatPaginator, MatPaginatorIntl, MatPaginatorModule, PageEvent } from '@angular/material/paginator'
-import { MatTableDataSource, MatTableModule } from '@angular/material/table'
+import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table'
 
 import { TickersResponse, TickersResponseSource, TickersResult } from '../../model/tickers-response'
 import { TickersSearchConfig } from '../../model/tickers-search-config'
 import { TickersService } from '../../service/tickers.service'
 import { NoTotalItemsPaginatorIntl } from './no-total-items-paginator-intl'
 
-export type TickersTableConfig = { pageSize: number; columnDefs: ColumnDef[] }
+export type TickersTableConfig = { pageSize: number; columnDefs: ColumnDef[]; refreshTable?: Signal<boolean> }
 
 type ColumnDef = {
   key: string
@@ -29,6 +29,8 @@ type ColumnDef = {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TickersTableComponent {
+  @ViewChild('table') private _table: MatTable<TickersResult> | undefined
+
   @Input()
   public set searchConfig(config: TickersSearchConfig | null) {
     if (!config) {
@@ -86,6 +88,13 @@ export class TickersTableComponent {
     return this.updateDataSource(response)
   }
 
+  public onPageChange(event: PageEvent): void {
+    if (event.pageIndex < this._dataSource.data.length / this._tickersTableConfig().pageSize - 1) {
+      return
+    }
+    this._tickerService.fetchTickersByCursor(this._nextCursor)
+  }
+
   private updateDataSource(response: TickersResponse): MatTableDataSource<TickersResult> {
     this._nextCursor = response.nextCursor
     this._dataSource.data =
@@ -93,12 +102,5 @@ export class TickersTableComponent {
         ? [...response.results]
         : [...this._dataSource.data, ...response.results]
     return this._dataSource
-  }
-
-  public onPageChange(event: PageEvent): void {
-    if (event.pageIndex < this._dataSource.data.length / this._tickersTableConfig().pageSize - 1) {
-      return
-    }
-    this._tickerService.fetchTickersByCursor(this._nextCursor)
   }
 }

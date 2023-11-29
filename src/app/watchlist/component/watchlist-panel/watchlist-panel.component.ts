@@ -21,6 +21,8 @@ export class WatchListPanelComponent {
       hasBackdrop: true
     })
 
-    dialogRef.afterClosed().subscribe((data: CreateWatchListConfig) => {})
+    dialogRef.afterClosed().subscribe((data: CreateWatchListConfig) => {
+      console.log(data)
+    })
   }
 }

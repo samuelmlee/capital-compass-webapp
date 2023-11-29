@@ -1,18 +1,22 @@
 <form>
   @for (field of tickersFilterConfig.fields; track field) {
-    <ng-container
-      *ngIf="field === 'searchTerm'"
-      [ngTemplateOutlet]="searchTermTemplate"
-      [ngTemplateOutletContext]="{ placeholder: searchPlaceholder }"
-    ></ng-container>
+    @if (field === 'searchTerm') {
+      <ng-container
+        [ngTemplateOutlet]="searchTermTemplate"
+        [ngTemplateOutletContext]="{ placeholder: searchPlaceholder }"
+      ></ng-container>
+    }
 
-    <ng-container *ngIf="field === 'type'" [ngTemplateOutlet]="typeTemplate"></ng-container>
+    @if (field === 'type') {
+      <ng-container [ngTemplateOutlet]="typeTemplate"></ng-container>
+    }
 
-    <ng-container
-      *ngIf="field === 'ticker'"
-      [ngTemplateOutlet]="tickerTemplate"
-      [ngTemplateOutletContext]="{ placeholder: tickerPlaceholder }"
-    ></ng-container>
+    @if (field === 'ticker') {
+      <ng-container
+        [ngTemplateOutlet]="tickerTemplate"
+        [ngTemplateOutletContext]="{ placeholder: tickerPlaceholder }"
+      ></ng-container>
+    }
   }
 </form>
 
