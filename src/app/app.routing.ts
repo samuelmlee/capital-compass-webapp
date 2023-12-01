@@ -18,7 +18,7 @@ const routes: Routes = [
     path: 'watchlist',
     loadComponent: () =>
       import('./watchlist/component/watchlist-panel/watchlist-panel.component').then(
-        (mod) => mod.WatchListPanelComponent
+        (mod) => mod.WatchlistPanelComponent
       )
     // canActivate: [authGuard]
   }

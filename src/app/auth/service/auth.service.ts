@@ -14,7 +14,7 @@ type LogOutApiResponse = { logoutUrl: string; idToken: string }
 export class AuthService {
   public user: Result<User>
 
-  private readonly _apiUrl = environment.apiUrl
+  private readonly _authUrl = environment.authUrl
   private readonly _clientId = environment.gatewayClientId
   private readonly _logoutUri = location.origin
   private readonly _authenticateSubject = new Subject<void>()
@@ -28,18 +28,18 @@ export class AuthService {
   }
 
   public getUserDetails(): Observable<User> {
-    return this._httpClient.get<User>(`${this._apiUrl}/user`, {
+    return this._httpClient.get<User>(`${this._authUrl}/user`, {
       withCredentials: true
     })
   }
 
   public login(): void {
-    window.open(`${this._apiUrl}/oauth2/authorization/keycloak`, '_self')
+    window.open(`${this._authUrl}/oauth2/authorization/keycloak`, '_self')
   }
 
   public logout(): void {
     this._httpClient
-      .get<LogOutApiResponse>(`${this._apiUrl}/api/logout`, { withCredentials: true })
+      .get<LogOutApiResponse>(`${this._authUrl}/api/logout`, { withCredentials: true })
       .pipe(
         map((response) => ({ value: response, error: null })),
         catchError((err) => of({ value: null, error: err }))

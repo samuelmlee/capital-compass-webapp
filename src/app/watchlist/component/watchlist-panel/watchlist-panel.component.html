@@ -10,3 +10,7 @@
     <button type="button" class="btn btn-primary btn-lg" (click)="openCreateDialog()">Create a watchlist</button>
   </div>
 </div>
+
+@for (watchlist of watchListsSignal.value()?.lists; track $index) {
+  <span>{{ watchlist.name }}</span>
+}
