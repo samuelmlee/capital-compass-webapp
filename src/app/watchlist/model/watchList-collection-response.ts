@@ -1,5 +1,3 @@
 import { WatchlistResponse } from './watchList-response'
 
-export type WatchlistCollectionResponse = {
-  lists: WatchlistResponse[]
-}
+export type WatchlistCollectionResponse = WatchlistResponse[]

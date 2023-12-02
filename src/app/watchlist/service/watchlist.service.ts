@@ -21,7 +21,7 @@ export class WatchlistService {
 
   constructor(private _http: HttpClient) {
     this.watchListsSignal = fromObsToSignal<WatchlistCollectionResponse>(
-      this._getTickersSubject.pipe(() => this.getUserWatchLists())
+      this._getTickersSubject.pipe(switchMap(() => this.getUserWatchLists()))
     )
 
     this.watchListCreatedSignal = fromObsToSignal<WatchlistResponse>(
@@ -38,7 +38,8 @@ export class WatchlistService {
   }
 
   private getUserWatchLists(): Observable<WatchlistCollectionResponse> {
-    return this._http.get<WatchlistCollectionResponse>(`${this._apiUrl}/gateway/watchlists`, { withCredentials: true })
+    // TODO: send requests to Gateway when aggregation implemented
+    return this._http.get<WatchlistCollectionResponse>(`${this._apiUrl}/users/watchlists`, { withCredentials: true })
   }
 
   private postUserWatchList(config: EditWatchlistConfig): Observable<WatchlistResponse> {
