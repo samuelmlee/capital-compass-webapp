@@ -43,6 +43,8 @@ export class WatchlistService {
 
   private postUserWatchList(config: EditWatchlistConfig): Observable<WatchlistResponse> {
     const requestConfig = { name: config.name, tickers: Array.from(config.tickerSymbols) }
-    return this._http.post<WatchlistResponse>(`${this._apiUrl}/users/watchlists`, requestConfig)
+    return this._http.post<WatchlistResponse>(`${this._apiUrl}/users/watchlists`, requestConfig, {
+      withCredentials: true
+    })
   }
 }
