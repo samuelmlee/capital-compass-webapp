@@ -72,7 +72,7 @@ export class CreateWatchlistDialogComponent {
     }
     const config: EditWatchlistConfig = {
       name: this.nameControl.value,
-      tickers: Array.from(this._tickersSelected()).map((ticker) => ticker.ticker)
+      tickerSymbols: new Set<string>([...this._tickersSelected()].map((ticker) => ticker.ticker))
     }
     this._dialogRef.close(config)
   }

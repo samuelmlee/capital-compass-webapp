@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core'
+import { ChangeDetectionStrategy, Component, OnInit, effect } from '@angular/core'
 import { MatDialog } from '@angular/material/dialog'
 import { EditWatchlistConfig } from '../../model/create-watchlist-config'
 import { WatchlistService } from '../../service/watchlist.service'
@@ -15,11 +15,18 @@ import { CreateWatchlistDialogComponent } from '../create-watchlist-dialog/creat
 })
 export class WatchlistPanelComponent implements OnInit {
   public watchListsSignal = this._watchlistService.watchListsSignal
+  private _watchListCreatedSignal = this._watchlistService.watchListCreatedSignal
 
   constructor(
     private _dialog: MatDialog,
     private _watchlistService: WatchlistService
-  ) {}
+  ) {
+    effect(() => {
+      if (this._watchListCreatedSignal.value()) {
+        this._watchlistService.fetchWatchLists()
+      }
+    })
+  }
   public ngOnInit(): void {
     this._watchlistService.fetchWatchLists()
   }
@@ -30,8 +37,8 @@ export class WatchlistPanelComponent implements OnInit {
       hasBackdrop: true
     })
 
-    dialogRef.afterClosed().subscribe((data: EditWatchlistConfig) => {
-      console.log(data)
+    dialogRef.afterClosed().subscribe((config: EditWatchlistConfig) => {
+      this._watchlistService.saveWatchList(config)
     })
   }
 }

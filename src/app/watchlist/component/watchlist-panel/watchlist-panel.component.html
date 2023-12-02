@@ -12,5 +12,6 @@
 </div>
 
 @for (watchlist of watchListsSignal.value()?.lists; track $index) {
-  <span>{{ watchlist.name }}</span>
+  <div>Name: {{ watchlist.name }}</div>
+  <div>Tickers: {{ watchlist.tickers }}</div>
 }

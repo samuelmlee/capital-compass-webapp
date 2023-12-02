@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { Observable, Subject } from 'rxjs'
+import { Observable, Subject, switchMap } from 'rxjs'
 import { Result } from 'src/app/shared/model/result'
 import { fromObsToSignal } from 'src/app/shared/utils/fromObsToSignal'
 import { environment } from 'src/environments/environment'
@@ -13,6 +13,7 @@ import { WatchlistResponse } from '../model/watchList-response'
 })
 export class WatchlistService {
   public watchListsSignal: Result<WatchlistCollectionResponse>
+  public watchListCreatedSignal: Result<WatchlistResponse>
 
   private _getTickersSubject = new Subject<void>()
   private _postWatchListSubject = new Subject<EditWatchlistConfig>()
@@ -22,18 +23,22 @@ export class WatchlistService {
     this.watchListsSignal = fromObsToSignal<WatchlistCollectionResponse>(
       this._getTickersSubject.pipe(() => this.getUserWatchLists())
     )
+
+    this.watchListCreatedSignal = fromObsToSignal<WatchlistResponse>(
+      this._postWatchListSubject.pipe(switchMap((config) => this.postUserWatchList(config)))
+    )
   }
 
   public fetchWatchLists(): void {
     this._getTickersSubject.next()
   }
 
-  private saveWatchList(config: EditWatchlistConfig): void {
+  public saveWatchList(config: EditWatchlistConfig): void {
     this._postWatchListSubject.next(config)
   }
 
   private getUserWatchLists(): Observable<WatchlistCollectionResponse> {
-    return this._http.get<WatchlistCollectionResponse>(`${this._apiUrl}/users/watchlists`, { withCredentials: true })
+    return this._http.get<WatchlistCollectionResponse>(`${this._apiUrl}/gateway/watchlists`, { withCredentials: true })
   }
 
   private postUserWatchList(config: EditWatchlistConfig): Observable<WatchlistResponse> {

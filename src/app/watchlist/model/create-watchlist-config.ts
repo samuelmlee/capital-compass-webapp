@@ -1,4 +1,4 @@
 export type EditWatchlistConfig = {
   name: string
-  tickers: string[]
+  tickerSymbols: Set<string>
 }
