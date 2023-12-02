@@ -60,7 +60,7 @@ export class TickersService {
 
   private getTickersByCursor(cursor: string): Observable<TickersResponse> {
     return this._http
-      .get<TickersResponse>(`${this.apiUrl}/stocks/tickers/${cursor}`)
+      .get<TickersResponse>(`${this.apiUrl}/stocks/tickers/cursor/${cursor}`)
       .pipe(map((response) => ({ ...response, source: TickersResponseSource.CURSOR })))
   }
 
