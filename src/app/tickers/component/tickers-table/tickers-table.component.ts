@@ -5,19 +5,9 @@ import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/
 
 import { TickersResponse, TickersResponseSource, TickersResult } from '../../model/tickers-response'
 import { TickersSearchConfig } from '../../model/tickers-search-config'
+import { COLUMN_TYPE, TickersTableConfig } from '../../model/tickers-table-config'
 import { TickersService } from '../../service/tickers.service'
 import { NoTotalItemsPaginatorIntl } from './no-total-items-paginator-intl'
-
-export type TickersTableConfig = { pageSize: number; columnDefs: ColumnDef[]; refreshTable?: Signal<boolean> }
-
-type ColumnDef = {
-  key: string
-  title: string
-  class: string[]
-  isAction?: boolean
-  actionCallback?: (element: unknown) => void
-  actionLabel?: string
-}
 
 @Component({
   selector: 'app-tickers-table',
@@ -47,16 +37,17 @@ export class TickersTableComponent {
   private _tickersTableConfig = signal<TickersTableConfig>({
     pageSize: 50,
     columnDefs: [
-      { key: 'ticker', title: 'Ticker', class: ['w-25'] },
-      { key: 'name', title: 'Name', class: ['w-50'] },
-      { key: 'market', title: 'Market', class: [] },
-      { key: 'currency_name', title: 'Currency Name', class: [] },
-      { key: 'primary_exchange', title: 'Primary Exchange', class: [] }
+      { key: 'ticker', title: 'Ticker', class: ['w-25'], type: COLUMN_TYPE.TEXT },
+      { key: 'name', title: 'Name', class: ['w-50'], type: COLUMN_TYPE.TEXT },
+      { key: 'market', title: 'Market', class: [], type: COLUMN_TYPE.TEXT },
+      { key: 'currency_name', title: 'Currency Name', class: [], type: COLUMN_TYPE.TEXT },
+      { key: 'primary_exchange', title: 'Primary Exchange', class: [], type: COLUMN_TYPE.TEXT }
     ]
   })
 
   public rowDefs = computed(() => this._tickersTableConfig().columnDefs.map((c) => c.key))
   public tickersDataSource = computed(() => this.convertResponseToDataSource())
+  public ColumnType = COLUMN_TYPE
 
   private _dataSource: MatTableDataSource<TickersResult>
   private _nextCursor = ''

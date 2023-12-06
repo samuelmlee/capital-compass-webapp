@@ -5,15 +5,15 @@ import { Result } from 'src/app/shared/model/result'
 import { fromObsToSignal } from 'src/app/shared/utils/fromObsToSignal'
 import { environment } from 'src/environments/environment'
 import { EditWatchlistConfig } from '../model/create-watchlist-config'
+import { Watchlist } from '../model/watchList'
 import { WatchlistCollectionResponse } from '../model/watchList-collection-response'
-import { WatchlistResponse } from '../model/watchList-response'
 
 @Injectable({
   providedIn: 'root'
 })
 export class WatchlistService {
   public watchListsSignal: Result<WatchlistCollectionResponse>
-  public watchListCreatedSignal: Result<WatchlistResponse>
+  public watchListCreatedSignal: Result<Watchlist>
 
   private _getTickersSubject = new Subject<void>()
   private _postWatchListSubject = new Subject<EditWatchlistConfig>()
@@ -24,7 +24,7 @@ export class WatchlistService {
       this._getTickersSubject.pipe(switchMap(() => this.getUserWatchLists()))
     )
 
-    this.watchListCreatedSignal = fromObsToSignal<WatchlistResponse>(
+    this.watchListCreatedSignal = fromObsToSignal<Watchlist>(
       this._postWatchListSubject.pipe(switchMap((config) => this.postUserWatchList(config)))
     )
   }
@@ -42,9 +42,9 @@ export class WatchlistService {
     return this._http.get<WatchlistCollectionResponse>(`${this._apiUrl}/users/watchlists`, { withCredentials: true })
   }
 
-  private postUserWatchList(config: EditWatchlistConfig): Observable<WatchlistResponse> {
+  private postUserWatchList(config: EditWatchlistConfig): Observable<Watchlist> {
     const requestConfig = { name: config.name, tickers: Array.from(config.tickerSymbols) }
-    return this._http.post<WatchlistResponse>(`${this._apiUrl}/users/watchlists`, requestConfig, {
+    return this._http.post<Watchlist>(`${this._apiUrl}/users/watchlists`, requestConfig, {
       withCredentials: true
     })
   }

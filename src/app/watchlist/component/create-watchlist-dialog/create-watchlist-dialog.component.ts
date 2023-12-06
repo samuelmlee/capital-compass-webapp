@@ -10,12 +10,10 @@ import {
   TickersFilterComponent,
   TickersFilterConfig
 } from 'src/app/tickers/component/tickers-filter/tickers-filter.component'
-import {
-  TickersTableComponent,
-  TickersTableConfig
-} from 'src/app/tickers/component/tickers-table/tickers-table.component'
+import { TickersTableComponent } from 'src/app/tickers/component/tickers-table/tickers-table.component'
 import { TickersResult } from 'src/app/tickers/model/tickers-response'
 import { TickersSearchConfig } from 'src/app/tickers/model/tickers-search-config'
+import { COLUMN_TYPE, TickersTableConfig } from 'src/app/tickers/model/tickers-table-config'
 import { EditWatchlistConfig } from '../../model/create-watchlist-config'
 
 @Component({
@@ -43,15 +41,15 @@ export class CreateWatchlistDialogComponent {
   public tickersTableConfig = signal<TickersTableConfig>({
     pageSize: 5,
     columnDefs: [
-      { key: 'ticker', title: 'Ticker', class: ['w-25'] },
-      { key: 'name', title: 'Name', class: ['w-50'] },
-      { key: 'market', title: 'Market', class: [] },
-      { key: 'primary_exchange', title: 'Primary Exchange', class: [] },
+      { key: 'ticker', title: 'Ticker', class: ['w-25'], type: COLUMN_TYPE.TEXT },
+      { key: 'name', title: 'Name', class: ['w-50'], type: COLUMN_TYPE.TEXT },
+      { key: 'market', title: 'Market', class: [], type: COLUMN_TYPE.TEXT },
+      { key: 'primary_exchange', title: 'Primary Exchange', class: [], type: COLUMN_TYPE.TEXT },
       {
         key: 'add',
         title: 'Action',
         class: [],
-        isAction: true,
+        type: COLUMN_TYPE.ACTION,
         actionCallback: (ticker): void => this.addTickerToWatchList(ticker as TickersResult),
         actionLabel: 'Add'
       }

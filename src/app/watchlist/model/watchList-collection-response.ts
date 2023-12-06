@@ -1,3 +1,3 @@
-import { WatchlistResponse } from './watchList-response'
+import { Watchlist } from './watchList'
 
-export type WatchlistCollectionResponse = WatchlistResponse[]
+export type WatchlistCollectionResponse = Watchlist[]
