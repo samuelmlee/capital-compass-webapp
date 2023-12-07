@@ -8,11 +8,12 @@ import { TickersSearchConfig } from '../../model/tickers-search-config'
 import { COLUMN_TYPE, TickersTableConfig } from '../../model/tickers-table-config'
 import { TickersService } from '../../service/tickers.service'
 import { NoTotalItemsPaginatorIntl } from './no-total-items-paginator-intl'
+import { RouterModule } from '@angular/router'
 
 @Component({
   selector: 'app-tickers-table',
   standalone: true,
-  imports: [CommonModule, MatTableModule, MatPaginatorModule],
+  imports: [CommonModule, MatTableModule, MatPaginatorModule, RouterModule],
   providers: [{ provide: MatPaginatorIntl, useClass: NoTotalItemsPaginatorIntl }],
   templateUrl: './tickers-table.component.html',
   styleUrl: './tickers-table.component.scss',
