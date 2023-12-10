@@ -19,7 +19,7 @@ export type ActionColumnDef = BaseColumnDef & {
 
 export type LinkColumnDef = BaseColumnDef & {
   type: COLUMN_TYPE.LINK
-  linkSrc: string
+  fragmentProperty: string
 }
 
 export type TickersTableConfig = {

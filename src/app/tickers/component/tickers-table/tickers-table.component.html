@@ -13,7 +13,7 @@
             }
 
             @case (ColumnType.LINK) {
-              <a [routerLink]="$any(column).linkSrc" >{{ element[column.key] }}</a>
+              <a routerLink="/ticker-details/{{column.key}}" >{{ element[column.key] }}</a>
             }
             @default {
               {{ element[column.key] }}

@@ -39,7 +39,7 @@ export class TickersTableComponent {
     pageSize: 50,
     columnDefs: [
       { key: 'ticker', title: 'Ticker', class: ['w-25'], type: COLUMN_TYPE.TEXT },
-      { key: 'name', title: 'Name', class: ['w-50'], type: COLUMN_TYPE.TEXT },
+      { key: 'name', title: 'Name', class: ['w-50'], type: COLUMN_TYPE.LINK },
       { key: 'market', title: 'Market', class: [], type: COLUMN_TYPE.TEXT },
       { key: 'currency_name', title: 'Currency Name', class: [], type: COLUMN_TYPE.TEXT },
       { key: 'primary_exchange', title: 'Primary Exchange', class: [], type: COLUMN_TYPE.TEXT }
