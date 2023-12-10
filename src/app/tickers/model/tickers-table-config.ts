@@ -19,7 +19,8 @@ export type ActionColumnDef = BaseColumnDef & {
 
 export type LinkColumnDef = BaseColumnDef & {
   type: COLUMN_TYPE.LINK
-  fragmentProperty: string
+  routeParam: string
+  routePath: string
 }
 
 export type TickersTableConfig = {

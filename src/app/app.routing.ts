@@ -21,7 +21,12 @@ const routes: Routes = [
         (mod) => mod.WatchlistPanelComponent
       )
     // canActivate: [authGuard]
-  }
+  },
+  {
+    path: 'ticker-details/:ticker',
+    loadComponent: () => import('./tickers/component/tickers-detail/tickers-detail.component').then(
+      (mod) => mod.TickersDetailComponent) 
+   }
 ]
 
 export const routing = RouterModule.forRoot(routes, {
