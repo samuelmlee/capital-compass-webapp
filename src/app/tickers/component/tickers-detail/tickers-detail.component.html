@@ -1,1 +1,25 @@
-<p>tickers-detail works!</p>
+<div class="container">
+  @if (tickerDetails.value()?.result; as tickerDetails) {
+    <h2 class="mb-3">{{ tickerDetails.name }} ({{ tickerDetails.ticker }})</h2>
+  }
+
+  <div class="row">
+    <div class="col">
+      @for (detail of primaryDetails(); track detail) {
+        <div class="mb-3">
+          <span class="me-3 text-secondary">{{ detail.label }} :</span>
+          <span class="text-dark">{{ detail.value }}</span>
+        </div>
+      }
+    </div>
+
+    <div class="col">
+      @for (detail of secondaryDetails(); track detail) {
+        <div class="mb-3">
+          <span class="me-3 text-secondary">{{ detail.label }} :</span>
+          <span class="text-dark">{{ detail.value }}</span>
+        </div>
+      }
+    </div>
+  </div>
+</div>
