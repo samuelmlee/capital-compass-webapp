@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core'
+import { ActivatedRoute } from '@angular/router'
+import { TickersService } from '../../service/tickers.service'
 
 @Component({
   selector: 'app-tickers-detail',
@@ -10,15 +11,16 @@ import { ActivatedRoute } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TickersDetailComponent implements OnInit {
-
-  private tickerSymbol = ''
-
-  constructor(private route: ActivatedRoute) {}
+  constructor(
+    private _route: ActivatedRoute,
+    private _tickersService: TickersService
+  ) {}
 
   public ngOnInit(): void {
-    this.tickerSymbol = this.route.snapshot.paramMap.get('ticker') ?? ''
+    const tickerSymbol = this._route.snapshot.paramMap.get('ticker') ?? ''
 
-    console.log('ticker symbol :', this.tickerSymbol)
+    this._tickersService.fetchTickerDetails(tickerSymbol)
+
+    console.log('ticker symbol :', tickerSymbol)
   }
-
 }

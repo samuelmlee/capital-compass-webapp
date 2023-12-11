@@ -5,15 +5,16 @@ import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/
 
 import { TickersResponse, TickersResponseSource, TickersResult } from '../../model/tickers-response'
 import { TickersSearchConfig } from '../../model/tickers-search-config'
-import { COLUMN_TYPE, TickersTableConfig } from '../../model/tickers-table-config'
+import { ActionColumnDef, COLUMN_TYPE, LinkColumnDef, TickersTableConfig } from '../../model/tickers-table-config'
 import { TickersService } from '../../service/tickers.service'
 import { NoTotalItemsPaginatorIntl } from './no-total-items-paginator-intl'
 import { RouterModule } from '@angular/router'
+import { CastPipe } from 'src/app/shared/pipe/cast.pipe'
 
 @Component({
   selector: 'app-tickers-table',
   standalone: true,
-  imports: [CommonModule, MatTableModule, MatPaginatorModule, RouterModule],
+  imports: [CommonModule, MatTableModule, MatPaginatorModule, RouterModule, CastPipe],
   providers: [{ provide: MatPaginatorIntl, useClass: NoTotalItemsPaginatorIntl }],
   templateUrl: './tickers-table.component.html',
   styleUrl: './tickers-table.component.scss',
@@ -39,7 +40,14 @@ export class TickersTableComponent {
     pageSize: 50,
     columnDefs: [
       { key: 'ticker', title: 'Ticker', class: ['w-25'], type: COLUMN_TYPE.TEXT },
-      { key: 'name', title: 'Name', class: ['w-50'], type: COLUMN_TYPE.LINK, routePath: '/ticker-details/', routeParam: 'ticker' },
+      {
+        key: 'name',
+        title: 'Name',
+        class: ['w-50'],
+        type: COLUMN_TYPE.LINK,
+        routePath: '/ticker-details/',
+        routeParam: 'ticker'
+      },
       { key: 'market', title: 'Market', class: [], type: COLUMN_TYPE.TEXT },
       { key: 'currency_name', title: 'Currency Name', class: [], type: COLUMN_TYPE.TEXT },
       { key: 'primary_exchange', title: 'Primary Exchange', class: [], type: COLUMN_TYPE.TEXT }
@@ -49,6 +57,8 @@ export class TickersTableComponent {
   public rowDefs = computed(() => this._tickersTableConfig().columnDefs.map((c) => c.key))
   public tickersDataSource = computed(() => this.convertResponseToDataSource())
   public ColumnType = COLUMN_TYPE
+  public ActionColumnDef: ActionColumnDef | undefined
+  public LinkColumnDef: LinkColumnDef | undefined
 
   private _dataSource: MatTableDataSource<TickersResult>
   private _nextCursor = ''
