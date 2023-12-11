@@ -15,7 +15,7 @@
             }
             @case (ColumnType.LINK) {
               @if (column | cast: LinkColumnDef; as linkColumn) {
-                <a [routerLink]="[linkColumn.routePath, element[$any(column).routeParam]]">{{ element[column.key] }}</a>
+                <a [routerLink]="[linkColumn.routePath, element[linkColumn.routeParam]]">{{ element[column.key] }}</a>
               }
             }
             @default {
