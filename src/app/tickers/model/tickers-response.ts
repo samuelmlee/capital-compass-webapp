@@ -2,8 +2,8 @@ export type TickersResult = {
   ticker: string
   name: string
   market: string
-  currency_name: string
-  primary_exchange: string | null
+  currencyName: string
+  primaryExchange: string | null
 }
 
 export enum TickersResponseSource {

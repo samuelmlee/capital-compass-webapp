@@ -49,8 +49,8 @@ export class TickersTableComponent {
         routeParam: 'ticker'
       },
       { key: 'market', title: 'Market', class: [], type: COLUMN_TYPE.TEXT },
-      { key: 'currency_name', title: 'Currency Name', class: [], type: COLUMN_TYPE.TEXT },
-      { key: 'primary_exchange', title: 'Primary Exchange', class: [], type: COLUMN_TYPE.TEXT }
+      { key: 'currencyName', title: 'Currency Name', class: [], type: COLUMN_TYPE.TEXT },
+      { key: 'primaryExchange', title: 'Primary Exchange', class: [], type: COLUMN_TYPE.TEXT }
     ]
   })
 
