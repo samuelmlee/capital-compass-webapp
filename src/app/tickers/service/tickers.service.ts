@@ -65,21 +65,21 @@ export class TickersService {
         .set('ticker', searchConfig?.ticker ?? '')
     }
     return this._http
-      .get<TickersResponse>(`${this.apiUrl}/stocks/tickers`, options)
+      .get<TickersResponse>(`${this.apiUrl}/stocks/reference/tickers`, options)
       .pipe(map((response) => ({ ...response, source: TickersResponseSource.CONFIG })))
   }
 
   private getTickersByCursor(cursor: string): Observable<TickersResponse> {
     return this._http
-      .get<TickersResponse>(`${this.apiUrl}/stocks/tickers/cursor/${cursor}`)
+      .get<TickersResponse>(`${this.apiUrl}/stocks/reference/tickers/cursor/${cursor}`)
       .pipe(map((response) => ({ ...response, source: TickersResponseSource.CURSOR })))
   }
 
   private getTickerTypes(): Observable<TickerTypesResponse> {
-    return this._http.get<TickerTypesResponse>(`${this.apiUrl}/stocks/tickers/types`)
+    return this._http.get<TickerTypesResponse>(`${this.apiUrl}/stocks/reference/tickers/types`)
   }
 
   private getTickerDetails(tickerSymbol: string): Observable<TickerDetailsResponse> {
-    return this._http.get<TickerDetailsResponse>(`${this.apiUrl}/stocks/tickers/details/${tickerSymbol}`)
+    return this._http.get<TickerDetailsResponse>(`${this.apiUrl}/stocks/reference/tickers/details/${tickerSymbol}`)
   }
 }
