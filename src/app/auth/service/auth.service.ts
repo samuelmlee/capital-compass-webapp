@@ -28,7 +28,7 @@ export class AuthService {
   }
 
   public getUserDetails(): Observable<User> {
-    return this._httpClient.get<User>(`${this._authUrl}/user`, {
+    return this._httpClient.get<User>(`${this._authUrl}/v1/auth/user`, {
       withCredentials: true
     })
   }
@@ -39,7 +39,7 @@ export class AuthService {
 
   public logout(): void {
     this._httpClient
-      .get<LogOutApiResponse>(`${this._authUrl}/api/logout`, { withCredentials: true })
+      .get<LogOutApiResponse>(`${this._authUrl}/v1/auth/logout`, { withCredentials: true })
       .pipe(
         map((response) => ({ value: response, error: null })),
         catchError((err) => of({ value: null, error: err }))

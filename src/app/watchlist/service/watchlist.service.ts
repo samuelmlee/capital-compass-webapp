@@ -38,8 +38,7 @@ export class WatchlistService {
   }
 
   private getUserWatchLists(): Observable<WatchlistCollectionResponse> {
-    // TODO: send requests to Gateway when aggregation implemented
-    return this._http.get<WatchlistCollectionResponse>(`${this._apiUrl}/users/watchlists`, { withCredentials: true })
+    return this._http.get<WatchlistCollectionResponse>(`${this._apiUrl}/gateway/watchlists`, { withCredentials: true })
   }
 
   private postUserWatchList(config: EditWatchlistConfig): Observable<Watchlist> {
