@@ -7,7 +7,7 @@
     <div class="col">
       @for (detail of primaryDetails(); track detail) {
         <div class="mb-3">
-          <span class="me-3 text-secondary">{{ detail.label }} :</span>
+          <span class="me-3 text-secondary">{{ detail.key | formatKey }} :</span>
           <span class="text-dark">{{ detail.value }}</span>
         </div>
       }
@@ -16,7 +16,7 @@
     <div class="col">
       @for (detail of secondaryDetails(); track detail) {
         <div class="mb-3">
-          <span class="me-3 text-secondary">{{ detail.label }} :</span>
+          <span class="me-3 text-secondary">{{ detail.key | formatKey }} :</span>
           <span class="text-dark">{{ detail.value }}</span>
         </div>
       }

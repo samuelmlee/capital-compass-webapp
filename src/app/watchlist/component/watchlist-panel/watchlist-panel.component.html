@@ -11,14 +11,6 @@
   </div>
 </div>
 
-<table class="table">
-  <tbody>
-    @for (watchlist of watchListsSignal.value(); track $index) {
-      <tr>
-        <th scope="row"></th>
-        <td>{{ watchlist.name }}</td>
-        <td>{{ watchlist.tickers }}</td>
-      </tr>
-    }
-  </tbody>
-</table>
+@for (watchlist of watchListsSignal.value(); track watchlist.id) {
+  <app-watchlist-table [watchlist]="watchlist"></app-watchlist-table>
+}

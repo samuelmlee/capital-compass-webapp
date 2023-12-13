@@ -4,11 +4,12 @@ import { MatDialog } from '@angular/material/dialog'
 import { EditWatchlistConfig } from '../../model/create-watchlist-config'
 import { WatchlistService } from '../../service/watchlist.service'
 import { CreateWatchlistDialogComponent } from '../create-watchlist-dialog/create-watchlist-dialog.component'
+import { WatchlistTableComponent } from '../watchlist-table/watchlist-table.component'
 
 @Component({
   selector: 'app-watch-list-panel',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, WatchlistTableComponent],
   templateUrl: './watchlist-panel.component.html',
   styleUrl: './watchlist-panel.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

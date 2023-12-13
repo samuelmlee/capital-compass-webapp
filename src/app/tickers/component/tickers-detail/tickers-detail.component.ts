@@ -3,16 +3,17 @@ import { ActivatedRoute } from '@angular/router'
 import { TickersService } from '../../service/tickers.service'
 import { DecimalPipe } from '@angular/common'
 import { TickerDetailsResult } from '../../model/ticker-details-response'
+import { FormatKeyPipe } from 'src/app/shared/pipe/format-key.pipe'
 
 type TickerDetailView = {
-  label: string
+  key: string
   value: string | number
 }
 
 @Component({
   selector: 'app-tickers-detail',
   standalone: true,
-  imports: [DecimalPipe],
+  imports: [DecimalPipe, FormatKeyPipe],
   templateUrl: './tickers-detail.component.html',
   styleUrl: './tickers-detail.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -57,21 +58,16 @@ export class TickersDetailComponent implements OnInit {
     detailKeys: string[]
   ): TickerDetailView[] {
     if (!result) {
-      return [{ label: 'Error', value: 'Error fetching details for ticker' }]
+      return [{ key: 'Error', value: 'Error fetching details for ticker' }]
     }
     const tickerDetailViews: TickerDetailView[] = []
     Object.keys(result).forEach((key) => {
-      const label = this.formatLabel(key)
       const value = result[key as keyof TickerDetailsResult]
 
       if (detailKeys.includes(key)) {
-        tickerDetailViews.push({ label, value })
+        tickerDetailViews.push({ key, value })
       }
     })
     return tickerDetailViews
-  }
-
-  private formatLabel(key: string): string {
-    return key.replace(/([A-Z])/g, ' $1').replace(/^./, (firstChar) => firstChar.toUpperCase())
   }
 }

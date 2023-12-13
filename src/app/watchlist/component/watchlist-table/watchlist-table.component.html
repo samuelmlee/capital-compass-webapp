@@ -1,0 +1,23 @@
+<div class="container mx-4">
+  <h4 class="mb-3">{{ watchlistSignal()?.name }}</h4>
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th scope="col">Ticker</th>
+        @for (column of tableColumns; track column) {
+          <th scope="col">{{ column | formatKey }}</th>
+        }
+      </tr>
+    </thead>
+    <tbody>
+      @for (snapshot of watchlistSignal()?.tickerSnapshotViews; track snapshot.ticker) {
+        <tr>
+          <td scope="row">{{ snapshot.ticker }}</td>
+          @for (column of tableColumns; track column) {
+            <td>{{ resolveDailyBarValue(snapshot.dailyBar, column) }}</td>
+          }
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

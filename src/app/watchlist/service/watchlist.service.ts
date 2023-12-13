@@ -5,7 +5,7 @@ import { Result } from 'src/app/shared/model/result'
 import { fromObsToSignal } from 'src/app/shared/utils/fromObsToSignal'
 import { environment } from 'src/environments/environment'
 import { EditWatchlistConfig } from '../model/create-watchlist-config'
-import { Watchlist } from '../model/watchList'
+import { Watchlist } from '../model/watchlist'
 import { WatchlistCollectionResponse } from '../model/watchList-collection-response'
 
 @Injectable({
