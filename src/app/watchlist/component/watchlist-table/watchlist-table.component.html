@@ -1,6 +1,6 @@
-<div class="container mx-4">
-  <h4 class="mb-3">{{ watchlistSignal()?.name }}</h4>
-  <table class="table table-sm">
+<div class="mb-4">
+  <h4 class="mb-4">{{ watchlistSignal()?.name }}</h4>
+  <table class="table table-sm table-hover">
     <thead>
       <tr>
         <th scope="col">Ticker</th>
@@ -12,7 +12,9 @@
     <tbody>
       @for (snapshot of watchlistSignal()?.tickerSnapshotViews; track snapshot.ticker) {
         <tr>
-          <td scope="row">{{ snapshot.ticker }}</td>
+          <td scope="row">
+            <a [routerLink]="'/ticker-details/' + snapshot.ticker">{{ snapshot.ticker }}</a>
+          </td>
           @for (column of tableColumns; track column) {
             <td>{{ resolveDailyBarValue(snapshot.dailyBar, column) }}</td>
           }

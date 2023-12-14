@@ -6,25 +6,25 @@ import { fromObsToSignal } from 'src/app/shared/utils/fromObsToSignal'
 import { environment } from 'src/environments/environment'
 import { EditWatchlistConfig } from '../model/create-watchlist-config'
 import { Watchlist } from '../model/watchlist'
-import { WatchlistCollectionResponse } from '../model/watchList-collection-response'
+import { WatchlistCollectionResponse } from '../model/watchlist-collection-response'
 
 @Injectable({
   providedIn: 'root'
 })
 export class WatchlistService {
-  public watchListsSignal: Result<WatchlistCollectionResponse>
-  public watchListCreatedSignal: Result<Watchlist>
+  public watchlistsSignal: Result<WatchlistCollectionResponse>
+  public watchlistCreatedSignal: Result<Watchlist>
 
   private _getTickersSubject = new Subject<void>()
   private _postWatchListSubject = new Subject<EditWatchlistConfig>()
   private _apiUrl = environment.apiUrl
 
   constructor(private _http: HttpClient) {
-    this.watchListsSignal = fromObsToSignal<WatchlistCollectionResponse>(
+    this.watchlistsSignal = fromObsToSignal<WatchlistCollectionResponse>(
       this._getTickersSubject.pipe(switchMap(() => this.getUserWatchLists()))
     )
 
-    this.watchListCreatedSignal = fromObsToSignal<Watchlist>(
+    this.watchlistCreatedSignal = fromObsToSignal<Watchlist>(
       this._postWatchListSubject.pipe(switchMap((config) => this.postUserWatchList(config)))
     )
   }

@@ -1,0 +1,6 @@
+
+.watchlists-container {
+    // 67px + 48px for title, 48px for creation text
+    height: calc(100% - 163px);
+    overflow-y: auto;
+}
