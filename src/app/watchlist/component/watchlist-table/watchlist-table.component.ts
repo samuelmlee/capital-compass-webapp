@@ -18,12 +18,21 @@ export class WatchlistTableComponent {
     this._watchlist.set(watchlistView)
   }
 
-  public tableColumns: string[] = ['closePrice', 'openPrice', 'highestPrice', 'lowestPrice', 'volumeWeightedPrice']
+  public tableColumns: string[] = [
+    'closePrice',
+    'openPrice',
+    'highestPrice',
+    'lowestPrice',
+    'volumeWeightedPrice'
+  ]
 
   private _watchlist = signal<WatchlistView | null>(null)
   public watchlistSignal = this._watchlist.asReadonly()
 
   public resolveDailyBarValue(dailyBar: DailyBar, key: string): string | number {
+    if (!dailyBar) {
+      return ''
+    }
     return dailyBar[key as keyof DailyBar]
   }
 
@@ -34,7 +43,7 @@ export class WatchlistTableComponent {
         return {
           ticker: snapShot.ticker,
           updated: snapShot.updated,
-          dailyBar: snapShot.day.tradingVolume > 0 ? snapShot.day : snapShot.prevDay
+          dailyBar: snapShot.day?.tradingVolume > 0 ? snapShot.day : snapShot.prevDay
         }
       })
     return { id: watchlist.id, name: watchlist.name, tickerSnapshotViews: snapShotViews }
