@@ -3,9 +3,7 @@ import { TickersResult } from 'src/app/tickers/model/tickers-response'
 import { EditWatchlistConfig } from '../model/create-watchlist-config'
 import { WatchlistService } from './watchlist.service'
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class EditWatchlistService {
   private _tickersSelected = signal<Set<TickersResult>>(new Set())
   private _watchlistName = ''
@@ -25,13 +23,13 @@ export class EditWatchlistService {
   }
 
   public addTickerToWatchList(ticker: TickersResult): void {
-    this._tickersSelected.update((selected) => selected.add(ticker))
+    this._tickersSelected.update((selected) => new Set([...selected, ticker]))
   }
 
   public removeTickerFromWatchList(ticker: TickersResult): void {
     this._tickersSelected.update((selected) => {
       selected.delete(ticker)
-      return selected
+      return new Set([...selected])
     })
   }
 

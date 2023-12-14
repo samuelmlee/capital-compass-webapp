@@ -1,11 +1,29 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectionStrategy, Component, Input, Signal, ViewChild, computed, signal } from '@angular/core'
-import { MatPaginator, MatPaginatorIntl, MatPaginatorModule, PageEvent } from '@angular/material/paginator'
-import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table'
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  Signal,
+  ViewChild,
+  computed,
+  signal
+} from '@angular/core'
+import {
+  MatPaginator,
+  MatPaginatorIntl,
+  MatPaginatorModule,
+  PageEvent
+} from '@angular/material/paginator'
+import { MatTableDataSource, MatTableModule } from '@angular/material/table'
 
 import { TickersResponse, TickersResponseSource, TickersResult } from '../../model/tickers-response'
 import { TickersSearchConfig } from '../../model/tickers-search-config'
-import { ActionColumnDef, COLUMN_TYPE, LinkColumnDef, TickersTableConfig } from '../../model/tickers-table-config'
+import {
+  ActionColumnDef,
+  COLUMN_TYPE,
+  LinkColumnDef,
+  TickersTableConfig
+} from '../../model/tickers-table-config'
 import { TickersService } from '../../service/tickers.service'
 import { NoTotalItemsPaginatorIntl } from './no-total-items-paginator-intl'
 import { RouterModule } from '@angular/router'
@@ -21,8 +39,6 @@ import { CastPipe } from 'src/app/shared/pipe/cast.pipe'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TickersTableComponent {
-  @ViewChild('table') private _table: MatTable<TickersResult> | undefined
-
   @Input()
   public set searchConfig(config: TickersSearchConfig | null) {
     if (!config) {

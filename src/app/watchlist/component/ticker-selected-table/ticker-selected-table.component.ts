@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core'
 import { TickersResult } from 'src/app/tickers/model/tickers-response'
 import { EditWatchlistService } from '../../service/edit-watchlist.service'
 
@@ -11,15 +11,11 @@ import { EditWatchlistService } from '../../service/edit-watchlist.service'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TickerSelectedTableComponent {
-  constructor(private _watchlistTickersService: EditWatchlistService) {}
+  public tickersSelected = this._editWatchlistService.tickersSelected
 
-  public tickersSelected = this._watchlistTickersService.tickersSelected
-
-  public addTickerToWatchList(ticker: TickersResult): void {
-    this._watchlistTickersService.addTickerToWatchList(ticker)
-  }
+  constructor(private _editWatchlistService: EditWatchlistService) {}
 
   public removeTickerFromWatchList(ticker: TickersResult): void {
-    this._watchlistTickersService.removeTickerFromWatchList(ticker)
+    this._editWatchlistService.removeTickerFromWatchList(ticker)
   }
 }

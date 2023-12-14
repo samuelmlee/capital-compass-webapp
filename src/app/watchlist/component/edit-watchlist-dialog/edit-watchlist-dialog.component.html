@@ -7,18 +7,14 @@
   </mat-form-field>
   <div>Add one or several tickers to the list</div>
 
-  <div class="table-container overflow-y-auto mb-3"></div>
+  <div class="table-container overflow-y-auto mb-3">
+    <app-ticker-selected-table></app-ticker-selected-table>
+  </div>
 
-  <app-tickers-filter
-    (newSearchConfig)="updateSearchConfig($event)"
-    [tickersFilterConfig]="tickersFilterConfig()"
-    class="mb-3"
-  ></app-tickers-filter>
-  <app-tickers-table
-    [searchConfig]="searchConfig$ | async"
-    [tableConfig]="tickersTableConfig()"
-    class="mb-3"
-  ></app-tickers-table>
+  <app-tickers-filter (newSearchConfig)="updateSearchConfig($event)" [tickersFilterConfig]="tickersFilterConfig()"
+    class="mb-3"></app-tickers-filter>
+  <app-tickers-table [searchConfig]="searchConfig$ | async" [tableConfig]="tickersTableConfig()"
+    class="mb-3"></app-tickers-table>
 
   <mat-dialog-actions align="end">
     <button mat-dialog-close type="button" class="btn btn-light me-2">Cancel</button>

@@ -16,6 +16,7 @@ import { TickersSearchConfig } from 'src/app/tickers/model/tickers-search-config
 import { COLUMN_TYPE, TickersTableConfig } from 'src/app/tickers/model/tickers-table-config'
 import { EditWatchlistService } from '../../service/edit-watchlist.service'
 import { toSignal } from '@angular/core/rxjs-interop'
+import { TickerSelectedTableComponent } from '../ticker-selected-table/ticker-selected-table.component'
 
 @Component({
   selector: 'app-edit-watchlist-dialog',
@@ -28,10 +29,12 @@ import { toSignal } from '@angular/core/rxjs-interop'
     MatInputModule,
     ReactiveFormsModule,
     TickersFilterComponent,
-    TickersTableComponent
+    TickersTableComponent,
+    TickerSelectedTableComponent
   ],
   templateUrl: './edit-watchlist-dialog.component.html',
   styleUrl: './edit-watchlist-dialog.component.scss',
+  providers: [EditWatchlistService],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EditWatchlistDialogComponent {
@@ -84,6 +87,7 @@ export class EditWatchlistDialogComponent {
 
   public saveWatchList(): void {
     this._watchlistTickersService.saveWatchList()
+    // wait for watchlist created signal value or error before closing
     this._dialogRef.close()
   }
 
