@@ -1,5 +1,5 @@
 <div class="p-4 max">
-  <h2 class="display-6 mb-3">Create Watchlist</h2>
+  <h2 class="text-center display-6 mb-3">Create Watchlist</h2>
 
   <mat-form-field class="w-50 mb-3">
     <mat-label>Name of the Watchlist</mat-label>
@@ -7,24 +7,7 @@
   </mat-form-field>
   <div>Add one or several tickers to the list</div>
 
-  <div class="table-container overflow-y-auto mb-3">
-    <table class="table">
-      <tbody>
-        @for (ticker of tickersSelected(); track ticker.ticker) {
-          <tr>
-            <th scope="row"></th>
-            <td>{{ ticker.ticker }}</td>
-            <td>{{ ticker.name }}</td>
-            <td>
-              <button type="button" class="btn btn-secondary btn-sm" (click)="removeTickerFromWatchList(ticker)">
-                Remove
-              </button>
-            </td>
-          </tr>
-        }
-      </tbody>
-    </table>
-  </div>
+  <div class="table-container overflow-y-auto mb-3"></div>
 
   <app-tickers-filter
     (newSearchConfig)="updateSearchConfig($event)"

@@ -2,7 +2,7 @@
   <h1 class="display-4">Watchlists</h1>
 </div>
 
-<div class="d-flex">
+<div class="d-flex mb-4">
   <div class="flex-grow-1">
     <span>Lists let you group several tickers together for a quick overview of each stock.</span>
   </div>
@@ -13,6 +13,6 @@
 
 <div class="watchlists-container">
   @for (watchlist of watchlistsSignal(); track watchlist.id) {
-    <app-watchlist-table [watchlist]="watchlist"></app-watchlist-table>
+  <app-watchlist-table [watchlist]="watchlist"></app-watchlist-table>
   }
 </div>

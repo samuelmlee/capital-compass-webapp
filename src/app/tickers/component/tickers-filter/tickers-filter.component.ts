@@ -1,7 +1,22 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, Signal, effect } from '@angular/core'
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  Signal,
+  effect
+} from '@angular/core'
 import { toSignal } from '@angular/core/rxjs-interop'
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatIconModule } from '@angular/material/icon'
 import { MatInputModule } from '@angular/material/input'
@@ -15,7 +30,14 @@ export type TickersFilterConfig = { fields: string[] }
 @Component({
   selector: 'app-tickers-filter',
   standalone: true,
-  imports: [CommonModule, MatFormFieldModule, MatIconModule, MatInputModule, MatSelectModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    MatSelectModule,
+    ReactiveFormsModule
+  ],
   templateUrl: './tickers-filter.component.html',
   styleUrl: './tickers-filter.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -50,13 +72,13 @@ export class TickersFilterComponent implements OnInit {
     this.initFormValues()
 
     effect(() => {
+      if (!this.formGroup.valid) {
+        return
+      }
       if (!this._formValues) {
         return
       }
       const [searchTerm = '', type = '', ticker = ''] = this._formValues() || []
-      if (!this.formGroup.valid) {
-        return
-      }
       const config: TickersSearchConfig = { searchTerm, type, ticker }
       this.configUpdatedEvent.emit(config)
     })
@@ -69,9 +91,13 @@ export class TickersFilterComponent implements OnInit {
   private initFormValues(): void {
     this._formValues = toSignal(
       combineLatest([
-        this.searchTermControl.valueChanges.pipe(debounceTime(500), distinctUntilChanged()).pipe(startWith('')),
+        this.searchTermControl.valueChanges
+          .pipe(debounceTime(500), distinctUntilChanged())
+          .pipe(startWith('')),
         this.typeControl.valueChanges.pipe(distinctUntilChanged()).pipe(startWith('')),
-        this.tickerControl.valueChanges.pipe(debounceTime(500), distinctUntilChanged()).pipe(startWith(''))
+        this.tickerControl.valueChanges
+          .pipe(debounceTime(500), distinctUntilChanged())
+          .pipe(startWith(''))
       ]).pipe(map(([searchTerm, type, ticker]) => [searchTerm ?? '', type ?? '', ticker ?? '']))
     )
   }

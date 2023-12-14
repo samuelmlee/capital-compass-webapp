@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectionStrategy, Component, Signal, signal } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Signal, effect, signal } from '@angular/core'
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms'
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatIconModule } from '@angular/material/icon'
 import { MatInputModule } from '@angular/material/input'
-import { Subject } from 'rxjs'
+import { Subject, debounceTime, distinctUntilChanged, map, startWith } from 'rxjs'
 import {
   TickersFilterComponent,
   TickersFilterConfig
@@ -14,10 +14,11 @@ import { TickersTableComponent } from 'src/app/tickers/component/tickers-table/t
 import { TickersResult } from 'src/app/tickers/model/tickers-response'
 import { TickersSearchConfig } from 'src/app/tickers/model/tickers-search-config'
 import { COLUMN_TYPE, TickersTableConfig } from 'src/app/tickers/model/tickers-table-config'
-import { EditWatchlistConfig } from '../../model/create-watchlist-config'
+import { EditWatchlistService } from '../../service/edit-watchlist.service'
+import { toSignal } from '@angular/core/rxjs-interop'
 
 @Component({
-  selector: 'app-create-watchlist-dialog',
+  selector: 'app-edit-watchlist-dialog',
   standalone: true,
   imports: [
     CommonModule,
@@ -29,13 +30,13 @@ import { EditWatchlistConfig } from '../../model/create-watchlist-config'
     TickersFilterComponent,
     TickersTableComponent
   ],
-  templateUrl: './create-watchlist-dialog.component.html',
-  styleUrl: './create-watchlist-dialog.component.scss',
+  templateUrl: './edit-watchlist-dialog.component.html',
+  styleUrl: './edit-watchlist-dialog.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CreateWatchlistDialogComponent {
-  private _tickersSelected = signal<Set<TickersResult>>(new Set())
+export class EditWatchlistDialogComponent {
   private _searchConfig = new Subject<TickersSearchConfig>()
+  private _watchlistName: Signal<string | undefined>
 
   public tickersFilterConfig = signal<TickersFilterConfig>({ fields: ['searchTerm', 'type'] })
   public tickersTableConfig = signal<TickersTableConfig>({
@@ -50,7 +51,8 @@ export class CreateWatchlistDialogComponent {
         title: 'Action',
         class: [],
         type: COLUMN_TYPE.ACTION,
-        actionCallback: (ticker): void => this.addTickerToWatchList(ticker as TickersResult),
+        actionCallback: (ticker): void =>
+          this._watchlistTickersService.addTickerToWatchList(ticker as TickersResult),
         actionLabel: 'Add'
       }
     ]
@@ -58,35 +60,34 @@ export class CreateWatchlistDialogComponent {
   public nameControl = new FormControl('', Validators.required)
   public searchConfig$ = this._searchConfig.asObservable()
 
-  constructor(private _dialogRef: MatDialogRef<CreateWatchlistDialogComponent>) {}
+  constructor(
+    private _watchlistTickersService: EditWatchlistService,
+    private _dialogRef: MatDialogRef<EditWatchlistDialogComponent>
+  ) {
+    this._watchlistName = toSignal(
+      this.nameControl.valueChanges.pipe(
+        debounceTime(500),
+        startWith(''),
+        distinctUntilChanged(),
+        map((value) => (value === null ? '' : value))
+      )
+    )
 
-  public get tickersSelected(): Signal<Set<TickersResult>> {
-    return this._tickersSelected.asReadonly()
+    effect(() => {
+      const watchlistName = this._watchlistName()
+      if (!watchlistName) {
+        return
+      }
+      this._watchlistTickersService.updateWatchlistName(watchlistName)
+    })
   }
 
   public saveWatchList(): void {
-    if (!this.nameControl.valid || !this.nameControl.value) {
-      return
-    }
-    const config: EditWatchlistConfig = {
-      name: this.nameControl.value,
-      tickerSymbols: new Set<string>([...this._tickersSelected()].map((ticker) => ticker.ticker))
-    }
-    this._dialogRef.close(config)
+    this._watchlistTickersService.saveWatchList()
+    this._dialogRef.close()
   }
 
   public updateSearchConfig(config: TickersSearchConfig): void {
     this._searchConfig.next(config)
-  }
-
-  public addTickerToWatchList(ticker: TickersResult): void {
-    this._tickersSelected.update((selected) => selected.add(ticker))
-  }
-
-  public removeTickerFromWatchList(ticker: TickersResult): void {
-    this._tickersSelected.update((selected) => {
-      selected.delete(ticker)
-      return selected
-    })
   }
 }
