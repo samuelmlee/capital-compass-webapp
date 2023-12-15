@@ -1,5 +1,5 @@
 export type TickersResult = {
-  ticker: string
+  symbol: string
   name: string
   market: string
   currencyName: string

@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, Input, signal } from '@angular/core'
-import { DailyBar, TickerSnapshotView, Watchlist, WatchlistView } from '../../model/watchlist'
-import { FormatKeyPipe } from 'src/app/shared/pipe/format-key.pipe'
-import { RouterModule } from '@angular/router'
-import { EditWatchlistDialogComponent } from '../edit-watchlist-dialog/edit-watchlist-dialog.component'
 import { MatDialog } from '@angular/material/dialog'
+import { RouterModule } from '@angular/router'
+import { FormatKeyPipe } from 'src/app/shared/pipe/format-key.pipe'
+import { DailyBar, TickerSnapshotView, Watchlist, WatchlistView } from '../../model/watchlist'
+import { EditWatchlistDialogComponent } from '../edit-watchlist-dialog/edit-watchlist-dialog.component'
 
 @Component({
   selector: 'app-watchlist-table',
@@ -51,10 +51,10 @@ export class WatchlistTableComponent {
 
   private fromWatchlistToWatchlistView(watchlist: Watchlist): WatchlistView {
     const snapShotViews: TickerSnapshotView[] = watchlist.tickerSnapshots
-      .sort((a, b) => (a.ticker > b.ticker ? 1 : -1))
+      .sort((a, b) => (a.symbol > b.symbol ? 1 : -1))
       .map((snapShot) => {
         return {
-          ticker: snapShot.ticker,
+          symbol: snapShot.symbol,
           updated: snapShot.updated,
           dailyBar: snapShot.day?.tradingVolume > 0 ? snapShot.day : snapShot.prevDay
         }

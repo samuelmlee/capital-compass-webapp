@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Inject, Signal, effect, signal } from '@angular/core'
+import { toSignal } from '@angular/core/rxjs-interop'
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms'
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog'
 import { MatFormFieldModule } from '@angular/material/form-field'
@@ -14,10 +15,9 @@ import { TickersTableComponent } from 'src/app/tickers/component/tickers-table/t
 import { TickersResult } from 'src/app/tickers/model/tickers-response'
 import { TickersSearchConfig } from 'src/app/tickers/model/tickers-search-config'
 import { COLUMN_TYPE, TickersTableConfig } from 'src/app/tickers/model/tickers-table-config'
-import { EditWatchlistService } from '../../service/edit-watchlist.service'
-import { toSignal } from '@angular/core/rxjs-interop'
-import { TickerSelectedTableComponent } from '../ticker-selected-table/ticker-selected-table.component'
 import { Watchlist } from '../../model/watchlist'
+import { EditWatchlistService } from '../../service/edit-watchlist.service'
+import { TickerSelectedTableComponent } from '../ticker-selected-table/ticker-selected-table.component'
 
 type EditDialogData = {
   watchlist: Watchlist
@@ -50,7 +50,7 @@ export class EditWatchlistDialogComponent {
   public tickersTableConfig = signal<TickersTableConfig>({
     pageSize: 5,
     columnDefs: [
-      { key: 'ticker', title: 'Ticker', class: ['w-25'], type: COLUMN_TYPE.TEXT },
+      { key: 'symbol', title: 'Ticker', class: ['w-25'], type: COLUMN_TYPE.TEXT },
       { key: 'name', title: 'Name', class: ['w-50'], type: COLUMN_TYPE.TEXT },
       { key: 'market', title: 'Market', class: [], type: COLUMN_TYPE.TEXT },
       { key: 'primary_exchange', title: 'Primary Exchange', class: [], type: COLUMN_TYPE.TEXT },

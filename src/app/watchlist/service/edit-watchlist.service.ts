@@ -28,7 +28,7 @@ export class EditWatchlistService {
   }
 
   public addTickerResultToWatchList(result: TickersResult): void {
-    const ticker: WatchlistTicker = { name: result.name, ticker: result.ticker }
+    const ticker: WatchlistTicker = { name: result.name, symbol: result.symbol }
     this._watchlistState.update((state) => ({
       name: state.name,
       tickersSelected: new Set([...state.tickersSelected, ticker])

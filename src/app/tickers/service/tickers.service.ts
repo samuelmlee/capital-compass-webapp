@@ -5,10 +5,10 @@ import { Observable, Subject, map, merge, switchMap } from 'rxjs'
 import { Result } from 'src/app/shared/model/result'
 import { fromObsToSignal } from 'src/app/shared/utils/fromObsToSignal'
 import { environment } from 'src/environments/environment'
+import { TickerDetailsResponse } from '../model/ticker-details-response'
 import { TickersTypesResponse as TickerTypesResponse } from '../model/ticker-types-response'
 import { TickersResponse, TickersResponseSource } from '../model/tickers-response'
 import { TickersSearchConfig } from '../model/tickers-search-config'
-import { TickerDetailsResponse } from '../model/ticker-details-response'
 
 @Injectable({
   providedIn: 'root'
@@ -62,7 +62,7 @@ export class TickersService {
       params: new HttpParams()
         .set('type', searchConfig?.type ?? '')
         .set('search-term', searchConfig?.searchTerm ?? '')
-        .set('ticker', searchConfig?.ticker ?? '')
+        .set('ticker', searchConfig?.symbol ?? '')
     }
     return this._http
       .get<TickersResponse>(`${this.apiUrl}/stocks/reference/tickers`, options)
@@ -80,6 +80,8 @@ export class TickersService {
   }
 
   private getTickerDetails(tickerSymbol: string): Observable<TickerDetailsResponse> {
-    return this._http.get<TickerDetailsResponse>(`${this.apiUrl}/stocks/reference/tickers/details/${tickerSymbol}`)
+    return this._http.get<TickerDetailsResponse>(
+      `${this.apiUrl}/stocks/reference/tickers/details/${tickerSymbol}`
+    )
   }
 }

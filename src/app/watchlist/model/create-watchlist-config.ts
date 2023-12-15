@@ -1,6 +1,6 @@
 export type WatchlistTicker = {
   name: string
-  ticker: string
+  symbol: string
 }
 
 export type EditWatchlistState = {

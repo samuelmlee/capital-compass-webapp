@@ -16,6 +16,8 @@ import {
 } from '@angular/material/paginator'
 import { MatTableDataSource, MatTableModule } from '@angular/material/table'
 
+import { RouterModule } from '@angular/router'
+import { CastPipe } from 'src/app/shared/pipe/cast.pipe'
 import { TickersResponse, TickersResponseSource, TickersResult } from '../../model/tickers-response'
 import { TickersSearchConfig } from '../../model/tickers-search-config'
 import {
@@ -26,8 +28,6 @@ import {
 } from '../../model/tickers-table-config'
 import { TickersService } from '../../service/tickers.service'
 import { NoTotalItemsPaginatorIntl } from './no-total-items-paginator-intl'
-import { RouterModule } from '@angular/router'
-import { CastPipe } from 'src/app/shared/pipe/cast.pipe'
 
 @Component({
   selector: 'app-tickers-table',
@@ -55,14 +55,14 @@ export class TickersTableComponent {
   private _tickersTableConfig = signal<TickersTableConfig>({
     pageSize: 50,
     columnDefs: [
-      { key: 'ticker', title: 'Ticker', class: ['w-25'], type: COLUMN_TYPE.TEXT },
+      { key: 'symbol', title: 'Ticker', class: ['w-25'], type: COLUMN_TYPE.TEXT },
       {
         key: 'name',
         title: 'Name',
         class: ['w-50'],
         type: COLUMN_TYPE.LINK,
         routePath: '/ticker-details/',
-        routeParam: 'ticker'
+        routeParam: 'symbol'
       },
       { key: 'market', title: 'Market', class: [], type: COLUMN_TYPE.TEXT },
       { key: 'currencyName', title: 'Currency Name', class: [], type: COLUMN_TYPE.TEXT },

@@ -1,7 +1,7 @@
 export type TickersResultsCount = 50 | 100 | 150
 
 export type TickersSearchConfig = {
-  ticker: string
+  symbol: string
   type: string
 
   searchTerm: string
