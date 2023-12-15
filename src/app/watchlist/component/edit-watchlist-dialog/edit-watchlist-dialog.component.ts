@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectionStrategy, Component, Signal, effect, signal } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Inject, Signal, effect, signal } from '@angular/core'
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms'
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog'
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatIconModule } from '@angular/material/icon'
 import { MatInputModule } from '@angular/material/input'
@@ -17,6 +17,11 @@ import { COLUMN_TYPE, TickersTableConfig } from 'src/app/tickers/model/tickers-t
 import { EditWatchlistService } from '../../service/edit-watchlist.service'
 import { toSignal } from '@angular/core/rxjs-interop'
 import { TickerSelectedTableComponent } from '../ticker-selected-table/ticker-selected-table.component'
+import { Watchlist } from '../../model/watchlist'
+
+type EditDialogData = {
+  watchlist: Watchlist
+}
 
 @Component({
   selector: 'app-edit-watchlist-dialog',
@@ -55,7 +60,7 @@ export class EditWatchlistDialogComponent {
         class: [],
         type: COLUMN_TYPE.ACTION,
         actionCallback: (ticker): void =>
-          this._watchlistTickersService.addTickerToWatchList(ticker as TickersResult),
+          this._watchlistTickersService.addTickerResultToWatchList(ticker as TickersResult),
         actionLabel: 'Add'
       }
     ]
@@ -65,8 +70,11 @@ export class EditWatchlistDialogComponent {
 
   constructor(
     private _watchlistTickersService: EditWatchlistService,
-    private _dialogRef: MatDialogRef<EditWatchlistDialogComponent>
+    private _dialogRef: MatDialogRef<EditWatchlistDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) private _dialogData: EditDialogData
   ) {
+    console.log('Watchlist received :', this._dialogData)
+
     this._watchlistName = toSignal(
       this.nameControl.valueChanges.pipe(
         debounceTime(500),
@@ -87,7 +95,7 @@ export class EditWatchlistDialogComponent {
 
   public saveWatchList(): void {
     this._watchlistTickersService.saveWatchList()
-    // wait for watchlist created signal value or error before closing
+    // TODO: wait for watchlist created signal value or error before closing
     this._dialogRef.close()
   }
 

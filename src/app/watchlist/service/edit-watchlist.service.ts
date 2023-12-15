@@ -1,39 +1,48 @@
-import { Injectable, Signal, signal } from '@angular/core'
+import { Injectable, signal } from '@angular/core'
 import { TickersResult } from 'src/app/tickers/model/tickers-response'
-import { EditWatchlistConfig } from '../model/create-watchlist-config'
+import {
+  CreateWatchlistConfig,
+  EditWatchlistState,
+  WatchlistTicker
+} from '../model/create-watchlist-config'
 import { WatchlistService } from './watchlist.service'
 
 @Injectable()
 export class EditWatchlistService {
-  private _tickersSelected = signal<Set<TickersResult>>(new Set())
-  private _watchlistName = ''
+  private _watchlistState = signal<EditWatchlistState>({
+    name: '',
+    tickersSelected: new Set<WatchlistTicker>()
+  })
 
-  public get tickersSelected(): Signal<Set<TickersResult>> {
-    return this._tickersSelected.asReadonly()
-  }
+  public watchlistState = this._watchlistState.asReadonly()
 
   constructor(private _watchlistService: WatchlistService) {}
 
   public saveWatchList(): void {
-    const config: EditWatchlistConfig = {
-      name: this._watchlistName,
-      tickerSymbols: new Set<string>([...this._tickersSelected()].map((ticker) => ticker.ticker))
+    const editWatchlistState = this._watchlistState()
+    const config: CreateWatchlistConfig = {
+      name: editWatchlistState.name,
+      tickerSymbols: editWatchlistState.tickersSelected
     }
     this._watchlistService.saveWatchList(config)
   }
 
-  public addTickerToWatchList(ticker: TickersResult): void {
-    this._tickersSelected.update((selected) => new Set([...selected, ticker]))
+  public addTickerResultToWatchList(result: TickersResult): void {
+    const ticker: WatchlistTicker = { name: result.name, ticker: result.ticker }
+    this._watchlistState.update((state) => ({
+      name: state.name,
+      tickersSelected: new Set([...state.tickersSelected, ticker])
+    }))
   }
 
-  public removeTickerFromWatchList(ticker: TickersResult): void {
-    this._tickersSelected.update((selected) => {
-      selected.delete(ticker)
-      return new Set([...selected])
+  public removeTickerFromWatchList(ticker: WatchlistTicker): void {
+    this._watchlistState.update((state) => {
+      state.tickersSelected.delete(ticker)
+      return { name: state.name, tickersSelected: new Set([...state.tickersSelected]) }
     })
   }
 
   public updateWatchlistName(name: string): void {
-    this._watchlistName = name
+    this._watchlistState.update((state) => ({ name, tickersSelected: state.tickersSelected }))
   }
 }

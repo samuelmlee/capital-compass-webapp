@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component, Input, signal } from '@angular/core
 import { DailyBar, TickerSnapshotView, Watchlist, WatchlistView } from '../../model/watchlist'
 import { FormatKeyPipe } from 'src/app/shared/pipe/format-key.pipe'
 import { RouterModule } from '@angular/router'
+import { EditWatchlistDialogComponent } from '../edit-watchlist-dialog/edit-watchlist-dialog.component'
+import { MatDialog } from '@angular/material/dialog'
 
 @Component({
   selector: 'app-watchlist-table',
@@ -28,6 +30,17 @@ export class WatchlistTableComponent {
 
   private _watchlist = signal<WatchlistView | null>(null)
   public watchlistSignal = this._watchlist.asReadonly()
+
+  constructor(private _dialog: MatDialog) {}
+
+  public openEditDialog(): void {
+    this._dialog.open(EditWatchlistDialogComponent, {
+      width: '50vw',
+      height: '90vh',
+      hasBackdrop: true,
+      data: { watchList: this._watchlist() }
+    })
+  }
 
   public resolveDailyBarValue(dailyBar: DailyBar, key: string): string | number {
     if (!dailyBar) {

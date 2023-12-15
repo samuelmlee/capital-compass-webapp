@@ -1,24 +1,27 @@
 <div class="mb-4">
-  <h4 class="mb-4">{{ watchlistSignal()?.name }}</h4>
+  <div class="d-flex align-items-baseline">
+    <h4 class="mb-4 me-4">{{ watchlistSignal()?.name }}</h4>
+    <button class="btn btn-outline-primary" (click)="openEditDialog()">Edit</button>
+  </div>
   <table class="table table-sm table-hover">
     <thead>
       <tr>
         <th scope="col">Ticker</th>
         @for (column of tableColumns; track column) {
-          <th scope="col">{{ column | formatKey }}</th>
+        <th scope="col">{{ column | formatKey }}</th>
         }
       </tr>
     </thead>
     <tbody>
       @for (snapshot of watchlistSignal()?.tickerSnapshotViews; track snapshot.ticker) {
-        <tr>
-          <td scope="row">
-            <a [routerLink]="'/ticker-details/' + snapshot.ticker">{{ snapshot.ticker }}</a>
-          </td>
-          @for (column of tableColumns; track column) {
-            <td>{{ resolveDailyBarValue(snapshot.dailyBar, column) }}</td>
-          }
-        </tr>
+      <tr>
+        <td scope="row">
+          <a [routerLink]="'/ticker-details/' + snapshot.ticker">{{ snapshot.ticker }}</a>
+        </td>
+        @for (column of tableColumns; track column) {
+        <td>{{ resolveDailyBarValue(snapshot.dailyBar, column) }}</td>
+        }
+      </tr>
       }
     </tbody>
   </table>
