@@ -11,7 +11,7 @@ import { WatchlistService } from './watchlist.service'
 export class EditWatchlistService {
   private _watchlistState = signal<EditWatchlistState>({
     name: '',
-    tickersSelected: new Set<WatchlistTicker>()
+    tickersSelected: []
   })
 
   public watchlistState = this._watchlistState.asReadonly()
@@ -28,17 +28,21 @@ export class EditWatchlistService {
   }
 
   public addTickerResultToWatchList(result: TickersResult): void {
+    if (this._watchlistState().tickersSelected.find(ticker => ticker.symbol == result.symbol)) {
+      return
+    }
     const ticker: WatchlistTicker = { name: result.name, symbol: result.symbol }
     this._watchlistState.update((state) => ({
-      name: state.name,
-      tickersSelected: new Set([...state.tickersSelected, ticker])
+        name: state.name,
+        tickersSelected: [...state.tickersSelected, ticker]
+      
     }))
   }
 
   public removeTickerFromWatchList(ticker: WatchlistTicker): void {
     this._watchlistState.update((state) => {
-      state.tickersSelected.delete(ticker)
-      return { name: state.name, tickersSelected: new Set([...state.tickersSelected]) }
+      const updatedTickers = state.tickersSelected.filter(t => t.symbol != ticker.symbol)
+      return { name: state.name, tickersSelected: updatedTickers }
     })
   }
 

@@ -5,12 +5,12 @@ export type WatchlistTicker = {
 
 export type EditWatchlistState = {
   name: string
-  tickersSelected: Set<WatchlistTicker>
+  tickersSelected: WatchlistTicker[]
 }
 
 export type CreateWatchlistConfig = {
   name: string
-  tickerSymbols: Set<WatchlistTicker>
+  tickerSymbols: WatchlistTicker[]
 }
 
 export type EditWatchlistConfig = CreateWatchlistConfig & {
