@@ -3,7 +3,10 @@ import { MatDialog } from '@angular/material/dialog'
 import { RouterModule } from '@angular/router'
 import { FormatKeyPipe } from 'src/app/shared/pipe/format-key.pipe'
 import { DailyBar, TickerSnapshotView, Watchlist, WatchlistView } from '../../model/watchlist'
-import { EditWatchlistDialogComponent } from '../edit-watchlist-dialog/edit-watchlist-dialog.component'
+import {
+  EditDialogData,
+  EditWatchlistDialogComponent
+} from '../edit-watchlist-dialog/edit-watchlist-dialog.component'
 
 @Component({
   selector: 'app-watchlist-table',
@@ -34,11 +37,19 @@ export class WatchlistTableComponent {
   constructor(private _dialog: MatDialog) {}
 
   public openEditDialog(): void {
+    const watchlistView = this._watchlist()
+    if (!watchlistView) {
+      return
+    }
+    const dialogData: EditDialogData = {
+      watchlist: watchlistView
+    }
+
     this._dialog.open(EditWatchlistDialogComponent, {
       width: '50vw',
       height: '90vh',
       hasBackdrop: true,
-      data: { watchList: this._watchlist() }
+      data: dialogData
     })
   }
 

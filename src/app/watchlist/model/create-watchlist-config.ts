@@ -4,6 +4,7 @@ export type WatchlistTicker = {
 }
 
 export type EditWatchlistState = {
+  id?: number,
   name: string
   tickersSelected: WatchlistTicker[]
 }

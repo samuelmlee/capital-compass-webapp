@@ -1,0 +1,4 @@
+<app-tickers-filter (newSearchConfig)="updateSearchConfig($event)" [tickersFilterConfig]="tickersFilterConfig()"
+    class="mb-3"></app-tickers-filter>
+<app-tickers-table [searchConfig]="searchConfig$ | async" [tableConfig]="tickersTableConfig()"
+    class="mb-3"></app-tickers-table>

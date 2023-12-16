@@ -5,18 +5,28 @@ import {
   EditWatchlistState,
   WatchlistTicker
 } from '../model/create-watchlist-config'
+import { WatchlistView } from '../model/watchlist'
 import { WatchlistService } from './watchlist.service'
 
 @Injectable()
 export class EditWatchlistService {
+
   private _watchlistState = signal<EditWatchlistState>({
     name: '',
     tickersSelected: []
   })
-
   public watchlistState = this._watchlistState.asReadonly()
 
   constructor(private _watchlistService: WatchlistService) { }
+
+  public updateStateWithWatchlist(watchlist: WatchlistView): void {
+    this._watchlistState.update(() => ({
+      id: watchlist.id,
+      name: watchlist.name,
+      tickersSelected: watchlist.tickerSnapshotViews.map(snapshot => ({ name: snapshot.name, symbol: snapshot.symbol }))
+    }))
+
+  }
 
   public saveWatchList(): void {
     const editWatchlistState = this._watchlistState()
@@ -48,7 +58,7 @@ export class EditWatchlistService {
 
   public updateWatchlistName(name: string): void {
     this._watchlistState.update((state) => {
-      return { name: name, tickersSelected: state.tickersSelected }
+      return { name, tickersSelected: state.tickersSelected }
     }
     )
   }

@@ -3,7 +3,7 @@
 
   <mat-form-field class="w-50 mb-3">
     <mat-label>Name of the Watchlist</mat-label>
-    <input matInput [formControl]="nameControl" />
+    <input matInput [formControl]="nameControl!" />
   </mat-form-field>
   <div>Add one or several tickers to the list</div>
 
@@ -11,10 +11,7 @@
     <app-ticker-selected-table></app-ticker-selected-table>
   </div>
 
-  <app-tickers-filter (newSearchConfig)="updateSearchConfig($event)" [tickersFilterConfig]="tickersFilterConfig()"
-    class="mb-3"></app-tickers-filter>
-  <app-tickers-table [searchConfig]="searchConfig$ | async" [tableConfig]="tickersTableConfig()"
-    class="mb-3"></app-tickers-table>
+  <app-add-tickers-table></app-add-tickers-table>
 
   <mat-dialog-actions align="end">
     <button mat-dialog-close type="button" class="btn btn-light me-2">Cancel</button>
