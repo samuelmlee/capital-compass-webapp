@@ -2,6 +2,7 @@ import { Injectable, signal } from '@angular/core'
 import { TickersResult } from 'src/app/tickers/model/tickers-response'
 import {
   CreateWatchlistConfig,
+  EditWatchlistConfig,
   EditWatchlistState,
   WatchlistTicker
 } from '../model/create-watchlist-config'
@@ -31,11 +32,21 @@ export class EditWatchlistService {
 
   public saveWatchList(): void {
     const editWatchlistState = this._watchlistState()
-    const config: CreateWatchlistConfig = {
+
+    if (editWatchlistState.id == null) {
+      const config: CreateWatchlistConfig = {
+        name: editWatchlistState.name,
+        tickers: editWatchlistState.tickersSelected
+      }
+      return this._watchlistService.saveWatchList(config)
+    }
+
+    const editConfig: EditWatchlistConfig = {
+      id: editWatchlistState.id,
       name: editWatchlistState.name,
       tickers: editWatchlistState.tickersSelected
     }
-    this._watchlistService.saveWatchList(config)
+    this._watchlistService.saveWatchList(editConfig)
   }
 
   public addTickerResultToWatchList(result: TickersResult): void {
@@ -44,7 +55,7 @@ export class EditWatchlistService {
     }
     const ticker: WatchlistTicker = { name: result.name, symbol: result.symbol }
     this._watchlistState.update((state) => ({
-      name: state.name,
+      ...state,
       tickersSelected: [...state.tickersSelected, ticker]
     }))
   }
@@ -52,13 +63,13 @@ export class EditWatchlistService {
   public removeTickerFromWatchList(ticker: WatchlistTicker): void {
     this._watchlistState.update((state) => {
       const updatedTickers = state.tickersSelected.filter((t) => t.symbol != ticker.symbol)
-      return { name: state.name, tickersSelected: updatedTickers }
+      return { ...state, tickersSelected: updatedTickers }
     })
   }
 
   public updateWatchlistName(name: string): void {
     this._watchlistState.update((state) => {
-      return { name, tickersSelected: state.tickersSelected }
+      return { ...state, name }
     })
   }
 }
