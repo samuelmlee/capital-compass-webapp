@@ -4,7 +4,7 @@ import { Observable, Subject, switchMap } from 'rxjs'
 import { Result } from 'src/app/shared/model/result'
 import { fromObsToSignal } from 'src/app/shared/utils/fromObsToSignal'
 import { environment } from 'src/environments/environment'
-import { CreateWatchlistConfig } from '../model/create-watchlist-config'
+import { CreateWatchlistConfig, EditWatchlistConfig } from '../model/create-watchlist-config'
 import { Watchlist } from '../model/watchlist'
 import { WatchlistCollectionResponse } from '../model/watchlist-collection-response'
 
@@ -14,9 +14,11 @@ import { WatchlistCollectionResponse } from '../model/watchlist-collection-respo
 export class WatchlistService {
   public watchlistsSignal: Result<WatchlistCollectionResponse>
   public watchlistCreatedSignal: Result<Watchlist>
+  public watchlistUpdatedSignal: Result<Watchlist>
 
   private _getTickersSubject = new Subject<void>()
   private _postWatchListSubject = new Subject<CreateWatchlistConfig>()
+  private _putWatchListSubject = new Subject<EditWatchlistConfig>()
   private _apiUrl = environment.apiUrl
 
   constructor(private _http: HttpClient) {
@@ -26,6 +28,10 @@ export class WatchlistService {
 
     this.watchlistCreatedSignal = fromObsToSignal<Watchlist>(
       this._postWatchListSubject.pipe(switchMap((config) => this.postUserWatchList(config)))
+    )
+
+    this.watchlistUpdatedSignal = fromObsToSignal<Watchlist>(
+      this._putWatchListSubject.pipe(switchMap((config) => this.putUserWatchList(config)))
     )
   }
 
@@ -37,6 +43,10 @@ export class WatchlistService {
     this._postWatchListSubject.next(config)
   }
 
+  public updateWatchList(config: EditWatchlistConfig): void {
+    this._putWatchListSubject.next(config)
+  }
+
   private getUserWatchLists(): Observable<WatchlistCollectionResponse> {
     return this._http.get<WatchlistCollectionResponse>(`${this._apiUrl}/gateway/watchlists`, {
       withCredentials: true
@@ -44,8 +54,13 @@ export class WatchlistService {
   }
 
   private postUserWatchList(config: CreateWatchlistConfig): Observable<Watchlist> {
-    const requestConfig = { name: config.name, tickers: Array.from(config.tickerSymbols) }
-    return this._http.post<Watchlist>(`${this._apiUrl}/users/watchlists`, requestConfig, {
+    return this._http.post<Watchlist>(`${this._apiUrl}/users/watchlists`, config, {
+      withCredentials: true
+    })
+  }
+
+  private putUserWatchList(config: EditWatchlistConfig): Observable<Watchlist> {
+    return this._http.put<Watchlist>(`${this._apiUrl}/users/watchlists`, config, {
       withCredentials: true
     })
   }

@@ -10,48 +10,48 @@ import { WatchlistService } from './watchlist.service'
 
 @Injectable()
 export class EditWatchlistService {
-
   private _watchlistState = signal<EditWatchlistState>({
     name: '',
     tickersSelected: []
   })
   public watchlistState = this._watchlistState.asReadonly()
 
-  constructor(private _watchlistService: WatchlistService) { }
+  constructor(private _watchlistService: WatchlistService) {}
 
   public updateStateWithWatchlist(watchlist: WatchlistView): void {
     this._watchlistState.update(() => ({
       id: watchlist.id,
       name: watchlist.name,
-      tickersSelected: watchlist.tickerSnapshotViews.map(snapshot => ({ name: snapshot.name, symbol: snapshot.symbol }))
+      tickersSelected: watchlist.tickerSnapshotViews.map((snapshot) => ({
+        name: snapshot.name,
+        symbol: snapshot.symbol
+      }))
     }))
-
   }
 
   public saveWatchList(): void {
     const editWatchlistState = this._watchlistState()
     const config: CreateWatchlistConfig = {
       name: editWatchlistState.name,
-      tickerSymbols: editWatchlistState.tickersSelected
+      tickers: editWatchlistState.tickersSelected
     }
     this._watchlistService.saveWatchList(config)
   }
 
   public addTickerResultToWatchList(result: TickersResult): void {
-    if (this._watchlistState().tickersSelected.find(ticker => ticker.symbol == result.symbol)) {
+    if (this._watchlistState().tickersSelected.find((ticker) => ticker.symbol == result.symbol)) {
       return
     }
     const ticker: WatchlistTicker = { name: result.name, symbol: result.symbol }
     this._watchlistState.update((state) => ({
-        name: state.name,
-        tickersSelected: [...state.tickersSelected, ticker]
-      
+      name: state.name,
+      tickersSelected: [...state.tickersSelected, ticker]
     }))
   }
 
   public removeTickerFromWatchList(ticker: WatchlistTicker): void {
     this._watchlistState.update((state) => {
-      const updatedTickers = state.tickersSelected.filter(t => t.symbol != ticker.symbol)
+      const updatedTickers = state.tickersSelected.filter((t) => t.symbol != ticker.symbol)
       return { name: state.name, tickersSelected: updatedTickers }
     })
   }
@@ -59,7 +59,6 @@ export class EditWatchlistService {
   public updateWatchlistName(name: string): void {
     this._watchlistState.update((state) => {
       return { name, tickersSelected: state.tickersSelected }
-    }
-    )
+    })
   }
 }
