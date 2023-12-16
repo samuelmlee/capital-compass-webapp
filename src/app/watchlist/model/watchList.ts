@@ -10,6 +10,7 @@ export type DailyBar = {
 export type TickerSnapshot = {
   updated: number
   symbol: string
+  name: string
   day: DailyBar
   prevDay: DailyBar
 }
@@ -23,6 +24,7 @@ export type Watchlist = {
 export type TickerSnapshotView = {
   updated: number
   symbol: string
+  name: string
   dailyBar: DailyBar
 }
 

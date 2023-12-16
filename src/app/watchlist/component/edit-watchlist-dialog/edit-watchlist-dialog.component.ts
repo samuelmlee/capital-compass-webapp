@@ -6,7 +6,7 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatIconModule } from '@angular/material/icon'
 import { MatInputModule } from '@angular/material/input'
-import { Subject, debounceTime, distinctUntilChanged, map, startWith } from 'rxjs'
+import { Subject, distinctUntilChanged, map } from 'rxjs'
 import {
   TickersFilterComponent,
   TickersFilterConfig
@@ -77,12 +77,10 @@ export class EditWatchlistDialogComponent {
 
     this._watchlistName = toSignal(
       this.nameControl.valueChanges.pipe(
-        debounceTime(500),
-        startWith(''),
         distinctUntilChanged(),
-        map((value) => (value === null ? '' : value))
+        map((value) => value == null ? '' : value))
       )
-    )
+    
 
     effect(() => {
       const watchlistName = this._watchlistName()
@@ -90,10 +88,13 @@ export class EditWatchlistDialogComponent {
         return
       }
       this._watchlistTickersService.updateWatchlistName(watchlistName)
-    })
+    }, {allowSignalWrites: true})
   }
 
   public saveWatchList(): void {
+    if (!this.nameControl.valid) {
+      return
+    }
     this._watchlistTickersService.saveWatchList()
     // TODO: wait for watchlist created signal value or error before closing
     this._dialogRef.close()

@@ -16,7 +16,7 @@
       @for (snapshot of watchlistSignal()?.tickerSnapshotViews; track snapshot.symbol) {
       <tr>
         <td scope="row">
-          <a [routerLink]="'/ticker-details/' + snapshot.symbol">{{ snapshot.symbol }}</a>
+          <a [routerLink]="'/ticker-details/' + snapshot.symbol">{{ snapshot.name }}</a>
         </td>
         @for (column of tableColumns; track column) {
         <td>{{ resolveDailyBarValue(snapshot.dailyBar, column) }}</td>

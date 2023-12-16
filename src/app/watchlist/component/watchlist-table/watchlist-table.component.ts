@@ -55,6 +55,7 @@ export class WatchlistTableComponent {
       .map((snapShot) => {
         return {
           symbol: snapShot.symbol,
+          name: snapShot.name,
           updated: snapShot.updated,
           dailyBar: snapShot.day?.tradingVolume > 0 ? snapShot.day : snapShot.prevDay
         }

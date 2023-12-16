@@ -16,7 +16,7 @@ export class EditWatchlistService {
 
   public watchlistState = this._watchlistState.asReadonly()
 
-  constructor(private _watchlistService: WatchlistService) {}
+  constructor(private _watchlistService: WatchlistService) { }
 
   public saveWatchList(): void {
     const editWatchlistState = this._watchlistState()
@@ -43,6 +43,9 @@ export class EditWatchlistService {
   }
 
   public updateWatchlistName(name: string): void {
-    this._watchlistState.update((state) => ({ name, tickersSelected: state.tickersSelected }))
+    this._watchlistState.update((state) => {
+      return { name: name, tickersSelected: state.tickersSelected }
+    }
+    )
   }
 }
