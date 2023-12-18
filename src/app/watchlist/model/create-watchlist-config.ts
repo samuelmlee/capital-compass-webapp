@@ -11,7 +11,7 @@ export type EditWatchlistState = {
 
 export type CreateWatchlistConfig = {
   name: string
-  tickers: WatchlistTicker[]
+  tickerSymbols: Set<string>
 }
 
 export type EditWatchlistConfig = CreateWatchlistConfig & {

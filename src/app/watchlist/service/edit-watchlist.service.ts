@@ -36,7 +36,7 @@ export class EditWatchlistService {
     if (editWatchlistState.id == null) {
       const config: CreateWatchlistConfig = {
         name: editWatchlistState.name,
-        tickers: editWatchlistState.tickersSelected
+        tickerSymbols: new Set(editWatchlistState.tickersSelected.map((ticker) => ticker.symbol))
       }
       return this._watchlistService.saveWatchList(config)
     }
@@ -44,7 +44,7 @@ export class EditWatchlistService {
     const editConfig: EditWatchlistConfig = {
       id: editWatchlistState.id,
       name: editWatchlistState.name,
-      tickers: editWatchlistState.tickersSelected
+      tickerSymbols: new Set(editWatchlistState.tickersSelected.map((ticker) => ticker.symbol))
     }
     this._watchlistService.saveWatchList(editConfig)
   }
