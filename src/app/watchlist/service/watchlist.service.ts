@@ -4,7 +4,7 @@ import { Observable, Subject, switchMap } from 'rxjs'
 import { Result } from 'src/app/shared/model/result'
 import { fromObsToSignal } from 'src/app/shared/utils/fromObsToSignal'
 import { environment } from 'src/environments/environment'
-import { CreateWatchlistConfig, EditWatchlistConfig } from '../model/create-watchlist-config'
+import { CreateWatchlistConfig, EditWatchlistConfig } from '../model/edit-watchlist-config'
 import { Watchlist } from '../model/watchlist'
 import { WatchlistCollectionResponse } from '../model/watchlist-collection-response'
 
@@ -15,10 +15,13 @@ export class WatchlistService {
   public watchlistsSignal: Result<WatchlistCollectionResponse>
   public watchlistCreatedSignal: Result<Watchlist>
   public watchlistUpdatedSignal: Result<Watchlist>
+  public watchlistDeletedSignal: Result<boolean>
 
   private _getTickersSubject = new Subject<void>()
   private _postWatchListSubject = new Subject<CreateWatchlistConfig>()
   private _putWatchListSubject = new Subject<EditWatchlistConfig>()
+  private _deleteWatchListSubject = new Subject<number>()
+
   private _apiUrl = environment.apiUrl
 
   constructor(private _http: HttpClient) {
@@ -33,18 +36,26 @@ export class WatchlistService {
     this.watchlistUpdatedSignal = fromObsToSignal<Watchlist>(
       this._putWatchListSubject.pipe(switchMap((config) => this.putUserWatchList(config)))
     )
+
+    this.watchlistDeletedSignal = fromObsToSignal<boolean>(
+      this._deleteWatchListSubject.pipe(switchMap((id) => this.deleteUserWatchList(id)))
+    )
   }
 
   public fetchWatchLists(): void {
     this._getTickersSubject.next()
   }
 
-  public saveWatchList(config: CreateWatchlistConfig): void {
+  public createWatchList(config: CreateWatchlistConfig): void {
     this._postWatchListSubject.next(config)
   }
 
   public updateWatchList(config: EditWatchlistConfig): void {
     this._putWatchListSubject.next(config)
+  }
+
+  public deleteWatchlist(id: number): void {
+    this._deleteWatchListSubject.next(id)
   }
 
   private getUserWatchLists(): Observable<WatchlistCollectionResponse> {
@@ -71,5 +82,11 @@ export class WatchlistService {
         withCredentials: true
       }
     )
+  }
+
+  private deleteUserWatchList(watchlistId: number): Observable<boolean> {
+    return this._http.delete<boolean>(`${this._apiUrl}/users/watchlists/${watchlistId}`, {
+      withCredentials: true
+    })
   }
 }

@@ -7,14 +7,10 @@ import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatIconModule } from '@angular/material/icon'
 import { MatInputModule } from '@angular/material/input'
 import { distinctUntilChanged, map } from 'rxjs'
-import { WatchlistView } from '../../model/watchlist'
+import { WatchDialogData } from '../../model/watchlist-dialog-data'
 import { EditWatchlistService } from '../../service/edit-watchlist.service'
 import { AddTickersTableComponent } from '../add-tickers-table/add-tickers-table.component'
 import { TickerSelectedTableComponent } from '../ticker-selected-table/ticker-selected-table.component'
-
-export type EditDialogData = {
-  watchlist: WatchlistView
-}
 
 @Component({
   selector: 'app-edit-watchlist-dialog',
@@ -43,7 +39,7 @@ export class EditWatchlistDialogComponent {
   constructor(
     private _editWatchlistService: EditWatchlistService,
     private _dialogRef: MatDialogRef<EditWatchlistDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) private _dialogData: EditDialogData
+    @Inject(MAT_DIALOG_DATA) private _dialogData: WatchDialogData
   ) {
     if (this._dialogData) {
       this._editWatchlistService.updateStateWithWatchlist(this._dialogData.watchlist)

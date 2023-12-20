@@ -1,7 +1,8 @@
 <div class="mb-4">
   <div class="d-flex align-items-baseline">
     <h4 class="mb-4 me-4">{{ watchlistSignal()?.name }}</h4>
-    <button class="btn btn-outline-primary" (click)="openEditDialog()">Edit</button>
+    <button class="btn btn-outline-primary me-4" (click)="openEditDialog()">Edit</button>
+    <button class="btn btn-outline-primary" (click)="openDeleteDialog()">Delete</button>
   </div>
   <table class="table table-sm table-hover">
     <thead>

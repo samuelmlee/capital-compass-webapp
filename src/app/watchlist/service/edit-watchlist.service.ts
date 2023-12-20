@@ -5,7 +5,7 @@ import {
   EditWatchlistConfig,
   EditWatchlistState,
   WatchlistTicker
-} from '../model/create-watchlist-config'
+} from '../model/edit-watchlist-config'
 import { WatchlistView } from '../model/watchlist'
 import { WatchlistService } from './watchlist.service'
 
@@ -38,7 +38,7 @@ export class EditWatchlistService {
         name: editWatchlistState.name,
         tickerSymbols: new Set(editWatchlistState.tickersSelected.map((ticker) => ticker.symbol))
       }
-      return this._watchlistService.saveWatchList(config)
+      return this._watchlistService.createWatchList(config)
     }
 
     const editConfig: EditWatchlistConfig = {
@@ -47,6 +47,14 @@ export class EditWatchlistService {
       tickerSymbols: new Set(editWatchlistState.tickersSelected.map((ticker) => ticker.symbol))
     }
     this._watchlistService.updateWatchList(editConfig)
+  }
+
+  public deleteWatchList(): void {
+    const editWatchlistState = this._watchlistState()
+    if (!editWatchlistState.id) {
+      return
+    }
+    this._watchlistService.deleteWatchlist(editWatchlistState.id)
   }
 
   public addTickerResultToWatchList(result: TickersResult): void {

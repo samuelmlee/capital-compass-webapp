@@ -18,14 +18,20 @@ export class WatchlistPanelComponent implements OnInit {
     const watchlists = this._watchlistService.watchlistsSignal.value()
     return watchlists?.sort((a, b) => (a.name < b.name ? -1 : 1))
   })
-  private _watchlistCreatedSignal = this._watchlistService.watchlistCreatedSignal
+  private _watchlistsUpdated = computed(() => {
+    return (
+      this._watchlistService.watchlistCreatedSignal.value() ||
+      this._watchlistService.watchlistUpdatedSignal.value() ||
+      this._watchlistService.watchlistDeletedSignal.value()
+    )
+  })
 
   constructor(
     private _dialog: MatDialog,
     private _watchlistService: WatchlistService
   ) {
     effect(() => {
-      if (this._watchlistCreatedSignal.value()) {
+      if (this._watchlistsUpdated()) {
         this._watchlistService.fetchWatchLists()
       }
     })
@@ -34,7 +40,7 @@ export class WatchlistPanelComponent implements OnInit {
     this._watchlistService.fetchWatchLists()
   }
 
-  public openEditDialog(): void {
+  public openCreateDialog(): void {
     this._dialog.open(EditWatchlistDialogComponent, {
       width: '50vw',
       height: '90vh',

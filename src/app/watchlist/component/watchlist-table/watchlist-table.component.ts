@@ -3,10 +3,9 @@ import { MatDialog } from '@angular/material/dialog'
 import { RouterModule } from '@angular/router'
 import { FormatKeyPipe } from 'src/app/shared/pipe/format-key.pipe'
 import { DailyBar, TickerSnapshotView, Watchlist, WatchlistView } from '../../model/watchlist'
-import {
-  EditDialogData,
-  EditWatchlistDialogComponent
-} from '../edit-watchlist-dialog/edit-watchlist-dialog.component'
+import { WatchDialogData } from '../../model/watchlist-dialog-data'
+import { DeleteWatchlistDialogComponent } from '../delete-watchlist-dialog/delete-watchlist-dialog.component'
+import { EditWatchlistDialogComponent } from '../edit-watchlist-dialog/edit-watchlist-dialog.component'
 
 @Component({
   selector: 'app-watchlist-table',
@@ -41,13 +40,30 @@ export class WatchlistTableComponent {
     if (!watchlistView) {
       return
     }
-    const dialogData: EditDialogData = {
+    const dialogData: WatchDialogData = {
       watchlist: watchlistView
     }
 
     this._dialog.open(EditWatchlistDialogComponent, {
       width: '50vw',
       height: '90vh',
+      hasBackdrop: true,
+      data: dialogData
+    })
+  }
+
+  public openDeleteDialog(): void {
+    const watchlistView = this._watchlist()
+    if (!watchlistView) {
+      return
+    }
+    const dialogData: WatchDialogData = {
+      watchlist: watchlistView
+    }
+
+    this._dialog.open(DeleteWatchlistDialogComponent, {
+      width: '25vw',
+      height: '25vh',
       hasBackdrop: true,
       data: dialogData
     })

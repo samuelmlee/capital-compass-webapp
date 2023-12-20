@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core'
-import { WatchlistTicker } from '../../model/create-watchlist-config'
+import { WatchlistTicker } from '../../model/edit-watchlist-config'
 import { EditWatchlistService } from '../../service/edit-watchlist.service'
 
 @Component({
