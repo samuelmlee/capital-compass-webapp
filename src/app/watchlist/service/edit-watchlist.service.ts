@@ -46,7 +46,7 @@ export class EditWatchlistService {
       name: editWatchlistState.name,
       tickerSymbols: new Set(editWatchlistState.tickersSelected.map((ticker) => ticker.symbol))
     }
-    this._watchlistService.saveWatchList(editConfig)
+    this._watchlistService.updateWatchList(editConfig)
   }
 
   public addTickerResultToWatchList(result: TickersResult): void {

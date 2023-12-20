@@ -6,7 +6,7 @@
   <table class="table table-sm table-hover">
     <thead>
       <tr>
-        <th scope="col">Ticker</th>
+        <th scope="col" class="ticker-column">Ticker</th>
         @for (column of tableColumns; track column) {
         <th scope="col">{{ column | formatKey }}</th>
         }
@@ -15,7 +15,7 @@
     <tbody>
       @for (snapshot of watchlistSignal()?.tickerSnapshotViews; track snapshot.symbol) {
       <tr>
-        <td scope="row">
+        <td scope="row" class="ticker-column">
           <a [routerLink]="'/ticker-details/' + snapshot.symbol">{{ snapshot.name }}</a>
         </td>
         @for (column of tableColumns; track column) {
