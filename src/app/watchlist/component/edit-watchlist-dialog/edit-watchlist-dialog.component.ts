@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectionStrategy, Component, Inject, Signal, effect } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Inject, Signal, effect, signal } from '@angular/core'
 import { toSignal } from '@angular/core/rxjs-interop'
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms'
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog'
@@ -38,6 +38,7 @@ export class EditWatchlistDialogComponent {
   public nameControl: FormControl | undefined
 
   private _watchlistName: Signal<string | undefined> | undefined
+  private _dialogTitle = signal<string>('Create Watchlist')
 
   constructor(
     private _editWatchlistService: EditWatchlistService,
@@ -46,6 +47,7 @@ export class EditWatchlistDialogComponent {
   ) {
     if (this._dialogData) {
       this._editWatchlistService.updateStateWithWatchlist(this._dialogData.watchlist)
+      this._dialogTitle.set('Edit Watchlist')
     }
 
     this.initFormControl()
@@ -60,6 +62,10 @@ export class EditWatchlistDialogComponent {
       },
       { allowSignalWrites: true }
     )
+  }
+
+  public get dialogTitle(): Signal<string> {
+    return this._dialogTitle.asReadonly()
   }
 
   public saveWatchList(): void {
