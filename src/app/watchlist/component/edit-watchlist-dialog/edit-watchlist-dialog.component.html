@@ -1,13 +1,13 @@
-<div class="p-4 max">
-  <h2 class="text-center display-6 mb-3">Create Watchlist</h2>
+<div class="p-3 max">
+  <h2 class="text-center display-6">Create Watchlist</h2>
 
-  <mat-form-field class="w-50 mb-3">
+  <mat-form-field class="w-50">
     <mat-label>Name of the Watchlist</mat-label>
     <input matInput [formControl]="nameControl!" />
   </mat-form-field>
   <div>Add one or several tickers to the list</div>
 
-  <div class="table-container overflow-y-auto mb-3">
+  <div class="table-container overflow-y-auto">
     <app-ticker-selected-table></app-ticker-selected-table>
   </div>
 

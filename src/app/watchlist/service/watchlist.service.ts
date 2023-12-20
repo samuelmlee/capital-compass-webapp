@@ -54,14 +54,22 @@ export class WatchlistService {
   }
 
   private postUserWatchList(config: CreateWatchlistConfig): Observable<Watchlist> {
-    return this._http.post<Watchlist>(`${this._apiUrl}/users/watchlists`, config, {
-      withCredentials: true
-    })
+    return this._http.post<Watchlist>(
+      `${this._apiUrl}/users/watchlists`,
+      { ...config, tickerSymbols: [...config.tickerSymbols] },
+      {
+        withCredentials: true
+      }
+    )
   }
 
   private putUserWatchList(config: EditWatchlistConfig): Observable<Watchlist> {
-    return this._http.put<Watchlist>(`${this._apiUrl}/users/watchlists`, config, {
-      withCredentials: true
-    })
+    return this._http.put<Watchlist>(
+      `${this._apiUrl}/users/watchlists`,
+      { ...config, tickerSymbols: [...config.tickerSymbols] },
+      {
+        withCredentials: true
+      }
+    )
   }
 }
