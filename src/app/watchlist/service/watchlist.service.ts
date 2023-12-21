@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { Observable, Subject, switchMap } from 'rxjs'
+import { Observable, Subject, map, switchMap } from 'rxjs'
 import { Result } from 'src/app/shared/model/result'
 import { fromObsToSignal } from 'src/app/shared/utils/fromObsToSignal'
 import { environment } from 'src/environments/environment'
@@ -38,7 +38,9 @@ export class WatchlistService {
     )
 
     this.watchlistDeletedSignal = fromObsToSignal<boolean>(
-      this._deleteWatchListSubject.pipe(switchMap((id) => this.deleteUserWatchList(id)))
+      this._deleteWatchListSubject.pipe(
+        switchMap((id) => this.deleteUserWatchList(id).pipe(map(() => true)))
+      )
     )
   }
 

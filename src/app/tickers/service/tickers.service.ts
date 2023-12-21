@@ -61,8 +61,8 @@ export class TickersService {
     const options = {
       params: new HttpParams()
         .set('type', searchConfig?.type ?? '')
-        .set('search-term', searchConfig?.searchTerm ?? '')
-        .set('ticker', searchConfig?.symbol ?? '')
+        .set('searchTerm', searchConfig?.searchTerm ?? '')
+        .set('symbol', searchConfig?.symbol ?? '')
     }
     return this._http
       .get<TickersResponse>(`${this.apiUrl}/stocks/reference/tickers`, options)
