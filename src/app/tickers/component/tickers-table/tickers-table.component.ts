@@ -110,6 +110,9 @@ export class TickersTableComponent {
     if (event.pageIndex < this._dataSource.data.length / this._tickersTableConfig().pageSize - 1) {
       return
     }
+    if (!this._nextCursor) {
+      return
+    }
     this._tickerService.fetchTickersByCursor(this._nextCursor)
   }
 

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectionStrategy, Component, OnInit, computed, effect } from '@angular/core'
+import { ChangeDetectionStrategy, Component, OnInit, computed } from '@angular/core'
 import { MatDialog } from '@angular/material/dialog'
 import { WatchlistService } from '../../service/watchlist.service'
 import { EditWatchlistDialogComponent } from '../edit-watchlist-dialog/edit-watchlist-dialog.component'
@@ -18,24 +18,11 @@ export class WatchlistPanelComponent implements OnInit {
     const watchlists = this._watchlistService.watchlistsSignal.value()
     return watchlists?.sort((a, b) => (a.name < b.name ? -1 : 1))
   })
-  private _watchlistsUpdated = computed(() => {
-    return (
-      this._watchlistService.watchlistCreatedSignal.value() ||
-      this._watchlistService.watchlistUpdatedSignal.value() ||
-      this._watchlistService.watchlistDeletedSignal.value()
-    )
-  })
 
   constructor(
     private _dialog: MatDialog,
     private _watchlistService: WatchlistService
-  ) {
-    effect(() => {
-      if (this._watchlistsUpdated()) {
-        this._watchlistService.fetchWatchLists()
-      }
-    })
-  }
+  ) {}
   public ngOnInit(): void {
     this._watchlistService.fetchWatchLists()
   }

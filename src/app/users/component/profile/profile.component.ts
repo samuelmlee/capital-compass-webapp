@@ -13,5 +13,5 @@ import { AuthService } from 'src/app/auth/service/auth.service'
 export class ProfileComponent {
   public user = computed(() => this.authService.user.value())
 
-  public constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) {}
 }
