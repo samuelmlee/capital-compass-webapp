@@ -17,7 +17,6 @@ type NavbarElement = { title: string; icon: string; link: string }
 })
 export class NavBarComponent {
   public readonly navElements = signal<NavbarElement[]>([
-    { title: 'Portfolio', icon: 'folder', link: '/portfolio' },
     { title: 'Watchlist', icon: 'visibility', link: '/watchlist' },
     { title: 'Search', icon: 'search', link: '/search' }
   ])

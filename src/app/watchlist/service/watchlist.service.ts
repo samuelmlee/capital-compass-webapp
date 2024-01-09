@@ -1,6 +1,6 @@
-import { HttpClient, HttpResponse } from '@angular/common/http'
+import { HttpClient } from '@angular/common/http'
 import { Injectable, effect } from '@angular/core'
-import { Observable, Subject, catchError, map, of, switchMap } from 'rxjs'
+import { Observable, Subject, switchMap, tap } from 'rxjs'
 import { Result } from 'src/app/shared/model/result'
 import { fromObsToSignal } from 'src/app/shared/utils/fromObsToSignal'
 import { environment } from 'src/environments/environment'
@@ -15,7 +15,6 @@ export class WatchlistService {
   public watchlistsSignal: Result<WatchlistCollectionResponse>
   public watchlistCreatedSignal: Result<Watchlist>
   public watchlistUpdatedSignal: Result<Watchlist>
-  public watchlistDeletedSignal: Result<string>
 
   private _getTickersSubject = new Subject<void>()
   private _postWatchListSubject = new Subject<CreateWatchlistConfig>()
@@ -37,16 +36,17 @@ export class WatchlistService {
       this._putWatchListSubject.pipe(switchMap((config) => this.putUserWatchList(config)))
     )
 
-    this.watchlistDeletedSignal = fromObsToSignal<string>(
-      this._deleteWatchListSubject.pipe(switchMap((id) => this.deleteUserWatchList(id)))
-    )
+    this._deleteWatchListSubject
+      .pipe(
+        switchMap((id) => this.deleteUserWatchList(id)),
+        tap(() => this.fetchWatchLists())
+      )
+      .subscribe({
+        error: (error) => console.log(error)
+      })
 
     effect(() => {
-      if (
-        this.watchlistCreatedSignal.value() ||
-        this.watchlistUpdatedSignal.value() ||
-        this.watchlistDeletedSignal.value()
-      ) {
+      if (this.watchlistCreatedSignal.value() || this.watchlistUpdatedSignal.value()) {
         this.fetchWatchLists()
       }
     })
@@ -94,14 +94,9 @@ export class WatchlistService {
     )
   }
 
-  private deleteUserWatchList(watchlistId: number): Observable<string> {
-    return this._http
-      .delete<HttpResponse<void>>(`${this._apiUrl}/users/watchlists/${watchlistId}`, {
-        withCredentials: true
-      })
-      .pipe(
-        map(() => `${watchlistId} deleted`),
-        catchError((error) => of(error))
-      )
+  private deleteUserWatchList(watchlistId: number): Observable<void> {
+    return this._http.delete<void>(`${this._apiUrl}/users/watchlists/${watchlistId}`, {
+      withCredentials: true
+    })
   }
 }

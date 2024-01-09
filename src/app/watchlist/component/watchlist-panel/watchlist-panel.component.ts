@@ -31,7 +31,8 @@ export class WatchlistPanelComponent implements OnInit {
     this._dialog.open(EditWatchlistDialogComponent, {
       width: '50vw',
       height: '90vh',
-      hasBackdrop: true
+      hasBackdrop: true,
+      disableClose: true
     })
   }
 }
