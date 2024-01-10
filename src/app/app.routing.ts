@@ -5,13 +5,16 @@ const routes: Routes = [
   { path: '', component: LandingComponent },
   {
     path: 'profile',
-    loadComponent: () => import('./users/component/profile/profile.component').then((mod) => mod.ProfileComponent)
+    loadComponent: () =>
+      import('./users/component/profile/profile.component').then((mod) => mod.ProfileComponent)
     // canActivate: [authGuard]
   },
   {
     path: 'search',
     loadComponent: () =>
-      import('./tickers/component/tickers-panel/tickers-panel.component').then((mod) => mod.TickersPanelComponent)
+      import('./tickers/component/tickers-panel/tickers-panel.component').then(
+        (mod) => mod.TickersPanelComponent
+      )
     // canActivate: [authGuard]
   },
   {
@@ -24,9 +27,19 @@ const routes: Routes = [
   },
   {
     path: 'ticker-details/:ticker',
-    loadComponent: () => import('./tickers/component/tickers-detail/tickers-detail.component').then(
-      (mod) => mod.TickersDetailComponent) 
-   }
+    loadComponent: () =>
+      import('./tickers/component/tickers-detail/tickers-detail.component').then(
+        (mod) => mod.TickersDetailComponent
+      )
+  },
+  {
+    path: 'admin-user',
+    loadComponent: () =>
+      import('./admin/component/admin-user-panel/admin-user-panel.component').then(
+        (mod) => mod.AdminUserPanelComponent
+      )
+    // canActivate: [authGuard]
+  }
 ]
 
 export const routing = RouterModule.forRoot(routes, {

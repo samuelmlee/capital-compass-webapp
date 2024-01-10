@@ -1,0 +1,24 @@
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">User Name</th>
+      <th scope="col">Email</th>
+      <th scope="col">Enabled</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (user of adminUsersSignal.value(); track user.username) {
+      <tr>
+        <td scope="row">
+          {{ user.username }}
+        </td>
+        <td scope="row">
+          {{ user.email }}
+        </td>
+        <td scope="row">
+          {{ user.enabled }}
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>
