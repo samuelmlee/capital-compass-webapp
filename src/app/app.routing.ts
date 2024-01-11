@@ -1,4 +1,5 @@
 import { RouterModule, Routes } from '@angular/router'
+import { authGuard } from './auth/service/auth.guard'
 import { LandingComponent } from './core/component/landing/landing.component'
 
 const routes: Routes = [
@@ -6,8 +7,8 @@ const routes: Routes = [
   {
     path: 'profile',
     loadComponent: () =>
-      import('./users/component/profile/profile.component').then((mod) => mod.ProfileComponent)
-    // canActivate: [authGuard]
+      import('./users/component/profile/profile.component').then((mod) => mod.ProfileComponent),
+    canActivate: [authGuard('USER')]
   },
   {
     path: 'search',
@@ -15,15 +16,14 @@ const routes: Routes = [
       import('./tickers/component/tickers-panel/tickers-panel.component').then(
         (mod) => mod.TickersPanelComponent
       )
-    // canActivate: [authGuard]
   },
   {
     path: 'watchlist',
     loadComponent: () =>
       import('./watchlist/component/watchlist-panel/watchlist-panel.component').then(
         (mod) => mod.WatchlistPanelComponent
-      )
-    // canActivate: [authGuard]
+      ),
+    canActivate: [authGuard('USER')]
   },
   {
     path: 'ticker-details/:ticker',
@@ -37,8 +37,8 @@ const routes: Routes = [
     loadComponent: () =>
       import('./admin/component/admin-user-panel/admin-user-panel.component').then(
         (mod) => mod.AdminUserPanelComponent
-      )
-    // canActivate: [authGuard]
+      ),
+    canActivate: [authGuard('ADMIN')]
   }
 ]
 
