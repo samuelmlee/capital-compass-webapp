@@ -1,16 +1,16 @@
-<nav class="navbar bg-light p-4">
-  <div class="container-fluid">
-    <a routerLink="/" class="navbar-brand shadow-none">
-      <span>{{ title }}</span>
+<mat-toolbar class="bg-light p-4">
+  <div class="d-flex justify-content-between w-100">
+    <a routerLink="/" class="text-decoration-none">
+      <div>{{ title }}</div>
     </a>
 
-    <div class="d-flex ms-auto">
+    <div class="d-flex">
       @if (user()) {
-        <a routerLink="/profile" class="btn navbar-text me-3 text-decoration-none" aria-pressed="true">
+        <a routerLink="/profile" class="me-3 text-decoration-none" aria-pressed="true">
           Welcome {{ user()?.firstName }}
         </a>
       }
       <app-auth></app-auth>
     </div>
   </div>
-</nav>
+</mat-toolbar>

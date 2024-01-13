@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core'
+import { MatButtonModule } from '@angular/material/button'
 import { AuthService } from '../../service/auth.service'
 
 @Component({
   selector: 'app-auth',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatButtonModule],
   templateUrl: './auth.component.html',
   styleUrl: './auth.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

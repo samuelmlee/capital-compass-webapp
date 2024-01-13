@@ -12,7 +12,14 @@ import { AuthService } from 'src/app/auth/service/auth.service'
   styleUrl: './toolbar.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [CommonModule, MatToolbarModule, MatButtonModule, RouterModule, AuthComponent]
+  imports: [
+    CommonModule,
+    MatToolbarModule,
+    MatButtonModule,
+    MatToolbarModule,
+    RouterModule,
+    AuthComponent
+  ]
 })
 export class ToolbarComponent {
   @Input() public title: string = ''
