@@ -17,7 +17,7 @@ body {
   margin: 0;
   padding: 0;
 
-  font-family: sans-serif;
+  font-family: 'Open Sans', sans-serif;
 }
 
 app-root {
@@ -26,4 +26,8 @@ app-root {
 
 mat-nav-list.mdc-list {
   padding: 0;
+}
+
+.flex-basis-0 {
+  flex-basis: 0;
 }

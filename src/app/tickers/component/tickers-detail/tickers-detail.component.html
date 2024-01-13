@@ -2,7 +2,7 @@
   <h2 class="mb-3">{{ tickerDetails.name }} ({{ tickerDetails.symbol }})</h2>
 
   <div class="d-flex">
-    <div class="w-50 me-3">
+    <div class="flex-grow-1 flex-basis-0 me-3">
       @for (detail of primaryDetails(); track detail.key) {
         <div class="mb-3">
           <span class="me-3">{{ detail.key | formatKey }}:</span>
@@ -11,7 +11,7 @@
       }
     </div>
 
-    <div class="w-50">
+    <div class="flex-grow-1 flex-basis-0">
       @for (detail of secondaryDetails(); track detail.key) {
         <div class="mb-3">
           <span class="me-3">{{ detail.key | formatKey }}:</span>
