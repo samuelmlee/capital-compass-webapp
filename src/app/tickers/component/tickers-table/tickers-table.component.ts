@@ -16,6 +16,7 @@ import {
 } from '@angular/material/paginator'
 import { MatTableDataSource, MatTableModule } from '@angular/material/table'
 
+import { MatButtonModule } from '@angular/material/button'
 import { RouterModule } from '@angular/router'
 import { CastPipe } from 'src/app/shared/pipe/cast.pipe'
 import { TickersResponse, TickersResponseSource, TickersResult } from '../../model/tickers-response'
@@ -32,7 +33,14 @@ import { NoTotalItemsPaginatorIntl } from './no-total-items-paginator-intl'
 @Component({
   selector: 'app-tickers-table',
   standalone: true,
-  imports: [CommonModule, MatTableModule, MatPaginatorModule, RouterModule, CastPipe],
+  imports: [
+    CommonModule,
+    MatButtonModule,
+    MatTableModule,
+    MatPaginatorModule,
+    RouterModule,
+    CastPipe
+  ],
   providers: [{ provide: MatPaginatorIntl, useClass: NoTotalItemsPaginatorIntl }],
   templateUrl: './tickers-table.component.html',
   styleUrl: './tickers-table.component.scss',

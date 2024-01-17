@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, OnInit, computed } from '@angular/core'
+import { MatButtonModule } from '@angular/material/button'
 import { MatDialog } from '@angular/material/dialog'
 import { WatchlistService } from '../../service/watchlist.service'
 import { EditWatchlistDialogComponent } from '../edit-watchlist-dialog/edit-watchlist-dialog.component'
@@ -8,7 +9,7 @@ import { WatchlistTableComponent } from '../watchlist-table/watchlist-table.comp
 @Component({
   selector: 'app-watch-list-panel',
   standalone: true,
-  imports: [CommonModule, WatchlistTableComponent],
+  imports: [CommonModule, MatButtonModule, WatchlistTableComponent],
   templateUrl: './watchlist-panel.component.html',
   styleUrl: './watchlist-panel.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

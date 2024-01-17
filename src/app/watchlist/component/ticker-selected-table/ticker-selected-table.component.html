@@ -1,16 +1,14 @@
 <table class="table">
   <tbody>
     @for (ticker of tickersSelected(); track ticker.symbol) {
-    <tr>
-      <th scope="row"></th>
-      <td>{{ ticker.symbol }}</td>
-      <td>{{ ticker.name }}</td>
-      <td>
-        <button type="button" class="btn btn-secondary btn-sm" (click)="removeTickerFromWatchList(ticker)">
-          Remove
-        </button>
-      </td>
-    </tr>
+      <tr>
+        <th scope="row"></th>
+        <td>{{ ticker.symbol }}</td>
+        <td>{{ ticker.name }}</td>
+        <td>
+          <button mat-raised-button (click)="removeTickerFromWatchList(ticker)">Remove</button>
+        </td>
+      </tr>
     }
   </tbody>
 </table>

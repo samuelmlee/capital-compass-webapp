@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, signal } from '@angular/core'
+import { MatButtonModule } from '@angular/material/button'
 import { MatDialog } from '@angular/material/dialog'
 import { RouterModule } from '@angular/router'
 import { FormatKeyPipe } from 'src/app/shared/pipe/format-key.pipe'
@@ -10,7 +11,7 @@ import { EditWatchlistDialogComponent } from '../edit-watchlist-dialog/edit-watc
 @Component({
   selector: 'app-watchlist-table',
   standalone: true,
-  imports: [RouterModule, FormatKeyPipe],
+  imports: [MatButtonModule, RouterModule, FormatKeyPipe],
   templateUrl: './watchlist-table.component.html',
   styleUrl: './watchlist-table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -48,7 +49,8 @@ export class WatchlistTableComponent {
       width: '50vw',
       height: '90vh',
       hasBackdrop: true,
-      data: dialogData
+      data: dialogData,
+      disableClose: true
     })
   }
 

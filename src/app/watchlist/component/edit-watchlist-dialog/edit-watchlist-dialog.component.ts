@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Inject, Signal, effect, signal } from '@angular/core'
 import { toSignal } from '@angular/core/rxjs-interop'
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms'
+import { MatButtonModule } from '@angular/material/button'
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatIconModule } from '@angular/material/icon'
@@ -18,6 +19,7 @@ import { TickerSelectedTableComponent } from '../ticker-selected-table/ticker-se
   imports: [
     CommonModule,
     MatIconModule,
+    MatButtonModule,
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
