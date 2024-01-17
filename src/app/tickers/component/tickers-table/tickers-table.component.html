@@ -1,5 +1,5 @@
-<div class="table-container overflow-y-auto">
-  <table mat-table [dataSource]="tickersDataSource()">
+<div class="table-container overflow-auto">
+  <table mat-table [dataSource]="tickersDataSource()" [fixedLayout]="true">
     @for (column of tickersTableConfig().columnDefs; track column.key) {
       <ng-container matColumnDef="{{ column.key }}">
         <th mat-header-cell *matHeaderCellDef [ngClass]="column.class.join(' ')">
@@ -17,9 +17,9 @@
             }
             @case (ColumnType.LINK) {
               @if (column | cast: LinkColumnDef; as linkColumn) {
-                <a [routerLink]="[linkColumn.routePath, element[linkColumn.routeParam]]">{{
-                  element[column.key]
-                }}</a>
+                <a [routerLink]="[linkColumn.routePath, element[linkColumn.routeParam]]">
+                  {{ element[column.key] }}
+                </a>
               }
             }
             @default {

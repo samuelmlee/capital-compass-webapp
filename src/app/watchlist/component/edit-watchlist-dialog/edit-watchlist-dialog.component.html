@@ -5,9 +5,9 @@
     <mat-label>Name of the Watchlist</mat-label>
     <input matInput [formControl]="nameControl!" />
   </mat-form-field>
-  <div>Add one or several tickers to the list</div>
+  <div class="mb-3">Add one or several tickers to the list</div>
 
-  <div class="table-container overflow-y-auto">
+  <div class="table-container overflow-auto mb-3">
     <app-ticker-selected-table></app-ticker-selected-table>
   </div>
 

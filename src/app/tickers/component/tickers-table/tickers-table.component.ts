@@ -67,7 +67,7 @@ export class TickersTableComponent {
       {
         key: 'name',
         title: 'Name',
-        class: ['w-50'],
+        class: ['w-25'],
         type: COLUMN_TYPE.LINK,
         routePath: '/ticker-details/',
         routeParam: 'symbol'

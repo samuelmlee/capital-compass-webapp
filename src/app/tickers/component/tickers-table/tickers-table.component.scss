@@ -2,3 +2,10 @@
   // 56px for paginator, 78px for filter
   max-height: calc(100% - 56px - 78px);
 }
+
+.ellipsis {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: auto;
+}
