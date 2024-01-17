@@ -4,19 +4,19 @@
     <button mat-raised-button class="me-4" (click)="openEditDialog()">Edit</button>
     <button mat-raised-button (click)="openDeleteDialog()">Delete</button>
   </div>
-  <table class="table table-sm table-hover">
+  <table class="native-table w-100">
     <thead>
       <tr>
-        <th scope="col" class="ticker-column">Ticker</th>
+        <th class="w-25">Ticker</th>
         @for (column of tableColumns; track column) {
-          <th scope="col">{{ column | formatKey }}</th>
+          <th>{{ column | formatKey }}</th>
         }
       </tr>
     </thead>
     <tbody>
       @for (snapshot of watchlistSignal()?.tickerSnapshotViews; track snapshot.symbol) {
         <tr>
-          <td scope="row" class="ticker-column">
+          <td class="w-25">
             <a [routerLink]="'/ticker-details/' + snapshot.symbol">{{ snapshot.name }}</a>
           </td>
           @for (column of tableColumns; track column) {

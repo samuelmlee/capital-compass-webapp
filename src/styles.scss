@@ -31,3 +31,18 @@ mat-nav-list.mdc-list {
 .flex-basis-0 {
   flex-basis: 0;
 }
+
+table.native-table,
+table.native-table th,
+table.native-table td {
+  border-bottom: 1px solid grey;
+  border-collapse: collapse;
+  padding: 5px;
+  text-align: center;
+}
+table.native-table tbody tr:nth-child(odd) {
+  background-color: #f1f1f1;
+}
+table.native-table tbody tr:nth-child(even) {
+  background-color: #ffffff;
+}
