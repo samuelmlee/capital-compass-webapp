@@ -27,7 +27,7 @@ export class AdminUserService {
   }
 
   private getAdminUsers(): Observable<AdminUserDTO[]> {
-    return this._http.get<AdminUserDTO[]>(`${this._apiUrl}/admin/users`, {
+    return this._http.get<AdminUserDTO[]>(`${this._apiUrl}/users/admin-users`, {
       withCredentials: true
     })
   }

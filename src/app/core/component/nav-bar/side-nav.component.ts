@@ -6,9 +6,9 @@ import { MatSidenavModule } from '@angular/material/sidenav'
 import { RouterModule } from '@angular/router'
 import { AuthService } from 'src/app/auth/service/auth.service'
 
-type NavbarElement = { title: string; icon: string; link: string; allowedRoles?: string[] }
+type SideNavElement = { title: string; icon: string; link: string; allowedRoles?: string[] }
 
-const ALL_ELEMENTS: NavbarElement[] = [
+const ALL_ELEMENTS: SideNavElement[] = [
   { title: 'Watchlist', icon: 'visibility', link: '/watchlist', allowedRoles: ['USER'] },
   { title: 'Search', icon: 'search', link: '/search' },
   {
@@ -19,7 +19,7 @@ const ALL_ELEMENTS: NavbarElement[] = [
   }
 ]
 
-const UNAUTHENTICATED_ELEMENTS: NavbarElement[] = [
+const UNAUTHENTICATED_ELEMENTS: SideNavElement[] = [
   { title: 'Search', icon: 'search', link: '/search' }
 ]
 
@@ -27,11 +27,11 @@ const UNAUTHENTICATED_ELEMENTS: NavbarElement[] = [
   selector: 'app-nav-bar',
   standalone: true,
   imports: [CommonModule, MatIconModule, MatListModule, MatSidenavModule, RouterModule],
-  templateUrl: './nav-bar.component.html',
-  styleUrl: './nav-bar.component.scss',
+  templateUrl: './side-nav.component.html',
+  styleUrl: './side-nav.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NavBarComponent {
+export class SideNavComponent {
   constructor(private _authservice: AuthService) {}
 
   public readonly navElements = computed(() => {
