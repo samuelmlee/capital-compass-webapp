@@ -117,6 +117,9 @@ export class TickersTableComponent {
     if (!response) {
       return this._dataSource
     }
+    if (response.source == TickersResponseSource.CONFIG) {
+      this.paginator?.firstPage()
+    }
     return this.updateDataSource(response)
   }
 
