@@ -1,0 +1,29 @@
+@if (newsResult(); as newsResult) {
+  <div class="mb-3">
+    <h4 class="mb-2">
+      <a [href]="newsResult.articleUrl" target="_blank" class="text-decoration-none">{{
+        newsResult.title
+      }}</a>
+    </h4>
+
+    <div class="d-flex align-items-center">
+      <div class="d-flex flex-column me-3">
+        <h4 class="text-muted mb-2">{{ newsResult.publisher.name }}</h4>
+        <div class="mb-2">
+          By {{ newsResult.author }} - {{ newsResult.publishedUtc | date: 'medium' }}
+        </div>
+        <div class="mb-2">{{ newsResult.description }}</div>
+        <div>
+          @for (ticker of newsResult.tickers; track $index) {
+            <span class="me-1">{{ ticker }}</span>
+          }
+        </div>
+      </div>
+      <img
+        [src]="newsResult.imageUrl"
+        onerror="this.style.display='none'"
+        class="me-3 object-fit-contain news-image"
+      />
+    </div>
+  </div>
+}

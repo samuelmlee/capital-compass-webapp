@@ -20,6 +20,15 @@ body {
   font-family: 'Open Sans', sans-serif;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+}
+
 app-root {
   height: 100%;
 }
@@ -30,6 +39,10 @@ mat-nav-list.mdc-list {
 
 .flex-basis-0 {
   flex-basis: 0;
+}
+
+.object-fit-contain {
+  object-fit: contain;
 }
 
 .overflow-y-auto {

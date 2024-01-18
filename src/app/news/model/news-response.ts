@@ -1,5 +1,9 @@
+export type NewsPublisher = {
+  name: string
+}
+
 export type NewsResult = {
-  publisherName: string
+  publisher: NewsPublisher
   title: string
   author: string
   publishedUtc: Date

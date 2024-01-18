@@ -1,14 +1,17 @@
 <mat-toolbar class="bg-light p-4">
-  <div class="d-flex justify-content-between w-100">
+  <div class="d-flex justify-content-between w-100 align-items-baseline">
     <a routerLink="/" class="text-decoration-none">
       <div>{{ title }}</div>
     </a>
 
     <div class="d-flex">
       @if (user()) {
-        <a routerLink="/profile" class="me-3 text-decoration-none" aria-pressed="true">
-          Welcome {{ user()?.firstName }}
-        </a>
+        <div class="fs-6">
+          Welcome
+          <a routerLink="/profile" class="me-3 text-decoration-none" aria-pressed="true">
+            {{ user()?.firstName }}
+          </a>
+        </div>
       }
       <app-auth></app-auth>
     </div>
