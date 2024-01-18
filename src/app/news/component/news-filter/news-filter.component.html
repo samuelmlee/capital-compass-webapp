@@ -1,0 +1,6 @@
+<mat-form-field class="w-25">
+  <input #tickerSymbol [formControl]="tickerSymbolControl" matInput [placeholder]="placeholder" />
+  @if (tickerSymbol.value) {
+    <mat-icon matSuffix role="button" (click)="clearControl()">close</mat-icon>
+  }
+</mat-form-field>

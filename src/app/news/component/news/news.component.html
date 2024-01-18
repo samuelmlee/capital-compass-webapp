@@ -1,3 +1,4 @@
+<app-news-filter></app-news-filter>
 <div class="d-flex flex-wrap">
   @for (result of newsSignal.value()?.results; track result.publishedUtc) {
     <app-news-article [result]="result" class="w-50"></app-news-article>

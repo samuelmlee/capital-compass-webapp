@@ -22,16 +22,13 @@ export class NewsService {
     )
   }
 
-  public fetchTickersByConfig(tickerSymbol?: string): void {
-    this._newsSubject.next(tickerSymbol ?? '')
+  public fetchNewsByTickerSymbol(tickerSymbol: string): void {
+    this._newsSubject.next(tickerSymbol)
   }
 
   private getNewsByTickerSymbol(tickerSymbol: string): Observable<NewsResponse> {
     const options = tickerSymbol ? { params: new HttpParams().set('ticker', tickerSymbol) } : {}
 
-    return this._http.get<NewsResponse>(
-      `${this._apiUrl}/stocks/reference/tickers/news?ticker=${tickerSymbol}`,
-      options
-    )
+    return this._http.get<NewsResponse>(`${this._apiUrl}/stocks/reference/tickers/news`, options)
   }
 }
