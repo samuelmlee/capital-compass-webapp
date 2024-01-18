@@ -22,7 +22,7 @@ export class TickersService {
   private _tickersConfigSubject = new Subject<TickersSearchConfig>()
   private _typesSubject = new Subject<void>()
   private _tickerDetailsSubject = new Subject<string>()
-  private apiUrl = environment.apiUrl
+  private _apiUrl = environment.apiUrl
 
   constructor(private _http: HttpClient) {
     this.tickersSignal = fromObsToSignal<TickersResponse>(
@@ -65,23 +65,23 @@ export class TickersService {
         .set('symbol', searchConfig?.symbol ?? '')
     }
     return this._http
-      .get<TickersResponse>(`${this.apiUrl}/stocks/reference/tickers`, options)
+      .get<TickersResponse>(`${this._apiUrl}/stocks/reference/tickers`, options)
       .pipe(map((response) => ({ ...response, source: TickersResponseSource.CONFIG })))
   }
 
   private getTickersByCursor(cursor: string): Observable<TickersResponse> {
     return this._http
-      .get<TickersResponse>(`${this.apiUrl}/stocks/reference/tickers/cursor/${cursor}`)
+      .get<TickersResponse>(`${this._apiUrl}/stocks/reference/tickers/cursor/${cursor}`)
       .pipe(map((response) => ({ ...response, source: TickersResponseSource.CURSOR })))
   }
 
   private getTickerTypes(): Observable<TickerTypesResponse> {
-    return this._http.get<TickerTypesResponse>(`${this.apiUrl}/stocks/reference/tickers/types`)
+    return this._http.get<TickerTypesResponse>(`${this._apiUrl}/stocks/reference/tickers/types`)
   }
 
   private getTickerDetails(tickerSymbol: string): Observable<TickerDetailsResponse> {
     return this._http.get<TickerDetailsResponse>(
-      `${this.apiUrl}/stocks/reference/tickers/details/${tickerSymbol}`
+      `${this._apiUrl}/stocks/reference/tickers/details/${tickerSymbol}`
     )
   }
 }

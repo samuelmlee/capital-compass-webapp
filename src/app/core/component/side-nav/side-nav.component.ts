@@ -24,7 +24,7 @@ const UNAUTHENTICATED_ELEMENTS: SideNavElement[] = [
 ]
 
 @Component({
-  selector: 'app-nav-bar',
+  selector: 'app-side-nav',
   standalone: true,
   imports: [CommonModule, MatIconModule, MatListModule, MatSidenavModule, RouterModule],
   templateUrl: './side-nav.component.html',
