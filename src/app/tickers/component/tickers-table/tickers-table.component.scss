@@ -4,8 +4,9 @@
 }
 
 .ellipsis {
+  display: block;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
-  width: auto;
+  width: 400px;
 }
