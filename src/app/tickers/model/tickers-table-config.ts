@@ -7,8 +7,9 @@ export enum COLUMN_TYPE {
 export type BaseColumnDef = {
   key: string
   title: string
-  class: string[]
+  headerCellclass: string[]
   type: COLUMN_TYPE
+  cellClass?: string[]
 }
 
 export type ActionColumnDef = BaseColumnDef & {

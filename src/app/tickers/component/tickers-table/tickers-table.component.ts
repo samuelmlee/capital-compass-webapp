@@ -63,18 +63,24 @@ export class TickersTableComponent {
   private _tickersTableConfig = signal<TickersTableConfig>({
     pageSize: 50,
     columnDefs: [
-      { key: 'symbol', title: 'Ticker', class: ['w-25'], type: COLUMN_TYPE.TEXT },
+      { key: 'symbol', title: 'Ticker', headerCellclass: ['w-25'], type: COLUMN_TYPE.TEXT },
       {
         key: 'name',
         title: 'Name',
-        class: ['w-25'],
+        headerCellclass: ['w-25'],
         type: COLUMN_TYPE.LINK,
         routePath: '/ticker-details/',
-        routeParam: 'symbol'
+        routeParam: 'symbol',
+        cellClass: ['ellipsis']
       },
-      { key: 'market', title: 'Market', class: [], type: COLUMN_TYPE.TEXT },
-      { key: 'currencyName', title: 'Currency Name', class: [], type: COLUMN_TYPE.TEXT },
-      { key: 'primaryExchange', title: 'Primary Exchange', class: [], type: COLUMN_TYPE.TEXT }
+      { key: 'market', title: 'Market', headerCellclass: [], type: COLUMN_TYPE.TEXT },
+      { key: 'currencyName', title: 'Currency Name', headerCellclass: [], type: COLUMN_TYPE.TEXT },
+      {
+        key: 'primaryExchange',
+        title: 'Primary Exchange',
+        headerCellclass: [],
+        type: COLUMN_TYPE.TEXT
+      }
     ]
   })
 

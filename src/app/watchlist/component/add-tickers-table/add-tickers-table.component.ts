@@ -25,14 +25,25 @@ export class AddTickersTableComponent {
   public tickersTableConfig = signal<TickersTableConfig>({
     pageSize: 5,
     columnDefs: [
-      { key: 'symbol', title: 'Ticker', class: ['w-25'], type: COLUMN_TYPE.TEXT },
-      { key: 'name', title: 'Name', class: ['w-50'], type: COLUMN_TYPE.TEXT },
-      { key: 'market', title: 'Market', class: [], type: COLUMN_TYPE.TEXT },
-      { key: 'primary_exchange', title: 'Primary Exchange', class: [], type: COLUMN_TYPE.TEXT },
+      { key: 'symbol', title: 'Ticker', headerCellclass: ['w-25'], type: COLUMN_TYPE.TEXT },
+      {
+        key: 'name',
+        title: 'Name',
+        headerCellclass: ['w-50'],
+        type: COLUMN_TYPE.TEXT,
+        cellClass: ['ellipsis']
+      },
+      { key: 'market', title: 'Market', headerCellclass: [], type: COLUMN_TYPE.TEXT },
+      {
+        key: 'primary_exchange',
+        title: 'Primary Exchange',
+        headerCellclass: [],
+        type: COLUMN_TYPE.TEXT
+      },
       {
         key: 'add',
         title: 'Action',
-        class: [],
+        headerCellclass: [],
         type: COLUMN_TYPE.ACTION,
         actionCallback: (ticker): void =>
           this._editWatchlistService.addTickerResultToWatchList(ticker as TickersResult),
