@@ -15,8 +15,8 @@
         <div class="mb-2">{{ newsResult.description }}</div>
         <div>
           <span>{{ newsResult.tickers.length > 1 ? 'Tickers' : 'Ticker' }} : </span>
-          @for (ticker of newsResult.tickers; track $index) {
-            <span>{{ ticker }}</span>
+          @for (ticker of newsResult.tickers; track ticker; let idx = $index) {
+            <span>{{ idx !== newsResult.tickers.length - 1 ? ticker + ', ' : ticker }} </span>
           }
         </div>
       </div>
