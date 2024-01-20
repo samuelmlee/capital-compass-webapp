@@ -1,7 +1,8 @@
-import { HttpClient } from '@angular/common/http'
+import { HttpClient, HttpErrorResponse } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Observable, Subject, map, switchMap, tap } from 'rxjs'
 import { Result } from 'src/app/shared/model/result'
+import { ErrorHandlingService } from 'src/app/shared/service/error-handling.service'
 import { fromObsToSignal } from 'src/app/shared/utils/fromObsToSignal'
 import { environment } from 'src/environments/environment'
 import { CreateWatchlistConfig, EditWatchlistConfig } from '../model/edit-watchlist-config'
@@ -24,30 +25,37 @@ export class WatchlistService {
 
   private _apiUrl = environment.apiUrl
 
-  constructor(private _http: HttpClient) {
+  constructor(
+    private _http: HttpClient,
+    private _errorHandlingService: ErrorHandlingService
+  ) {
     this.watchlistsSignal = fromObsToSignal<WatchlistCollectionResponse>(
-      this._getTickersSubject.pipe(switchMap(() => this.getUserWatchLists()))
+      this._getTickersSubject.pipe(switchMap(() => this.getUserWatchLists())),
+      (e: HttpErrorResponse) => this._errorHandlingService.getErrorMessage(e, 'Watchlist')
     )
 
     this.watchlistCreatedSignal = fromObsToSignal<Watchlist>(
       this._postWatchListSubject.pipe(
         switchMap((config) => this.postUserWatchList(config)),
         tap(() => this.fetchWatchLists())
-      )
+      ),
+      (e: HttpErrorResponse) => this._errorHandlingService.getErrorMessage(e, 'Watchlist')
     )
 
     this.watchlistUpdatedSignal = fromObsToSignal<Watchlist>(
       this._putWatchListSubject.pipe(
         switchMap((config) => this.putUserWatchList(config)),
         tap(() => this.fetchWatchLists())
-      )
+      ),
+      (e: HttpErrorResponse) => this._errorHandlingService.getErrorMessage(e, 'Watchlist')
     )
 
     this.watchlistDeletedSignal = fromObsToSignal<number>(
       this._deleteWatchListSubject.pipe(
         switchMap((id) => this.deleteUserWatchList(id)),
         tap(() => this.fetchWatchLists())
-      )
+      ),
+      (e: HttpErrorResponse) => this._errorHandlingService.getErrorMessage(e, 'Watchlist')
     )
   }
 
@@ -68,7 +76,7 @@ export class WatchlistService {
   }
 
   private getUserWatchLists(): Observable<WatchlistCollectionResponse> {
-    return this._http.get<WatchlistCollectionResponse>(`${this._apiUrl}/gateway/watchlists`, {
+    return this._http.get<WatchlistCollectionResponse>(`${this._apiUrl}/gateway/watchlistsz`, {
       withCredentials: true
     })
   }

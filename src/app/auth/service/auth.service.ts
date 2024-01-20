@@ -1,7 +1,8 @@
-import { HttpClient } from '@angular/common/http'
+import { HttpClient, HttpErrorResponse } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Observable, Subject, catchError, map, of, switchMap } from 'rxjs'
 import { Result } from 'src/app/shared/model/result'
+import { ErrorHandlingService } from 'src/app/shared/service/error-handling.service'
 import { fromObsToSignal } from 'src/app/shared/utils/fromObsToSignal'
 import { environment } from 'src/environments/environment'
 import { type User } from '../../users/model/user'
@@ -19,8 +20,14 @@ export class AuthService {
   private readonly _logoutUri = location.origin
   private readonly _authenticateSubject = new Subject<void>()
 
-  constructor(private readonly _httpClient: HttpClient) {
-    this.user = fromObsToSignal<User>(this._authenticateSubject.pipe(switchMap(() => this.getUserDetails())))
+  constructor(
+    private readonly _httpClient: HttpClient,
+    private _errorHandlingService: ErrorHandlingService
+  ) {
+    this.user = fromObsToSignal<User>(
+      this._authenticateSubject.pipe(switchMap(() => this.getUserDetails())),
+      (e: HttpErrorResponse) => this._errorHandlingService.getErrorMessage(e, 'User Profile')
+    )
   }
 
   public authenticate(): void {

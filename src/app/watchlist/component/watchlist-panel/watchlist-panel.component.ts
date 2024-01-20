@@ -1,7 +1,13 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectionStrategy, Component, OnInit, computed } from '@angular/core'
+import { ChangeDetectionStrategy, Component, OnInit, computed, effect } from '@angular/core'
 import { MatButtonModule } from '@angular/material/button'
 import { MatDialog } from '@angular/material/dialog'
+import {
+  MatSnackBar,
+  MatSnackBarHorizontalPosition,
+  MatSnackBarModule,
+  MatSnackBarVerticalPosition
+} from '@angular/material/snack-bar'
 import { WatchlistService } from '../../service/watchlist.service'
 import { EditWatchlistDialogComponent } from '../edit-watchlist-dialog/edit-watchlist-dialog.component'
 import { WatchlistTableComponent } from '../watchlist-table/watchlist-table.component'
@@ -9,21 +15,33 @@ import { WatchlistTableComponent } from '../watchlist-table/watchlist-table.comp
 @Component({
   selector: 'app-watch-list-panel',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, WatchlistTableComponent],
+  imports: [CommonModule, MatButtonModule, MatSnackBarModule, WatchlistTableComponent],
   templateUrl: './watchlist-panel.component.html',
   styleUrl: './watchlist-panel.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WatchlistPanelComponent implements OnInit {
-  public watchlistsSignal = computed(() => {
+  public $watchlists = computed(() => {
     const watchlists = this._watchlistService.watchlistsSignal.value()
     return watchlists?.sort((a, b) => (a.name < b.name ? -1 : 1))
   })
 
+  private horizontalPosition: MatSnackBarHorizontalPosition = 'end'
+  private verticalPosition: MatSnackBarVerticalPosition = 'top'
+
   constructor(
     private _dialog: MatDialog,
-    private _watchlistService: WatchlistService
-  ) {}
+    private _watchlistService: WatchlistService,
+    private _snackBar: MatSnackBar
+  ) {
+    effect(() => {
+      const message = this._watchlistService.watchlistsSignal.error() as string
+      this._snackBar.open(message, 'Close', {
+        horizontalPosition: this.horizontalPosition,
+        verticalPosition: this.verticalPosition
+      })
+    })
+  }
   public ngOnInit(): void {
     this._watchlistService.fetchWatchLists()
   }

@@ -1,7 +1,8 @@
-import { HttpClient, HttpParams } from '@angular/common/http'
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Observable, Subject, switchMap } from 'rxjs'
 import { Result } from 'src/app/shared/model/result'
+import { ErrorHandlingService } from 'src/app/shared/service/error-handling.service'
 import { fromObsToSignal } from 'src/app/shared/utils/fromObsToSignal'
 import { environment } from 'src/environments/environment'
 import { NewsResponse } from '../model/news-response'
@@ -16,9 +17,13 @@ export class NewsService {
 
   private _apiUrl = environment.apiUrl
 
-  constructor(private _http: HttpClient) {
+  constructor(
+    private _http: HttpClient,
+    private _errorHandlingService: ErrorHandlingService
+  ) {
     this.newsSignal = fromObsToSignal<NewsResponse>(
-      this._newsSubject.pipe(switchMap((tickerSymbol) => this.getNewsByTickerSymbol(tickerSymbol)))
+      this._newsSubject.pipe(switchMap((tickerSymbol) => this.getNewsByTickerSymbol(tickerSymbol))),
+      (e: HttpErrorResponse) => this._errorHandlingService.getErrorMessage(e, 'News')
     )
   }
 

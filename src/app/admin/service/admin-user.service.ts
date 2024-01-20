@@ -1,7 +1,8 @@
-import { HttpClient } from '@angular/common/http'
+import { HttpClient, HttpErrorResponse } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Observable, Subject, switchMap } from 'rxjs'
 import { Result } from 'src/app/shared/model/result'
+import { ErrorHandlingService } from 'src/app/shared/service/error-handling.service'
 import { fromObsToSignal } from 'src/app/shared/utils/fromObsToSignal'
 import { environment } from 'src/environments/environment'
 import { AdminUserDTO } from '../model/admin-user'
@@ -16,9 +17,13 @@ export class AdminUserService {
 
   private _apiUrl = environment.apiUrl
 
-  constructor(private _http: HttpClient) {
+  constructor(
+    private _http: HttpClient,
+    private _errorHandlingService: ErrorHandlingService
+  ) {
     this.adminUsersSignal = fromObsToSignal<AdminUserDTO[]>(
-      this._getAdminUsersSubject.pipe(switchMap(() => this.getAdminUsers()))
+      this._getAdminUsersSubject.pipe(switchMap(() => this.getAdminUsers())),
+      (e: HttpErrorResponse) => this._errorHandlingService.getErrorMessage(e, 'Users for Admin')
     )
   }
 

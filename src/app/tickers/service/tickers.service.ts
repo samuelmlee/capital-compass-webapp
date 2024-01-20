@@ -1,8 +1,9 @@
-import { HttpClient, HttpParams } from '@angular/common/http'
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Observable, Subject, map, merge, switchMap } from 'rxjs'
 
 import { Result } from 'src/app/shared/model/result'
+import { ErrorHandlingService } from 'src/app/shared/service/error-handling.service'
 import { fromObsToSignal } from 'src/app/shared/utils/fromObsToSignal'
 import { environment } from 'src/environments/environment'
 import { TickerDetailsResponse } from '../model/ticker-details-response'
@@ -24,20 +25,26 @@ export class TickersService {
   private _tickerDetailsSubject = new Subject<string>()
   private _apiUrl = environment.apiUrl
 
-  constructor(private _http: HttpClient) {
+  constructor(
+    private _http: HttpClient,
+    private _errorHandlingService: ErrorHandlingService
+  ) {
     this.tickersSignal = fromObsToSignal<TickersResponse>(
       merge(
         this._tickersConfigSubject.pipe(switchMap((config) => this.getTickersByConfig(config))),
         this._tickersCursorSubject.pipe(switchMap((cursor) => this.getTickersByCursor(cursor)))
-      )
+      ),
+      (e: HttpErrorResponse) => this._errorHandlingService.getErrorMessage(e, 'Tickers')
     )
 
     this.tickerTypesSignal = fromObsToSignal<TickerTypesResponse>(
-      this._typesSubject.pipe(switchMap(() => this.getTickerTypes()))
+      this._typesSubject.pipe(switchMap(() => this.getTickerTypes())),
+      (e: HttpErrorResponse) => this._errorHandlingService.getErrorMessage(e, 'Tickers')
     )
 
     this.tickerDetailsSignal = fromObsToSignal<TickerDetailsResponse>(
-      this._tickerDetailsSubject.pipe(switchMap((symbol) => this.getTickerDetails(symbol)))
+      this._tickerDetailsSubject.pipe(switchMap((symbol) => this.getTickerDetails(symbol))),
+      (e: HttpErrorResponse) => this._errorHandlingService.getErrorMessage(e, 'Tickers')
     )
   }
 
