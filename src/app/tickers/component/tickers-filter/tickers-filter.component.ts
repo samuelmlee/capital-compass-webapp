@@ -52,12 +52,12 @@ export class TickersFilterComponent implements OnInit {
 
   @Output('newSearchConfig')
   public configUpdatedEvent = new EventEmitter<TickersSearchConfig>()
-  public tickerTypes = this._tickersService.tickerTypesSignal
+  public $tickerTypes = this._tickersService.tickerTypesResult.value
   public searchTermControl = new FormControl('')
   public typeControl = new FormControl('')
   public tickerControl = new FormControl('', [Validators.maxLength(5)])
 
-  private _formValues: Signal<string[] | undefined> | undefined
+  private _$formValues: Signal<string[] | undefined> | undefined
 
   constructor(
     private _formBuilder: FormBuilder,
@@ -75,10 +75,10 @@ export class TickersFilterComponent implements OnInit {
       if (!this.formGroup.valid) {
         return
       }
-      if (!this._formValues) {
+      if (!this._$formValues) {
         return
       }
-      const [searchTerm = '', type = '', ticker = ''] = this._formValues() || []
+      const [searchTerm = '', type = '', ticker = ''] = this._$formValues() || []
       const config: TickersSearchConfig = { searchTerm, type, symbol: ticker }
       this.configUpdatedEvent.emit(config)
     })
@@ -89,7 +89,7 @@ export class TickersFilterComponent implements OnInit {
   }
 
   private initFormValues(): void {
-    this._formValues = toSignal(
+    this._$formValues = toSignal(
       combineLatest([
         this.searchTermControl.valueChanges
           .pipe(debounceTime(500), distinctUntilChanged())

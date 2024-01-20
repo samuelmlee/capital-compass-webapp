@@ -12,7 +12,7 @@ import { AuthService } from '../../service/auth.service'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AuthComponent {
-  public isAuthenticated = computed(() => this._authService.user.value() != null)
+  public $isAuthenticated = computed(() => this._authService.userResult.value() != null)
 
   constructor(private readonly _authService: AuthService) {}
 

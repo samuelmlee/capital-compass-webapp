@@ -20,9 +20,9 @@ import { EditWatchlistService } from '../../service/edit-watchlist.service'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AddTickersTableComponent {
-  public tickersFilterConfig = signal<TickersFilterConfig>({ fields: ['searchTerm', 'type'] })
+  public $tickersFilterConfig = signal<TickersFilterConfig>({ fields: ['searchTerm', 'type'] })
 
-  public tickersTableConfig = signal<TickersTableConfig>({
+  public $tickersTableConfig = signal<TickersTableConfig>({
     pageSize: 5,
     columnDefs: [
       { key: 'symbol', title: 'Ticker', headerCellclass: ['w-25'], type: COLUMN_TYPE.TEXT },

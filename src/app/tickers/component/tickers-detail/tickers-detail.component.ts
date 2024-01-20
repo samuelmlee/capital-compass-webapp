@@ -1,9 +1,9 @@
+import { DecimalPipe } from '@angular/common'
 import { ChangeDetectionStrategy, Component, OnInit, Signal, computed } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
-import { TickersService } from '../../service/tickers.service'
-import { DecimalPipe } from '@angular/common'
-import { TickerDetailsResult } from '../../model/ticker-details-response'
 import { FormatKeyPipe } from 'src/app/shared/pipe/format-key.pipe'
+import { TickerDetailsResult } from '../../model/ticker-details-response'
+import { TickersService } from '../../service/tickers.service'
 
 type TickerDetailView = {
   key: string
@@ -19,15 +19,15 @@ type TickerDetailView = {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TickersDetailComponent implements OnInit {
-  public tickerDetails = this._tickersService.tickerDetailsSignal
+  public $tickerDetails = this._tickersService.tickerDetailsResult.value
 
-  public primaryDetails: Signal<TickerDetailView[]> = computed(() => {
-    const tickerDetails = this.tickerDetails.value()
+  public $primaryDetails: Signal<TickerDetailView[]> = computed(() => {
+    const tickerDetails = this.$tickerDetails()
     return this.fromResponseToTickerDetailsView(tickerDetails?.result, this.primaryDetailsKeys)
   })
 
-  public secondaryDetails: Signal<TickerDetailView[]> = computed(() => {
-    const tickerDetails = this.tickerDetails.value()
+  public $secondaryDetails: Signal<TickerDetailView[]> = computed(() => {
+    const tickerDetails = this.$tickerDetails()
     return this.fromResponseToTickerDetailsView(tickerDetails?.result, this.secondaryDetailsKeys)
   })
 
@@ -49,8 +49,6 @@ export class TickersDetailComponent implements OnInit {
   public ngOnInit(): void {
     const tickerSymbol = this._route.snapshot.paramMap.get('ticker') ?? ''
     this._tickersService.fetchTickerDetails(tickerSymbol)
-
-    console.log('ticker symbol :', tickerSymbol)
   }
 
   private fromResponseToTickerDetailsView(

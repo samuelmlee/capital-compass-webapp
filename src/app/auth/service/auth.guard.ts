@@ -6,7 +6,7 @@ export function authGuard(...allowedRoles: string[]): CanActivateFn {
   return () => {
     const authService: AuthService = inject(AuthService)
 
-    const user = authService.user.value()
+    const user = authService.userResult.value()
 
     if (!allowedRoles?.length) {
       return true

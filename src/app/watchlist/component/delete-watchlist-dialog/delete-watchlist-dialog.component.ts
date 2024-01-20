@@ -14,8 +14,8 @@ import { EditWatchlistService } from '../../service/edit-watchlist.service'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DeleteWatchlistDialogComponent {
-  public watchlistName = computed(() => {
-    return this._editWatchlistService.watchlistState().name
+  public $watchlistName = computed(() => {
+    return this._editWatchlistService.$watchlistState().name
   })
 
   constructor(

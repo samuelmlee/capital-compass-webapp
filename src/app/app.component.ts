@@ -15,7 +15,7 @@ export class AppComponent {
     private _router: Router
   ) {
     effect(() => {
-      if (!this._authService.user.value()) {
+      if (!this._authService.userResult.value()) {
         this._router.navigate(['/'])
       }
     })

@@ -18,7 +18,7 @@ export class AdminUserPanelComponent {
 
   constructor(adminUserService: AdminUserService) {
     this._adminUserService = adminUserService
-    this.adminUsersSignal = this._adminUserService.adminUsersSignal
+    this.adminUsersSignal = this._adminUserService.adminUsersResult
   }
 
   public ngOnInit(): void {

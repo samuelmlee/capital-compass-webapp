@@ -1,6 +1,6 @@
 <table class="native-table w-100">
   <tbody>
-    @for (ticker of tickersSelected(); track ticker.symbol) {
+    @for (ticker of $tickersSelected(); track ticker.symbol) {
       <tr>
         <td>{{ ticker.symbol }}</td>
         <td>{{ ticker.name }}</td>

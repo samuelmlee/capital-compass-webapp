@@ -5,11 +5,11 @@
     </a>
 
     <div class="d-flex">
-      @if (user()) {
+      @if ($user()) {
         <div class="fs-6">
           Welcome
           <a routerLink="/profile" class="me-3 text-decoration-none" aria-pressed="true">
-            {{ user()?.firstName }}
+            {{ $user()?.firstName }}
           </a>
         </div>
       }

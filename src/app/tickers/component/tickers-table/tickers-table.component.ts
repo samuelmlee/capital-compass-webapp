@@ -3,7 +3,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   Input,
-  Signal,
   ViewChild,
   computed,
   signal
@@ -57,10 +56,10 @@ export class TickersTableComponent {
 
   @Input()
   public set tableConfig(config: TickersTableConfig) {
-    this._tickersTableConfig.set(config)
+    this._$tickersTableConfig.set(config)
   }
 
-  private _tickersTableConfig = signal<TickersTableConfig>({
+  private _$tickersTableConfig = signal<TickersTableConfig>({
     pageSize: 50,
     columnDefs: [
       { key: 'symbol', title: 'Ticker', headerCellclass: ['w-25'], type: COLUMN_TYPE.TEXT },
@@ -84,8 +83,9 @@ export class TickersTableComponent {
     ]
   })
 
-  public rowDefs = computed(() => this._tickersTableConfig().columnDefs.map((c) => c.key))
-  public tickersDataSource = computed(() => this.convertResponseToDataSource())
+  public $rowDefs = computed(() => this._$tickersTableConfig().columnDefs.map((c) => c.key))
+  public $tickersDataSource = computed(() => this.convertResponseToDataSource())
+  public $tickersTableConfig = this._$tickersTableConfig.asReadonly()
   public ColumnType = COLUMN_TYPE
   public ActionColumnDef: ActionColumnDef | undefined
   public LinkColumnDef: LinkColumnDef | undefined
@@ -103,17 +103,13 @@ export class TickersTableComponent {
     this._dataSource.paginator = this.paginator
   }
 
-  public get tickersTableConfig(): Signal<TickersTableConfig> {
-    return this._tickersTableConfig.asReadonly()
-  }
-
   public convertResponseToDataSource(): MatTableDataSource<TickersResult> {
-    const error: unknown = this._tickerService.tickersSignal.error()
+    const error: unknown = this._tickerService.tickersResult.error()
     if (error) {
       // show in toast
       return this._dataSource
     }
-    const response = this._tickerService.tickersSignal.value()
+    const response = this._tickerService.tickersResult.value()
     if (!response) {
       return this._dataSource
     }
@@ -124,7 +120,7 @@ export class TickersTableComponent {
   }
 
   public onPageChange(event: PageEvent): void {
-    if (event.pageIndex < this._dataSource.data.length / this._tickersTableConfig().pageSize - 1) {
+    if (event.pageIndex < this._dataSource.data.length / this._$tickersTableConfig().pageSize - 1) {
       return
     }
     if (!this._nextCursor) {

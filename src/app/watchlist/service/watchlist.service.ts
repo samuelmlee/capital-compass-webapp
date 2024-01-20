@@ -13,10 +13,10 @@ import { WatchlistCollectionResponse } from '../model/watchlist-collection-respo
   providedIn: 'root'
 })
 export class WatchlistService {
-  public watchlistsSignal: Result<WatchlistCollectionResponse>
-  public watchlistCreatedSignal: Result<Watchlist>
-  public watchlistUpdatedSignal: Result<Watchlist>
-  public watchlistDeletedSignal: Result<number>
+  public watchlistsResult: Result<WatchlistCollectionResponse>
+  public watchlistCreatedResult: Result<Watchlist>
+  public watchlistUpdatedResult: Result<Watchlist>
+  public watchlistDeletedResult: Result<number>
 
   private _getTickersSubject = new Subject<void>()
   private _postWatchListSubject = new Subject<CreateWatchlistConfig>()
@@ -29,12 +29,12 @@ export class WatchlistService {
     private _http: HttpClient,
     private _errorHandlingService: ErrorHandlingService
   ) {
-    this.watchlistsSignal = fromObsToSignal<WatchlistCollectionResponse>(
+    this.watchlistsResult = fromObsToSignal<WatchlistCollectionResponse>(
       this._getTickersSubject.pipe(switchMap(() => this.getUserWatchLists())),
       (e: HttpErrorResponse) => this._errorHandlingService.getErrorMessage(e, 'Watchlist')
     )
 
-    this.watchlistCreatedSignal = fromObsToSignal<Watchlist>(
+    this.watchlistCreatedResult = fromObsToSignal<Watchlist>(
       this._postWatchListSubject.pipe(
         switchMap((config) => this.postUserWatchList(config)),
         tap(() => this.fetchWatchLists())
@@ -42,7 +42,7 @@ export class WatchlistService {
       (e: HttpErrorResponse) => this._errorHandlingService.getErrorMessage(e, 'Watchlist')
     )
 
-    this.watchlistUpdatedSignal = fromObsToSignal<Watchlist>(
+    this.watchlistUpdatedResult = fromObsToSignal<Watchlist>(
       this._putWatchListSubject.pipe(
         switchMap((config) => this.putUserWatchList(config)),
         tap(() => this.fetchWatchLists())
@@ -50,7 +50,7 @@ export class WatchlistService {
       (e: HttpErrorResponse) => this._errorHandlingService.getErrorMessage(e, 'Watchlist')
     )
 
-    this.watchlistDeletedSignal = fromObsToSignal<number>(
+    this.watchlistDeletedResult = fromObsToSignal<number>(
       this._deleteWatchListSubject.pipe(
         switchMap((id) => this.deleteUserWatchList(id)),
         tap(() => this.fetchWatchLists())
@@ -76,7 +76,7 @@ export class WatchlistService {
   }
 
   private getUserWatchLists(): Observable<WatchlistCollectionResponse> {
-    return this._http.get<WatchlistCollectionResponse>(`${this._apiUrl}/gateway/watchlistsz`, {
+    return this._http.get<WatchlistCollectionResponse>(`${this._apiUrl}/gateway/watchlists`, {
       withCredentials: true
     })
   }

@@ -1,4 +1,4 @@
-@if (isAuthenticated()) {
+@if ($isAuthenticated()) {
   <button mat-raised-button (click)="logOutClicked()">Logout</button>
 } @else {
   <button mat-raised-button color="primary" (click)="logInClicked()">Login</button>

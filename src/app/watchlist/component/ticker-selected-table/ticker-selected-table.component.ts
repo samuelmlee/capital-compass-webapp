@@ -12,8 +12,8 @@ import { EditWatchlistService } from '../../service/edit-watchlist.service'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TickerSelectedTableComponent {
-  public tickersSelected = computed(
-    () => this._editWatchlistService.watchlistState().tickersSelected
+  public $tickersSelected = computed(
+    () => this._editWatchlistService.$watchlistState().tickersSelected
   )
 
   constructor(private _editWatchlistService: EditWatchlistService) {}

@@ -1,6 +1,6 @@
 <div class="mb-4">
   <div class="d-flex align-items-baseline">
-    <h4 class="mb-4 me-4">{{ watchlistSignal()?.name }}</h4>
+    <h4 class="mb-4 me-4">{{ $watchlist()?.name }}</h4>
     <button mat-raised-button class="me-4" (click)="openEditDialog()">Edit</button>
     <button mat-raised-button (click)="openDeleteDialog()">Delete</button>
   </div>
@@ -14,7 +14,7 @@
       </tr>
     </thead>
     <tbody>
-      @for (snapshot of watchlistSignal()?.tickerSnapshotViews; track snapshot.symbol) {
+      @for (snapshot of $watchlist()?.tickerSnapshotViews; track snapshot.symbol) {
         <tr>
           <td class="w-25">
             <a [routerLink]="'/ticker-details/' + snapshot.symbol">{{ snapshot.name }}</a>

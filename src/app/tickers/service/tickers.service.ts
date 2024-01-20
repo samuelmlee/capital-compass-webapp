@@ -15,9 +15,9 @@ import { TickersSearchConfig } from '../model/tickers-search-config'
   providedIn: 'root'
 })
 export class TickersService {
-  public tickersSignal: Result<TickersResponse>
-  public tickerTypesSignal: Result<TickerTypesResponse>
-  public tickerDetailsSignal: Result<TickerDetailsResponse>
+  public tickersResult: Result<TickersResponse>
+  public tickerTypesResult: Result<TickerTypesResponse>
+  public tickerDetailsResult: Result<TickerDetailsResponse>
 
   private _tickersCursorSubject = new Subject<string>()
   private _tickersConfigSubject = new Subject<TickersSearchConfig>()
@@ -29,7 +29,7 @@ export class TickersService {
     private _http: HttpClient,
     private _errorHandlingService: ErrorHandlingService
   ) {
-    this.tickersSignal = fromObsToSignal<TickersResponse>(
+    this.tickersResult = fromObsToSignal<TickersResponse>(
       merge(
         this._tickersConfigSubject.pipe(switchMap((config) => this.getTickersByConfig(config))),
         this._tickersCursorSubject.pipe(switchMap((cursor) => this.getTickersByCursor(cursor)))
@@ -37,12 +37,12 @@ export class TickersService {
       (e: HttpErrorResponse) => this._errorHandlingService.getErrorMessage(e, 'Tickers')
     )
 
-    this.tickerTypesSignal = fromObsToSignal<TickerTypesResponse>(
+    this.tickerTypesResult = fromObsToSignal<TickerTypesResponse>(
       this._typesSubject.pipe(switchMap(() => this.getTickerTypes())),
       (e: HttpErrorResponse) => this._errorHandlingService.getErrorMessage(e, 'Tickers')
     )
 
-    this.tickerDetailsSignal = fromObsToSignal<TickerDetailsResponse>(
+    this.tickerDetailsResult = fromObsToSignal<TickerDetailsResponse>(
       this._tickerDetailsSubject.pipe(switchMap((symbol) => this.getTickerDetails(symbol))),
       (e: HttpErrorResponse) => this._errorHandlingService.getErrorMessage(e, 'Tickers')
     )

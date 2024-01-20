@@ -20,7 +20,7 @@ export class WatchlistTableComponent {
   @Input()
   public set watchlist(watchlist: Watchlist) {
     const watchlistView = this.fromWatchlistToWatchlistView(watchlist)
-    this._watchlist.set(watchlistView)
+    this._$watchlist.set(watchlistView)
   }
 
   public tableColumns: string[] = [
@@ -31,13 +31,13 @@ export class WatchlistTableComponent {
     'volumeWeightedPrice'
   ]
 
-  private _watchlist = signal<WatchlistView | null>(null)
-  public watchlistSignal = this._watchlist.asReadonly()
+  private _$watchlist = signal<WatchlistView | null>(null)
+  public $watchlist = this._$watchlist.asReadonly()
 
   constructor(private _dialog: MatDialog) {}
 
   public openEditDialog(): void {
-    const watchlistView = this._watchlist()
+    const watchlistView = this._$watchlist()
     if (!watchlistView) {
       return
     }
@@ -55,7 +55,7 @@ export class WatchlistTableComponent {
   }
 
   public openDeleteDialog(): void {
-    const watchlistView = this._watchlist()
+    const watchlistView = this._$watchlist()
     if (!watchlistView) {
       return
     }

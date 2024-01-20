@@ -11,7 +11,7 @@ import { NewsResponse } from '../model/news-response'
   providedIn: 'root'
 })
 export class NewsService {
-  public newsSignal: Result<NewsResponse>
+  public newsResult: Result<NewsResponse>
 
   private _newsSubject = new Subject<string>()
 
@@ -21,7 +21,7 @@ export class NewsService {
     private _http: HttpClient,
     private _errorHandlingService: ErrorHandlingService
   ) {
-    this.newsSignal = fromObsToSignal<NewsResponse>(
+    this.newsResult = fromObsToSignal<NewsResponse>(
       this._newsSubject.pipe(switchMap((tickerSymbol) => this.getNewsByTickerSymbol(tickerSymbol))),
       (e: HttpErrorResponse) => this._errorHandlingService.getErrorMessage(e, 'News')
     )

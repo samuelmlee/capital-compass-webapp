@@ -12,7 +12,7 @@ import { NewsFilterComponent } from '../news-filter/news-filter.component'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NewsComponent implements OnInit {
-  public newsSignal = this._newsService.newsSignal
+  public $news = this._newsService.newsResult.value
 
   constructor(private _newsService: NewsService) {}
 

@@ -1,6 +1,6 @@
 <mat-sidenav #sidenav mode="side" opened="true">
   <mat-nav-list class="pt-4 ps-4">
-    @for (element of navElements(); track element.title) {
+    @for (element of $navElements(); track element.title) {
       <mat-list-item routerLink="{{ element.link }}" class="px-5">
         <div class="d-flex">
           <mat-icon class="me-4">{{ element.icon }}</mat-icon>

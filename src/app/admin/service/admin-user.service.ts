@@ -11,7 +11,7 @@ import { AdminUserDTO } from '../model/admin-user'
   providedIn: 'root'
 })
 export class AdminUserService {
-  public adminUsersSignal: Result<AdminUserDTO[]>
+  public adminUsersResult: Result<AdminUserDTO[]>
 
   private _getAdminUsersSubject = new Subject<void>()
 
@@ -21,7 +21,7 @@ export class AdminUserService {
     private _http: HttpClient,
     private _errorHandlingService: ErrorHandlingService
   ) {
-    this.adminUsersSignal = fromObsToSignal<AdminUserDTO[]>(
+    this.adminUsersResult = fromObsToSignal<AdminUserDTO[]>(
       this._getAdminUsersSubject.pipe(switchMap(() => this.getAdminUsers())),
       (e: HttpErrorResponse) => this._errorHandlingService.getErrorMessage(e, 'Users for Admin')
     )

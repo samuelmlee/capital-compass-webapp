@@ -34,8 +34,8 @@ const UNAUTHENTICATED_ELEMENTS: SideNavElement[] = [
 export class SideNavComponent {
   constructor(private _authservice: AuthService) {}
 
-  public readonly navElements = computed(() => {
-    const user = this._authservice.user.value()
+  public readonly $navElements = computed(() => {
+    const user = this._authservice.userResult.value()
     if (!user) {
       return UNAUTHENTICATED_ELEMENTS
     }

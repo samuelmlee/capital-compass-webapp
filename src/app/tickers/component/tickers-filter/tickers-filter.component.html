@@ -33,7 +33,7 @@
   <mat-form-field class="me-3">
     <mat-select [formControl]="typeControl">
       <mat-option>None</mat-option>
-      @for (type of tickerTypes.value()?.results; track type.code) {
+      @for (type of $tickerTypes()?.results; track type.code) {
         <mat-option [value]="type.code">{{ type.description }}</mat-option>
       }
     </mat-select>

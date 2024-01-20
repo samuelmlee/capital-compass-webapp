@@ -1,9 +1,9 @@
-@if (tickerDetails.value()?.result; as tickerDetails) {
+@if ($tickerDetails()?.result; as tickerDetails) {
   <h2 class="mb-3">{{ tickerDetails.name }} ({{ tickerDetails.symbol }})</h2>
 
   <div class="d-flex">
     <div class="flex-grow-1 flex-basis-0 me-3">
-      @for (detail of primaryDetails(); track detail.key) {
+      @for (detail of $primaryDetails(); track detail.key) {
         <div class="mb-3">
           <span class="me-3">{{ detail.key | formatKey }}:</span>
           <span>{{ detail.value }}</span>
@@ -12,7 +12,7 @@
     </div>
 
     <div class="flex-grow-1 flex-basis-0">
-      @for (detail of secondaryDetails(); track detail.key) {
+      @for (detail of $secondaryDetails(); track detail.key) {
         <div class="mb-3">
           <span class="me-3">{{ detail.key | formatKey }}:</span>
           <span>{{ detail.value }}</span>

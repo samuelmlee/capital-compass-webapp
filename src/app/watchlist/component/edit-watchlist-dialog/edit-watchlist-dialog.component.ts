@@ -35,8 +35,9 @@ import { TickerSelectedTableComponent } from '../ticker-selected-table/ticker-se
 export class EditWatchlistDialogComponent {
   public nameControl: FormControl | undefined
 
-  private _watchlistName: Signal<string | undefined> | undefined
-  private _dialogTitle = signal<string>('Create Watchlist')
+  private _$watchlistName: Signal<string | undefined> | undefined
+  private _$dialogTitle = signal<string>('Create Watchlist')
+  public $dialogTitle = this._$dialogTitle.asReadonly()
 
   constructor(
     private _editWatchlistService: EditWatchlistService,
@@ -45,14 +46,14 @@ export class EditWatchlistDialogComponent {
   ) {
     if (this._dialogData) {
       this._editWatchlistService.updateStateWithWatchlist(this._dialogData.watchlist)
-      this._dialogTitle.set('Edit Watchlist')
+      this._$dialogTitle.set('Edit Watchlist')
     }
 
     this.initFormControl()
 
     effect(
       () => {
-        const watchlistName = this._watchlistName?.()
+        const watchlistName = this._$watchlistName?.()
         if (!watchlistName) {
           return
         }
@@ -60,10 +61,6 @@ export class EditWatchlistDialogComponent {
       },
       { allowSignalWrites: true }
     )
-  }
-
-  public get dialogTitle(): Signal<string> {
-    return this._dialogTitle.asReadonly()
   }
 
   public saveWatchList(): void {
@@ -76,10 +73,10 @@ export class EditWatchlistDialogComponent {
   }
 
   private initFormControl(): void {
-    const name = this._editWatchlistService.watchlistState().name
+    const name = this._editWatchlistService.$watchlistState().name
     this.nameControl = new FormControl(name, Validators.required)
 
-    this._watchlistName = toSignal(
+    this._$watchlistName = toSignal(
       this.nameControl.valueChanges.pipe(
         distinctUntilChanged(),
         map((value) => (value == null ? '' : value))

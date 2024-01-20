@@ -13,7 +13,7 @@ type LogOutApiResponse = { logoutUrl: string; idToken: string }
   providedIn: 'root'
 })
 export class AuthService {
-  public user: Result<User>
+  public userResult: Result<User>
 
   private readonly _authUrl = environment.authUrl
   private readonly _clientId = environment.gatewayClientId
@@ -24,7 +24,7 @@ export class AuthService {
     private readonly _httpClient: HttpClient,
     private _errorHandlingService: ErrorHandlingService
   ) {
-    this.user = fromObsToSignal<User>(
+    this.userResult = fromObsToSignal<User>(
       this._authenticateSubject.pipe(switchMap(() => this.getUserDetails())),
       (e: HttpErrorResponse) => this._errorHandlingService.getErrorMessage(e, 'User Profile')
     )

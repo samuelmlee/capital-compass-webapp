@@ -19,15 +19,15 @@ export class NewsFilterComponent {
   public tickerSymbolControl = new FormControl('')
   public placeholder = 'Search for news that contain this ticker.'
 
-  private _tickerSymbolSignal: Signal<string | null | undefined>
+  private _$tickerSymbol: Signal<string | null | undefined>
 
   constructor(private _newsService: NewsService) {
     effect(() => {
-      const tickerSymbol = this._tickerSymbolSignal?.() ?? ''
+      const tickerSymbol = this._$tickerSymbol?.() ?? ''
       this._newsService.fetchNewsByTickerSymbol(tickerSymbol)
     })
 
-    this._tickerSymbolSignal = toSignal(
+    this._$tickerSymbol = toSignal(
       this.tickerSymbolControl.valueChanges.pipe(debounceTime(500), distinctUntilChanged())
     )
   }

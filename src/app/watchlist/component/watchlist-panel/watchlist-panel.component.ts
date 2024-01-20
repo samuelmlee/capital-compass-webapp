@@ -22,7 +22,7 @@ import { WatchlistTableComponent } from '../watchlist-table/watchlist-table.comp
 })
 export class WatchlistPanelComponent implements OnInit {
   public $watchlists = computed(() => {
-    const watchlists = this._watchlistService.watchlistsSignal.value()
+    const watchlists = this._watchlistService.watchlistsResult.value()
     return watchlists?.sort((a, b) => (a.name < b.name ? -1 : 1))
   })
 
@@ -35,7 +35,10 @@ export class WatchlistPanelComponent implements OnInit {
     private _snackBar: MatSnackBar
   ) {
     effect(() => {
-      const message = this._watchlistService.watchlistsSignal.error() as string
+      const message = this._watchlistService.watchlistsResult.error() as string
+      if (!message) {
+        return
+      }
       this._snackBar.open(message, 'Close', {
         horizontalPosition: this.horizontalPosition,
         verticalPosition: this.verticalPosition

@@ -13,10 +13,10 @@ import { NewsResult } from '../../model/news-response'
 export class NewsArticleComponent {
   @Input()
   public set result(result: NewsResult) {
-    this._newsResult.set(result)
+    this._$newsResult.set(result)
   }
 
-  private _newsResult = signal<NewsResult | null>(null)
+  private _$newsResult = signal<NewsResult | null>(null)
 
-  public newsResult = this._newsResult.asReadonly()
+  public $newsResult = this._$newsResult.asReadonly()
 }
