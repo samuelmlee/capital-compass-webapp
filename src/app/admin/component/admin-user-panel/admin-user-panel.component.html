@@ -7,7 +7,8 @@
     </tr>
   </thead>
   <tbody>
-    @for (user of adminUsersSignal.value(); track user.username) {
+    <app-error-message [errorMessage]="$adminUsersError()"></app-error-message>
+    @for (user of $adminUsers(); track user.username) {
       <tr>
         <td>
           {{ user.username }}

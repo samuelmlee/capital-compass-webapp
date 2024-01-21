@@ -1,0 +1,8 @@
+@if ($errorMessage(); as errorMessage) {
+  <div class="d-flex align-items-center justify-content-center py-4 px-4">
+    <mat-icon class="me-2 error-logo">warning</mat-icon>
+    <div>
+      {{ errorMessage }}
+    </div>
+  </div>
+}

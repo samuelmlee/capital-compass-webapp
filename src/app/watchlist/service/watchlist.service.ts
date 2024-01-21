@@ -76,7 +76,7 @@ export class WatchlistService {
   }
 
   private getUserWatchLists(): Observable<WatchlistCollectionResponse> {
-    return this._http.get<WatchlistCollectionResponse>(`${this._apiUrl}/gateway/watchlists`, {
+    return this._http.get<WatchlistCollectionResponse>(`${this._apiUrl}/gateway/watchlistsz`, {
       withCredentials: true
     })
   }
