@@ -41,7 +41,8 @@ export class WatchlistPanelComponent implements OnInit {
       }
       this._snackBar.open(message, 'Close', {
         horizontalPosition: this.horizontalPosition,
-        verticalPosition: this.verticalPosition
+        verticalPosition: this.verticalPosition,
+        duration: 2000
       })
     })
   }

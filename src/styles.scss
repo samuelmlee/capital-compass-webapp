@@ -51,6 +51,13 @@ mat-nav-list.mdc-list {
   overflow-y: auto;
 }
 
+.mat-mdc-snack-bar-container {
+  --mdc-snackbar-container-color: #3f51b5;
+  --mat-snack-bar-button-color: #00000080;
+
+  transform: translateY(100px) !important;
+}
+
 table.native-table {
   border-collapse: collapse;
 

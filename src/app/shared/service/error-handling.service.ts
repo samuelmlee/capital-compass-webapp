@@ -5,8 +5,6 @@ import { Injectable } from '@angular/core'
   providedIn: 'root'
 })
 export class ErrorHandlingService {
-  constructor() {}
-
   public getErrorMessage(error: HttpErrorResponse, resource: string): string {
     if (error.error instanceof ErrorEvent) {
       return `Client Error: ${error.error.message}`
