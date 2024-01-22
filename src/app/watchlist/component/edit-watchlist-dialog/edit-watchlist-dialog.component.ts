@@ -51,16 +51,13 @@ export class EditWatchlistDialogComponent {
 
     this.initFormControl()
 
-    effect(
-      () => {
-        const watchlistName = this._$watchlistName?.()
-        if (!watchlistName) {
-          return
-        }
-        this._editWatchlistService.updateWatchlistName(watchlistName)
-      },
-      { allowSignalWrites: true }
-    )
+    effect(() => {
+      const watchlistName = this._$watchlistName?.()
+      if (!watchlistName) {
+        return
+      }
+      this._editWatchlistService.updateWatchlistName(watchlistName)
+    })
   }
 
   public saveWatchList(): void {

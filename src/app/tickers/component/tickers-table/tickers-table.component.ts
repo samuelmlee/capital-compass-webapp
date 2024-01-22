@@ -17,6 +17,7 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table'
 
 import { MatButtonModule } from '@angular/material/button'
 import { RouterModule } from '@angular/router'
+import { ErrorMessageComponent } from 'src/app/shared/component/error-message/error-message.component'
 import { CastPipe } from 'src/app/shared/pipe/cast.pipe'
 import { TickersResponse, TickersResponseSource, TickersResult } from '../../model/tickers-response'
 import { TickersSearchConfig } from '../../model/tickers-search-config'
@@ -33,6 +34,7 @@ import { NoTotalItemsPaginatorIntl } from './no-total-items-paginator-intl'
   selector: 'app-tickers-table',
   standalone: true,
   imports: [
+    ErrorMessageComponent,
     CommonModule,
     MatButtonModule,
     MatTableModule,
@@ -85,6 +87,7 @@ export class TickersTableComponent {
 
   public $rowDefs = computed(() => this._$tickersTableConfig().columnDefs.map((c) => c.key))
   public $tickersDataSource = computed(() => this.convertResponseToDataSource())
+  public $tickersDataSourceError = this._tickerService.tickersResult.error
   public $tickersTableConfig = this._$tickersTableConfig.asReadonly()
   public ColumnType = COLUMN_TYPE
   public ActionColumnDef: ActionColumnDef | undefined
@@ -104,11 +107,6 @@ export class TickersTableComponent {
   }
 
   public convertResponseToDataSource(): MatTableDataSource<TickersResult> {
-    const error: unknown = this._tickerService.tickersResult.error()
-    if (error) {
-      // show in toast
-      return this._dataSource
-    }
     const response = this._tickerService.tickersResult.value()
     if (!response) {
       return this._dataSource
