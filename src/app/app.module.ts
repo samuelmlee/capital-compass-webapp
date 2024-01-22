@@ -22,6 +22,6 @@ import { HttpRequestInterceptor } from './core/service/http-request-interceptor'
     ToolbarComponent
   ],
   bootstrap: [AppComponent],
-  providers: [{ provide: HTTP_INTERCEPTORS, useClass: HttpRequestInterceptor }]
+  providers: [{ provide: HTTP_INTERCEPTORS, useClass: HttpRequestInterceptor, multi: true }]
 })
 export class AppModule {}

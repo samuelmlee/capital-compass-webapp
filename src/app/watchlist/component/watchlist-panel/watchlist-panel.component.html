@@ -14,8 +14,12 @@
 </div>
 
 <div class="watchlists-container overflow-y-auto">
-  <app-error-message [errorMessage]="$watchlistsError()"></app-error-message>
-  @for (watchlist of $watchlists(); track watchlist.id) {
-    <app-watchlist-table [watchlist]="watchlist"></app-watchlist-table>
+  @if (loading$ | async) {
+    <app-loading-indicator></app-loading-indicator>
+  } @else {
+    <app-error-message [errorMessage]="$watchlistsError()"></app-error-message>
+    @for (watchlist of $watchlists(); track watchlist.id) {
+      <app-watchlist-table [watchlist]="watchlist"></app-watchlist-table>
+    }
   }
 </div>

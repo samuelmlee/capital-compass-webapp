@@ -1,29 +1,28 @@
-import { Injectable, Signal, computed, signal } from '@angular/core'
+import { Injectable } from '@angular/core'
+import { BehaviorSubject } from 'rxjs'
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoadingService {
-  private _$loadingMap = signal(new Map<string, boolean>())
+  private _loadingMap = new Map<string, boolean>()
+
+  private _loadingSub = new BehaviorSubject<boolean>(false)
+
+  public loading$ = this._loadingSub.asObservable()
 
   public setLoading(loading: boolean, url: string): void {
     if (!url) {
       throw new Error('The request URL must be provided to the LoadingService.setLoading function')
     }
     if (loading === true) {
-      this._$loadingMap.update((map) => map.set(url, loading))
-    } else if (loading === false && this._$loadingMap().has(url)) {
-      this._$loadingMap.update((map) => {
-        map.delete(url)
-        return map
-      })
+      this._loadingMap.set(url, loading)
+      this._loadingSub.next(true)
+    } else if (loading === false && this._loadingMap.has(url)) {
+      this._loadingMap.delete(url)
     }
-    // if (this._$loadingMap().size === 0) {
-    //   this.$loading.set(false)
-    // }
-  }
-
-  public getLoadingSignal(url: string): Signal<boolean | undefined> {
-    return computed(() => this._$loadingMap().get(url))
+    if (this._loadingMap.size === 0) {
+      this._loadingSub.next(false)
+    }
   }
 }

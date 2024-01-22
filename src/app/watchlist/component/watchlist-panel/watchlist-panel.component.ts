@@ -3,7 +3,9 @@ import { ChangeDetectionStrategy, Component, OnInit, computed } from '@angular/c
 import { MatButtonModule } from '@angular/material/button'
 import { MatDialog } from '@angular/material/dialog'
 import { MatSnackBarModule } from '@angular/material/snack-bar'
+import { LoadingService } from 'src/app/core/service/loading.service'
 import { ErrorMessageComponent } from 'src/app/shared/component/error-message/error-message.component'
+import { LoadingIndicatorComponent } from 'src/app/shared/component/loading-indicator/loading-indicator.component'
 import { WatchlistService } from '../../service/watchlist.service'
 import { EditWatchlistDialogComponent } from '../edit-watchlist-dialog/edit-watchlist-dialog.component'
 import { WatchlistTableComponent } from '../watchlist-table/watchlist-table.component'
@@ -14,6 +16,7 @@ import { WatchlistTableComponent } from '../watchlist-table/watchlist-table.comp
   imports: [
     CommonModule,
     ErrorMessageComponent,
+    LoadingIndicatorComponent,
     MatButtonModule,
     MatSnackBarModule,
     WatchlistTableComponent
@@ -30,9 +33,12 @@ export class WatchlistPanelComponent implements OnInit {
 
   public $watchlistsError = this._watchlistService.watchlistsResult.error
 
+  public loading$ = this._loadingService.loading$
+
   constructor(
     private _dialog: MatDialog,
-    private _watchlistService: WatchlistService
+    private _watchlistService: WatchlistService,
+    private _loadingService: LoadingService
   ) {}
   public ngOnInit(): void {
     this._watchlistService.fetchWatchLists()
