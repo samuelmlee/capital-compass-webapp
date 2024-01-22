@@ -21,7 +21,6 @@ import { ErrorMessageComponent } from 'src/app/shared/component/error-message/er
 import { LoadingIndicatorComponent } from 'src/app/shared/component/loading-indicator/loading-indicator.component'
 import { CastPipe } from 'src/app/shared/pipe/cast.pipe'
 import { TickersResponse, TickersResponseSource, TickersResult } from '../../model/tickers-response'
-import { TickersSearchConfig } from '../../model/tickers-search-config'
 import {
   ActionColumnDef,
   COLUMN_TYPE,
@@ -50,14 +49,6 @@ import { NoTotalItemsPaginatorIntl } from './no-total-items-paginator-intl'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TickersTableComponent {
-  @Input()
-  public set searchConfig(config: TickersSearchConfig | null) {
-    if (!config) {
-      return
-    }
-    this._tickerService.fetchTickersByConfig(config)
-  }
-
   @Input()
   public set tableConfig(config: TickersTableConfig) {
     this._$tickersTableConfig.set(config)

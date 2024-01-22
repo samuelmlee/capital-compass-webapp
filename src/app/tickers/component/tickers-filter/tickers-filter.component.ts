@@ -125,7 +125,7 @@ export class TickersFilterComponent implements OnInit {
       }
       const [searchTerm = '', type = '', ticker = ''] = this._$formValues() || []
       const config: TickersSearchConfig = { searchTerm, type, symbol: ticker }
-      this.configUpdatedEvent.emit(config)
+      this._tickersService.fetchTickersByConfig(config)
     })
   }
 }

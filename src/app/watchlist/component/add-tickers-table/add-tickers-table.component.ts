@@ -1,13 +1,11 @@
 import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core'
-import { Subject } from 'rxjs'
 import {
   TickersFilterComponent,
   TickersFilterConfig
 } from 'src/app/tickers/component/tickers-filter/tickers-filter.component'
 import { TickersTableComponent } from 'src/app/tickers/component/tickers-table/tickers-table.component'
 import { TickersResult } from 'src/app/tickers/model/tickers-response'
-import { TickersSearchConfig } from 'src/app/tickers/model/tickers-search-config'
 import { COLUMN_TYPE, TickersTableConfig } from 'src/app/tickers/model/tickers-table-config'
 import { EditWatchlistService } from '../../service/edit-watchlist.service'
 
@@ -52,12 +50,5 @@ export class AddTickersTableComponent {
     ]
   })
 
-  private _searchConfig = new Subject<TickersSearchConfig>()
-  public searchConfig$ = this._searchConfig.asObservable()
-
   constructor(private _editWatchlistService: EditWatchlistService) {}
-
-  public updateSearchConfig(config: TickersSearchConfig): void {
-    this._searchConfig.next(config)
-  }
 }
