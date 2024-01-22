@@ -1,6 +1,7 @@
 import { DecimalPipe } from '@angular/common'
 import { ChangeDetectionStrategy, Component, OnInit, Signal, computed } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
+import { ErrorMessageComponent } from 'src/app/shared/component/error-message/error-message.component'
 import { FormatKeyPipe } from 'src/app/shared/pipe/format-key.pipe'
 import { TickerDetailsResult } from '../../model/ticker-details-response'
 import { TickersService } from '../../service/tickers.service'
@@ -13,13 +14,15 @@ type TickerDetailView = {
 @Component({
   selector: 'app-tickers-detail',
   standalone: true,
-  imports: [DecimalPipe, FormatKeyPipe],
+  imports: [ErrorMessageComponent, DecimalPipe, FormatKeyPipe],
   templateUrl: './tickers-detail.component.html',
   styleUrl: './tickers-detail.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TickersDetailComponent implements OnInit {
   public $tickerDetails = this._tickersService.tickerDetailsResult.value
+
+  public $tickerDetailsError = this._tickersService.tickerDetailsResult.error
 
   public $primaryDetails: Signal<TickerDetailView[]> = computed(() => {
     const tickerDetails = this.$tickerDetails()

@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
+  Injector,
   Input,
   OnInit,
   Output,
@@ -22,6 +23,7 @@ import { MatIconModule } from '@angular/material/icon'
 import { MatInputModule } from '@angular/material/input'
 import { MatSelectModule } from '@angular/material/select'
 import { combineLatest, debounceTime, distinctUntilChanged, map, startWith } from 'rxjs'
+import { SnackbarService } from 'src/app/core/service/snack-bar.service'
 import { TickersSearchConfig } from '../../model/tickers-search-config'
 import { TickersService } from '../../service/tickers.service'
 
@@ -53,6 +55,7 @@ export class TickersFilterComponent implements OnInit {
   @Output('newSearchConfig')
   public configUpdatedEvent = new EventEmitter<TickersSearchConfig>()
   public $tickerTypes = this._tickersService.tickerTypesResult.value
+
   public searchTermControl = new FormControl('')
   public typeControl = new FormControl('')
   public tickerControl = new FormControl('', [Validators.maxLength(5)])
@@ -61,7 +64,9 @@ export class TickersFilterComponent implements OnInit {
 
   constructor(
     private _formBuilder: FormBuilder,
-    private _tickersService: TickersService
+    private _tickersService: TickersService,
+    private _snackBarService: SnackbarService,
+    private _injector: Injector
   ) {
     this.formGroup = this._formBuilder.group({
       searchTerm: this.searchTermControl,
@@ -71,21 +76,19 @@ export class TickersFilterComponent implements OnInit {
 
     this.initFormValues()
 
-    effect(() => {
-      if (!this.formGroup.valid) {
-        return
-      }
-      if (!this._$formValues) {
-        return
-      }
-      const [searchTerm = '', type = '', ticker = ''] = this._$formValues() || []
-      const config: TickersSearchConfig = { searchTerm, type, symbol: ticker }
-      this.configUpdatedEvent.emit(config)
-    })
+    this.initFormValuesEffect()
+
+    this.initTickerTypesErrorEffect()
   }
 
   public ngOnInit(): void {
     this._tickersService.fetchTickerTypes()
+  }
+
+  public clearControl(controlName: string): void {
+    const control = this.formGroup.get(controlName)
+    control?.setValue('')
+    this.formGroup.updateValueAndValidity()
   }
 
   private initFormValues(): void {
@@ -102,9 +105,27 @@ export class TickersFilterComponent implements OnInit {
     )
   }
 
-  public clearControl(controlName: string): void {
-    const control = this.formGroup.get(controlName)
-    control?.setValue('')
-    this.formGroup.updateValueAndValidity()
+  private initTickerTypesErrorEffect(): void {
+    effect(() => {
+      const error = this._tickersService.tickerTypesResult.error()
+      if (typeof error !== 'string' || !error) {
+        return
+      }
+      this._snackBarService.error(error)
+    })
+  }
+
+  private initFormValuesEffect(): void {
+    effect(() => {
+      if (!this.formGroup.valid) {
+        return
+      }
+      if (!this._$formValues) {
+        return
+      }
+      const [searchTerm = '', type = '', ticker = ''] = this._$formValues() || []
+      const config: TickersSearchConfig = { searchTerm, type, symbol: ticker }
+      this.configUpdatedEvent.emit(config)
+    })
   }
 }

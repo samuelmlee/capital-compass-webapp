@@ -1,3 +1,4 @@
+<app-error-message [errorMessage]="$tickerDetailsError()"></app-error-message>
 @if ($tickerDetails()?.result; as tickerDetails) {
   <h2 class="mb-3">{{ tickerDetails.name }} ({{ tickerDetails.symbol }})</h2>
 

@@ -1,4 +1,5 @@
 <app-news-filter></app-news-filter>
+<app-error-message [errorMessage]="$newsError()"></app-error-message>
 <div class="d-flex flex-wrap article-container overflow-y-auto">
   @for (article of $news()?.results; track article.publishedUtc) {
     <app-news-article [result]="article" class="w-50"></app-news-article>
