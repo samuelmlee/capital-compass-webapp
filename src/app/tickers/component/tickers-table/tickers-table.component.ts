@@ -18,6 +18,7 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table'
 import { MatButtonModule } from '@angular/material/button'
 import { RouterModule } from '@angular/router'
 import { ErrorMessageComponent } from 'src/app/shared/component/error-message/error-message.component'
+import { LoadingIndicatorComponent } from 'src/app/shared/component/loading-indicator/loading-indicator.component'
 import { CastPipe } from 'src/app/shared/pipe/cast.pipe'
 import { TickersResponse, TickersResponseSource, TickersResult } from '../../model/tickers-response'
 import { TickersSearchConfig } from '../../model/tickers-search-config'
@@ -35,6 +36,7 @@ import { NoTotalItemsPaginatorIntl } from './no-total-items-paginator-intl'
   standalone: true,
   imports: [
     ErrorMessageComponent,
+    LoadingIndicatorComponent,
     CommonModule,
     MatButtonModule,
     MatTableModule,
@@ -61,6 +63,15 @@ export class TickersTableComponent {
     this._$tickersTableConfig.set(config)
   }
 
+  public $rowDefs = computed(() => this._$tickersTableConfig().columnDefs.map((c) => c.key))
+  public $tickersDataSource = computed(() => this.convertResponseToDataSource())
+  public $tickersDataSourceError = this._tickerService.tickersResult.error
+  public ColumnType = COLUMN_TYPE
+  public ActionColumnDef: ActionColumnDef | undefined
+  public LinkColumnDef: LinkColumnDef | undefined
+
+  private _dataSource: MatTableDataSource<TickersResult>
+  private _nextCursor = ''
   private _$tickersTableConfig = signal<TickersTableConfig>({
     pageSize: 50,
     columnDefs: [
@@ -84,20 +95,8 @@ export class TickersTableComponent {
       }
     ]
   })
-
-  public $rowDefs = computed(() => this._$tickersTableConfig().columnDefs.map((c) => c.key))
-  public $tickersDataSource = computed(() => this.convertResponseToDataSource())
-  public $tickersDataSourceError = this._tickerService.tickersResult.error
   public $tickersTableConfig = this._$tickersTableConfig.asReadonly()
-  public ColumnType = COLUMN_TYPE
-  public ActionColumnDef: ActionColumnDef | undefined
-  public LinkColumnDef: LinkColumnDef | undefined
-
-  private _dataSource: MatTableDataSource<TickersResult>
-  private _nextCursor = ''
-
   @ViewChild(MatPaginator) public paginator: MatPaginator | null = null
-
   constructor(private _tickerService: TickersService) {
     this._dataSource = new MatTableDataSource<TickersResult>([])
   }

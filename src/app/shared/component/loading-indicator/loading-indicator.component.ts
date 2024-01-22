@@ -10,6 +10,4 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
   styleUrl: './loading-indicator.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoadingIndicatorComponent {
-  constructor() {}
-}
+export class LoadingIndicatorComponent {}
