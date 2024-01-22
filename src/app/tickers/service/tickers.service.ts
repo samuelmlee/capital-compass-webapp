@@ -1,9 +1,8 @@
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Observable, Subject, map, merge, switchMap } from 'rxjs'
-
+import { ErrorHandlingService } from 'src/app/core/service/error-handling.service'
 import { Result } from 'src/app/shared/model/result'
-import { ErrorHandlingService } from 'src/app/shared/service/error-handling.service'
 import { fromObsToSignal } from 'src/app/shared/utils/fromObsToSignal'
 import { environment } from 'src/environments/environment'
 import { TickerDetailsResponse } from '../model/ticker-details-response'

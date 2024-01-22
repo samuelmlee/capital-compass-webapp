@@ -1,8 +1,9 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { Observable, Subject, catchError, map, of, switchMap } from 'rxjs'
+import { EMPTY, Observable, Subject, catchError, switchMap, take } from 'rxjs'
+import { ErrorHandlingService } from 'src/app/core/service/error-handling.service'
+import { SnackbarService } from 'src/app/core/service/snack-bar.service'
 import { Result } from 'src/app/shared/model/result'
-import { ErrorHandlingService } from 'src/app/shared/service/error-handling.service'
 import { fromObsToSignal } from 'src/app/shared/utils/fromObsToSignal'
 import { environment } from 'src/environments/environment'
 import { type User } from '../../users/model/user'
@@ -22,7 +23,8 @@ export class AuthService {
 
   constructor(
     private readonly _httpClient: HttpClient,
-    private _errorHandlingService: ErrorHandlingService
+    private _errorHandlingService: ErrorHandlingService,
+    private _snackBarService: SnackbarService
   ) {
     this.userResult = fromObsToSignal<User>(
       this._authenticateSubject.pipe(switchMap(() => this.getUserDetails())),
@@ -48,11 +50,14 @@ export class AuthService {
     this._httpClient
       .get<LogOutApiResponse>(`${this._authUrl}/v1/auth/logout`, { withCredentials: true })
       .pipe(
-        map((response) => ({ value: response, error: null })),
-        catchError((err) => of({ value: null, error: err }))
+        take(1),
+        catchError(() => {
+          this._snackBarService.error('Error occured during logout')
+          return EMPTY
+        })
       )
       .subscribe((result) => {
-        const keycloakLogoutUrl = `${result.value?.logoutUrl}?client_id=${this._clientId}&post_logout_redirect_uri=${this._logoutUri}`
+        const keycloakLogoutUrl = `${result.logoutUrl}?client_id=${this._clientId}&post_logout_redirect_uri=${this._logoutUri}`
         window.open(keycloakLogoutUrl, '_self')
       })
   }
