@@ -51,6 +51,23 @@ mat-nav-list.mdc-list {
   overflow-y: auto;
 }
 
+.mat-mdc-snack-bar-container {
+  --mat-snack-bar-button-color: black;
+  --mdc-snackbar-supporting-text-color: white;
+
+  &.error-snackbar {
+    --mdc-snackbar-container-color: red;
+  }
+
+  &.success-snackbar {
+    --mdc-snackbar-container-color: green;
+  }
+
+  &.info-snackbar {
+    --mdc-snackbar-container-color: blue;
+  }
+}
+
 table.native-table {
   border-collapse: collapse;
 
