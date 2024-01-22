@@ -1,5 +1,13 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectionStrategy, Component, Inject, Signal, effect, signal } from '@angular/core'
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Inject,
+  Injector,
+  Signal,
+  effect,
+  signal
+} from '@angular/core'
 import { toSignal } from '@angular/core/rxjs-interop'
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms'
 import { MatButtonModule } from '@angular/material/button'
@@ -42,6 +50,7 @@ export class EditWatchlistDialogComponent {
   constructor(
     private _editWatchlistService: EditWatchlistService,
     private _dialogRef: MatDialogRef<EditWatchlistDialogComponent>,
+    private _injector: Injector,
     @Inject(MAT_DIALOG_DATA) private _dialogData: WatchDialogData
   ) {
     if (this._dialogData) {
@@ -51,13 +60,7 @@ export class EditWatchlistDialogComponent {
 
     this.initFormControl()
 
-    effect(() => {
-      const watchlistName = this._$watchlistName?.()
-      if (!watchlistName) {
-        return
-      }
-      this._editWatchlistService.updateWatchlistName(watchlistName)
-    })
+    this.initWatchlistNameEffect()
   }
 
   public saveWatchList(): void {
@@ -80,4 +83,16 @@ export class EditWatchlistDialogComponent {
       )
     )
   }
+
+  private initWatchlistNameEffect(): void {
+    effect(() => {
+      const watchlistName = this._$watchlistName?.()
+      if (!watchlistName) {
+        return
+      }
+      this._editWatchlistService.updateWatchlistName(watchlistName)
+    })
+  }
+
+  private initWatchlistCreatedEffect(): void {}
 }
