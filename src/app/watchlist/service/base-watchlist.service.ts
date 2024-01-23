@@ -13,6 +13,8 @@ export abstract class BaseWatchlistService {
 
   constructor(protected _watchlistService: WatchlistService) {}
 
+  public abstract saveWatchList(): void
+
   public addTickerResultToWatchList(result: TickersResult): void {
     if (this._$watchlistState().tickersSelected.find((ticker) => ticker.symbol == result.symbol)) {
       return

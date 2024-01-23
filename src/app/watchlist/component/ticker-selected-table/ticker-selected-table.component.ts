@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core'
 import { MatButtonModule } from '@angular/material/button'
 import { WatchlistTicker } from '../../model/edit-watchlist-config'
-import { EditWatchlistService } from '../../service/edit-watchlist.service'
+import { BaseWatchlistService } from '../../service/base-watchlist.service'
 
 @Component({
   selector: 'app-ticker-selected-table',
@@ -13,12 +13,12 @@ import { EditWatchlistService } from '../../service/edit-watchlist.service'
 })
 export class TickerSelectedTableComponent {
   public $tickersSelected = computed(
-    () => this._editWatchlistService.$watchlistState().tickersSelected
+    () => this._baseWatchlistService.$watchlistState().tickersSelected
   )
 
-  constructor(private _editWatchlistService: EditWatchlistService) {}
+  constructor(private _baseWatchlistService: BaseWatchlistService) {}
 
   public removeTickerFromWatchList(ticker: WatchlistTicker): void {
-    this._editWatchlistService.removeTickerFromWatchList(ticker)
+    this._baseWatchlistService.removeTickerFromWatchList(ticker)
   }
 }

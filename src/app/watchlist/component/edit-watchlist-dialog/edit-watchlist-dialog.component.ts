@@ -1,13 +1,5 @@
 import { CommonModule } from '@angular/common'
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Inject,
-  Injector,
-  Signal,
-  effect,
-  signal
-} from '@angular/core'
+import { ChangeDetectionStrategy, Component, Inject, Signal, effect, signal } from '@angular/core'
 import { toSignal } from '@angular/core/rxjs-interop'
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms'
 import { MatButtonModule } from '@angular/material/button'
@@ -21,7 +13,7 @@ import { WatchDialogData } from '../../model/watchlist-dialog-data'
 import { BaseWatchlistService } from '../../service/base-watchlist.service'
 import { CreateWatchlistService } from '../../service/create-watchlist.service'
 import { EditWatchlistService } from '../../service/edit-watchlist.service'
-import { WatchlistServicesModule } from '../../watchlist-services-module'
+import { WatchlistService } from '../../service/watchlist.service'
 import { AddTickersTableComponent } from '../add-tickers-table/add-tickers-table.component'
 import { TickerSelectedTableComponent } from '../ticker-selected-table/ticker-selected-table.component'
 
@@ -37,20 +29,22 @@ import { TickerSelectedTableComponent } from '../ticker-selected-table/ticker-se
     MatInputModule,
     ReactiveFormsModule,
     AddTickersTableComponent,
-    TickerSelectedTableComponent,
-    WatchlistServicesModule
+    TickerSelectedTableComponent
   ],
   templateUrl: './edit-watchlist-dialog.component.html',
   styleUrl: './edit-watchlist-dialog.component.scss',
   providers: [
     {
       provide: BaseWatchlistService,
-      useFactory: (injector: Injector, dialogData: WatchDialogData): BaseWatchlistService => {
+      useFactory: (
+        dialogData: WatchDialogData,
+        watchlistService: WatchlistService
+      ): BaseWatchlistService => {
         return dialogData
-          ? injector.get(EditWatchlistService)
-          : injector.get(CreateWatchlistService)
+          ? new EditWatchlistService(watchlistService)
+          : new CreateWatchlistService(watchlistService)
       },
-      deps: [Injector, MAT_DIALOG_DATA]
+      deps: [MAT_DIALOG_DATA, WatchlistService]
     }
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -63,14 +57,15 @@ export class EditWatchlistDialogComponent {
   public $dialogTitle = this._$dialogTitle.asReadonly()
 
   constructor(
-    private _editWatchlistService: EditWatchlistService,
+    private _baseWatchlistService: BaseWatchlistService,
     private _dialogRef: MatDialogRef<EditWatchlistDialogComponent>,
-    private _injector: Injector,
     private _snackBarService: SnackbarService,
     @Inject(MAT_DIALOG_DATA) private _dialogData: WatchDialogData
   ) {
     if (this._dialogData) {
-      this._editWatchlistService.updateStateWithWatchlist(this._dialogData.watchlist)
+      const service = this._baseWatchlistService as EditWatchlistService
+      service.updateStateWithWatchlist(this._dialogData.watchlist)
+
       this._$dialogTitle.set('Edit Watchlist')
     }
 
@@ -83,13 +78,13 @@ export class EditWatchlistDialogComponent {
     if (!this.nameControl?.valid) {
       return
     }
-    this._editWatchlistService.saveWatchList()
+    this._baseWatchlistService.saveWatchList()
     // TODO: wait for watchlist created signal value or error before closing
     this._dialogRef.close()
   }
 
   private initFormControl(): void {
-    const name = this._editWatchlistService.$watchlistState().name
+    const name = this._baseWatchlistService.$watchlistState().name
     this.nameControl = new FormControl(name, Validators.required)
 
     this._$watchlistName = toSignal(
@@ -108,7 +103,7 @@ export class EditWatchlistDialogComponent {
         if (!watchlistName) {
           return
         }
-        this._editWatchlistService.updateWatchlistName(watchlistName)
+        this._baseWatchlistService.updateWatchlistName(watchlistName)
       },
       { allowSignalWrites: true }
     )

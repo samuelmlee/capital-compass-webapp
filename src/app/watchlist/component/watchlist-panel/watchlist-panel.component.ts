@@ -1,5 +1,11 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectionStrategy, Component, OnInit, computed } from '@angular/core'
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  ViewContainerRef,
+  computed
+} from '@angular/core'
 import { MatButtonModule } from '@angular/material/button'
 import { MatDialog } from '@angular/material/dialog'
 import { MatSnackBarModule } from '@angular/material/snack-bar'
@@ -38,7 +44,8 @@ export class WatchlistPanelComponent implements OnInit {
   constructor(
     private _dialog: MatDialog,
     private _watchlistService: WatchlistService,
-    private _loadingService: LoadingService
+    private _loadingService: LoadingService,
+    private _viewContainerRef: ViewContainerRef
   ) {}
   public ngOnInit(): void {
     this._watchlistService.fetchWatchLists()
@@ -49,7 +56,8 @@ export class WatchlistPanelComponent implements OnInit {
       width: '50vw',
       height: '95vh',
       hasBackdrop: true,
-      disableClose: true
+      disableClose: true,
+      viewContainerRef: this._viewContainerRef
     })
   }
 }
