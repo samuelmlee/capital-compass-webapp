@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { Observable, Subject, map, switchMap, tap } from 'rxjs'
+import { Observable, Subject, map, switchMap } from 'rxjs'
 import { ErrorHandlingService } from 'src/app/core/service/error-handling.service'
 import { Result } from 'src/app/shared/model/result'
 import { fromObsToSignal } from 'src/app/shared/utils/fromObsToSignal'
@@ -33,26 +33,17 @@ export class WatchlistService {
     )
 
     this.watchlistCreatedResult = fromObsToSignal<Watchlist>(
-      this._postWatchListSubject.pipe(
-        switchMap((config) => this.postUserWatchList(config)),
-        tap(() => this.fetchWatchLists())
-      ),
+      this._postWatchListSubject.pipe(switchMap((config) => this.postUserWatchList(config))),
       (e: HttpErrorResponse) => this._errorHandlingService.getErrorMessage(e, 'Watchlist')
     )
 
     this.watchlistUpdatedResult = fromObsToSignal<Watchlist>(
-      this._putWatchListSubject.pipe(
-        switchMap((config) => this.putUserWatchList(config)),
-        tap(() => this.fetchWatchLists())
-      ),
+      this._putWatchListSubject.pipe(switchMap((config) => this.putUserWatchList(config))),
       (e: HttpErrorResponse) => this._errorHandlingService.getErrorMessage(e, 'Watchlist')
     )
 
     this.watchlistDeletedResult = fromObsToSignal<number>(
-      this._deleteWatchListSubject.pipe(
-        switchMap((id) => this.deleteUserWatchList(id)),
-        tap(() => this.fetchWatchLists())
-      ),
+      this._deleteWatchListSubject.pipe(switchMap((id) => this.deleteUserWatchList(id))),
       (e: HttpErrorResponse) => this._errorHandlingService.getErrorMessage(e, 'Watchlist')
     )
   }

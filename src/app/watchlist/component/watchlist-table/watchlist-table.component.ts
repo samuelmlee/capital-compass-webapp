@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router'
 import { FormatKeyPipe } from 'src/app/shared/pipe/format-key.pipe'
 import { DailyBar, TickerSnapshotView, Watchlist, WatchlistView } from '../../model/watchlist'
 import { WatchDialogData } from '../../model/watchlist-dialog-data'
+import { WatchlistService } from '../../service/watchlist.service'
 import { DeleteWatchlistDialogComponent } from '../delete-watchlist-dialog/delete-watchlist-dialog.component'
 import { ManageWatchlistDialogComponent } from '../edit-watchlist-dialog/manage-watchlist-dialog.component'
 
@@ -34,7 +35,10 @@ export class WatchlistTableComponent {
   private _$watchlist = signal<WatchlistView | null>(null)
   public $watchlist = this._$watchlist.asReadonly()
 
-  constructor(private _dialog: MatDialog) {}
+  constructor(
+    private _dialog: MatDialog,
+    private _watchlistService: WatchlistService
+  ) {}
 
   public openEditDialog(): void {
     const watchlistView = this._$watchlist()
@@ -45,12 +49,16 @@ export class WatchlistTableComponent {
       watchlist: watchlistView
     }
 
-    this._dialog.open(ManageWatchlistDialogComponent, {
+    const dialogRef = this._dialog.open(ManageWatchlistDialogComponent, {
       width: '50vw',
       height: '90vh',
       hasBackdrop: true,
       data: dialogData,
       disableClose: true
+    })
+
+    dialogRef.afterClosed().subscribe(() => {
+      this._watchlistService.fetchWatchLists()
     })
   }
 
@@ -63,11 +71,15 @@ export class WatchlistTableComponent {
       watchlist: watchlistView
     }
 
-    this._dialog.open(DeleteWatchlistDialogComponent, {
+    const dialogRef = this._dialog.open(DeleteWatchlistDialogComponent, {
       width: '25vw',
       height: '25vh',
       hasBackdrop: true,
       data: dialogData
+    })
+
+    dialogRef.afterClosed().subscribe(() => {
+      this._watchlistService.fetchWatchLists()
     })
   }
 

@@ -53,6 +53,8 @@ export class WatchlistPanelComponent implements OnInit {
       disableClose: true
     })
 
-    // dialogRef.afterClosed.
+    dialogRef.afterClosed().subscribe(() => {
+      this._watchlistService.fetchWatchLists()
+    })
   }
 }
