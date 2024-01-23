@@ -121,6 +121,7 @@ export class ManageWatchlistDialogComponent {
       if (!watchlist) {
         return
       }
+      this._snackBarService.success('Watchlist has been updated')
       this._dialogRef.close()
     })
   }

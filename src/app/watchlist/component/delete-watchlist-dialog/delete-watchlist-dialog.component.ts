@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Component, Inject, signal } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Inject, effect, signal } from '@angular/core'
 import { MatButtonModule } from '@angular/material/button'
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog'
+import { SnackbarService } from 'src/app/core/service/snack-bar.service'
 import { DeleteWatchlistView } from '../../model/watchlist'
 import { WatchDialogData } from '../../model/watchlist-dialog-data'
-import { EditWatchlistService } from '../../service/edit-watchlist.service'
 import { WatchlistService } from '../../service/watchlist.service'
 
 @Component({
@@ -12,7 +12,7 @@ import { WatchlistService } from '../../service/watchlist.service'
   imports: [MatButtonModule, MatDialogModule],
   templateUrl: './delete-watchlist-dialog.component.html',
   styleUrl: './delete-watchlist-dialog.component.scss',
-  providers: [EditWatchlistService],
+  providers: [WatchlistService],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DeleteWatchlistDialogComponent {
@@ -25,11 +25,14 @@ export class DeleteWatchlistDialogComponent {
   constructor(
     private _wathclistService: WatchlistService,
     private _dialogRef: MatDialogRef<DeleteWatchlistDialogComponent>,
+    private _snackBarService: SnackbarService,
     @Inject(MAT_DIALOG_DATA) private _dialogData: WatchDialogData
   ) {
     if (this._dialogData) {
       this._$watchlistView.set(this._dialogData.watchlist)
     }
+
+    this.initWatchlistResultEffect()
   }
 
   public deleteWatchList(): void {
@@ -38,6 +41,21 @@ export class DeleteWatchlistDialogComponent {
       return
     }
     this._wathclistService.deleteWatchlist(id)
-    this._dialogRef.close()
+  }
+
+  private initWatchlistResultEffect(): void {
+    effect(() => {
+      const errorMessage = this._wathclistService.watchlistDeletedResult?.error()
+      const watchlist = this._wathclistService.watchlistDeletedResult?.value()
+      if (errorMessage) {
+        this._snackBarService.error(errorMessage as string)
+        return
+      }
+      if (!watchlist) {
+        return
+      }
+      this._snackBarService.success('Watchlist has been deleted')
+      this._dialogRef.close()
+    })
   }
 }
