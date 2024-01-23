@@ -15,7 +15,7 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatIconModule } from '@angular/material/icon'
 import { MatInputModule } from '@angular/material/input'
-import { distinctUntilChanged, map } from 'rxjs'
+import { debounceTime, distinctUntilChanged, map } from 'rxjs'
 import { SnackbarService } from 'src/app/core/service/snack-bar.service'
 import { WatchDialogData } from '../../model/watchlist-dialog-data'
 import { EditWatchlistService } from '../../service/edit-watchlist.service'
@@ -81,18 +81,22 @@ export class EditWatchlistDialogComponent {
     this._$watchlistName = toSignal(
       this.nameControl.valueChanges.pipe(
         distinctUntilChanged(),
+        debounceTime(500),
         map((value) => (value == null ? '' : value))
       )
     )
   }
 
   private initWatchlistNameEffect(): void {
-    effect(() => {
-      const watchlistName = this._$watchlistName?.()
-      if (!watchlistName) {
-        return
-      }
-      this._editWatchlistService.updateWatchlistName(watchlistName)
-    })
+    effect(
+      () => {
+        const watchlistName = this._$watchlistName?.()
+        if (!watchlistName) {
+          return
+        }
+        this._editWatchlistService.updateWatchlistName(watchlistName)
+      },
+      { allowSignalWrites: true }
+    )
   }
 }

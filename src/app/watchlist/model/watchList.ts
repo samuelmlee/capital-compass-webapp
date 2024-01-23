@@ -35,3 +35,8 @@ export type WatchlistView = {
   id: number
   tickerSnapshotViews: TickerSnapshotView[]
 }
+
+export type DeleteWatchlistView = {
+  name: string
+  id: number
+}

@@ -34,12 +34,4 @@ export class EditWatchlistService extends BaseWatchlistService {
     }
     this._watchlistService.updateWatchList(editConfig)
   }
-
-  public deleteWatchList(): void {
-    const editWatchlistState = this._$watchlistState()
-    if (!editWatchlistState.id) {
-      return
-    }
-    this._watchlistService.deleteWatchlist(editWatchlistState.id)
-  }
 }
