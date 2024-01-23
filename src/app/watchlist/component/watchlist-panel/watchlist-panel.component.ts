@@ -34,7 +34,7 @@ export class WatchlistPanelComponent implements OnInit {
 
   public $watchlistsError = this._watchlistService.watchlistsResult.error
 
-  public loading$ = this._loadingService.loading$
+  public loading$ = this._watchlistService.fetchWatchListsLoading
 
   constructor(
     private _dialog: MatDialog,

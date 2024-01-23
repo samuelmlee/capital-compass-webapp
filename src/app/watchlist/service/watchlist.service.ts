@@ -2,6 +2,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Observable, Subject, map, switchMap } from 'rxjs'
 import { ErrorHandlingService } from 'src/app/core/service/error-handling.service'
+import { LoadingService } from 'src/app/core/service/loading.service'
 import { Result } from 'src/app/shared/model/result'
 import { fromObsToSignal } from 'src/app/shared/utils/fromObsToSignal'
 import { environment } from 'src/environments/environment'
@@ -22,10 +23,14 @@ export class WatchlistService {
   private _deleteWatchListSubject = new Subject<number>()
 
   private _apiUrl = environment.apiUrl
+  private _getWatchListsUrl = `${this._apiUrl}/gateway/watchlists`
+
+  public fetchWatchListsLoading = this._loadingService.isLoading(this._getWatchListsUrl)
 
   constructor(
     private _http: HttpClient,
-    private _errorHandlingService: ErrorHandlingService
+    private _errorHandlingService: ErrorHandlingService,
+    private _loadingService: LoadingService
   ) {
     this.watchlistsResult = fromObsToSignal<WatchlistCollectionResponse>(
       this._getTickersSubject.pipe(switchMap(() => this.getUserWatchLists())),
@@ -65,7 +70,7 @@ export class WatchlistService {
   }
 
   private getUserWatchLists(): Observable<WatchlistCollectionResponse> {
-    return this._http.get<WatchlistCollectionResponse>(`${this._apiUrl}/gateway/watchlists`, {
+    return this._http.get<WatchlistCollectionResponse>(this._getWatchListsUrl, {
       withCredentials: true
     })
   }
