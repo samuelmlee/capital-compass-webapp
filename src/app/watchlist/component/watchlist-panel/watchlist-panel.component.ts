@@ -7,7 +7,7 @@ import { LoadingService } from 'src/app/core/service/loading.service'
 import { ErrorMessageComponent } from 'src/app/shared/component/error-message/error-message.component'
 import { LoadingIndicatorComponent } from 'src/app/shared/component/loading-indicator/loading-indicator.component'
 import { WatchlistService } from '../../service/watchlist.service'
-import { ManageWatchlistDialogComponent } from '../edit-watchlist-dialog/manage-watchlist-dialog.component'
+import { ManageWatchlistDialogComponent } from '../manage-watchlist-dialog/manage-watchlist-dialog.component'
 import { WatchlistTableComponent } from '../watchlist-table/watchlist-table.component'
 
 @Component({

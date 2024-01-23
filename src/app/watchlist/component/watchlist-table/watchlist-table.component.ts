@@ -7,7 +7,7 @@ import { DailyBar, TickerSnapshotView, Watchlist, WatchlistView } from '../../mo
 import { WatchDialogData } from '../../model/watchlist-dialog-data'
 import { WatchlistService } from '../../service/watchlist.service'
 import { DeleteWatchlistDialogComponent } from '../delete-watchlist-dialog/delete-watchlist-dialog.component'
-import { ManageWatchlistDialogComponent } from '../edit-watchlist-dialog/manage-watchlist-dialog.component'
+import { ManageWatchlistDialogComponent } from '../manage-watchlist-dialog/manage-watchlist-dialog.component'
 
 @Component({
   selector: 'app-watchlist-table',
