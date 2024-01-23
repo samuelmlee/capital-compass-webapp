@@ -7,7 +7,7 @@ import {
 import { TickersTableComponent } from 'src/app/tickers/component/tickers-table/tickers-table.component'
 import { TickersResult } from 'src/app/tickers/model/tickers-response'
 import { COLUMN_TYPE, TickersTableConfig } from 'src/app/tickers/model/tickers-table-config'
-import { EditWatchlistService } from '../../service/edit-watchlist.service'
+import { BaseWatchlistService } from '../../service/base-watchlist.service'
 
 @Component({
   selector: 'app-add-tickers-table',
@@ -44,11 +44,11 @@ export class AddTickersTableComponent {
         headerCellclass: [],
         type: COLUMN_TYPE.ACTION,
         actionCallback: (ticker): void =>
-          this._editWatchlistService.addTickerResultToWatchList(ticker as TickersResult),
+          this._baseWatchlistService.addTickerResultToWatchList(ticker as TickersResult),
         actionLabel: 'Add'
       }
     ]
   })
 
-  constructor(private _editWatchlistService: EditWatchlistService) {}
+  constructor(private _baseWatchlistService: BaseWatchlistService) {}
 }

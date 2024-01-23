@@ -18,7 +18,10 @@ import { MatInputModule } from '@angular/material/input'
 import { debounceTime, distinctUntilChanged, map } from 'rxjs'
 import { SnackbarService } from 'src/app/core/service/snack-bar.service'
 import { WatchDialogData } from '../../model/watchlist-dialog-data'
+import { BaseWatchlistService } from '../../service/base-watchlist.service'
+import { CreateWatchlistService } from '../../service/create-watchlist.service'
 import { EditWatchlistService } from '../../service/edit-watchlist.service'
+import { WatchlistServicesModule } from '../../watchlist-services-module'
 import { AddTickersTableComponent } from '../add-tickers-table/add-tickers-table.component'
 import { TickerSelectedTableComponent } from '../ticker-selected-table/ticker-selected-table.component'
 
@@ -34,11 +37,22 @@ import { TickerSelectedTableComponent } from '../ticker-selected-table/ticker-se
     MatInputModule,
     ReactiveFormsModule,
     AddTickersTableComponent,
-    TickerSelectedTableComponent
+    TickerSelectedTableComponent,
+    WatchlistServicesModule
   ],
   templateUrl: './edit-watchlist-dialog.component.html',
   styleUrl: './edit-watchlist-dialog.component.scss',
-  providers: [EditWatchlistService],
+  providers: [
+    {
+      provide: BaseWatchlistService,
+      useFactory: (injector: Injector, dialogData: WatchDialogData): BaseWatchlistService => {
+        return dialogData
+          ? injector.get(EditWatchlistService)
+          : injector.get(CreateWatchlistService)
+      },
+      deps: [Injector, MAT_DIALOG_DATA]
+    }
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EditWatchlistDialogComponent {

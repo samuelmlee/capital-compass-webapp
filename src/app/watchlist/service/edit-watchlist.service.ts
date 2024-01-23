@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { CreateWatchlistConfig, EditWatchlistConfig } from '../model/edit-watchlist-config'
+import { EditWatchlistConfig } from '../model/edit-watchlist-config'
 import { WatchlistView } from '../model/watchlist'
 import { BaseWatchlistService } from './base-watchlist.service'
 
@@ -19,12 +19,8 @@ export class EditWatchlistService extends BaseWatchlistService {
   public saveWatchList(): void {
     const editWatchlistState = this._$watchlistState()
 
-    if (editWatchlistState.id == null) {
-      const config: CreateWatchlistConfig = {
-        name: editWatchlistState.name,
-        tickerSymbols: new Set(editWatchlistState.tickersSelected.map((ticker) => ticker.symbol))
-      }
-      return this._watchlistService.createWatchList(config)
+    if (!editWatchlistState.id) {
+      return
     }
 
     const editConfig: EditWatchlistConfig = {
