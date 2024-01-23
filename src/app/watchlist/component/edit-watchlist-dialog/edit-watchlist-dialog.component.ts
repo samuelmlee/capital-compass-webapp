@@ -16,6 +16,7 @@ import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatIconModule } from '@angular/material/icon'
 import { MatInputModule } from '@angular/material/input'
 import { distinctUntilChanged, map } from 'rxjs'
+import { SnackbarService } from 'src/app/core/service/snack-bar.service'
 import { WatchDialogData } from '../../model/watchlist-dialog-data'
 import { EditWatchlistService } from '../../service/edit-watchlist.service'
 import { AddTickersTableComponent } from '../add-tickers-table/add-tickers-table.component'
@@ -51,6 +52,7 @@ export class EditWatchlistDialogComponent {
     private _editWatchlistService: EditWatchlistService,
     private _dialogRef: MatDialogRef<EditWatchlistDialogComponent>,
     private _injector: Injector,
+    private _snackBarService: SnackbarService,
     @Inject(MAT_DIALOG_DATA) private _dialogData: WatchDialogData
   ) {
     if (this._dialogData) {
@@ -93,6 +95,4 @@ export class EditWatchlistDialogComponent {
       this._editWatchlistService.updateWatchlistName(watchlistName)
     })
   }
-
-  private initWatchlistCreatedEffect(): void {}
 }

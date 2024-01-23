@@ -1,0 +1,39 @@
+import { Injectable, signal } from '@angular/core'
+import { TickersResult } from 'src/app/tickers/model/tickers-response'
+import { EditWatchlistState, WatchlistTicker } from '../model/edit-watchlist-config'
+import { WatchlistService } from './watchlist.service'
+
+@Injectable()
+export abstract class BaseWatchlistService {
+  protected _$watchlistState = signal<EditWatchlistState>({
+    name: '',
+    tickersSelected: []
+  })
+  public $watchlistState = this._$watchlistState.asReadonly()
+
+  constructor(protected _watchlistService: WatchlistService) {}
+
+  public addTickerResultToWatchList(result: TickersResult): void {
+    if (this._$watchlistState().tickersSelected.find((ticker) => ticker.symbol == result.symbol)) {
+      return
+    }
+    const ticker: WatchlistTicker = { name: result.name, symbol: result.symbol }
+    this._$watchlistState.update((state) => ({
+      ...state,
+      tickersSelected: [...state.tickersSelected, ticker]
+    }))
+  }
+
+  public removeTickerFromWatchList(ticker: WatchlistTicker): void {
+    this._$watchlistState.update((state) => {
+      const updatedTickers = state.tickersSelected.filter((t) => t.symbol != ticker.symbol)
+      return { ...state, tickersSelected: updatedTickers }
+    })
+  }
+
+  public updateWatchlistName(name: string): void {
+    this._$watchlistState.update((state) => {
+      return { ...state, name }
+    })
+  }
+}
