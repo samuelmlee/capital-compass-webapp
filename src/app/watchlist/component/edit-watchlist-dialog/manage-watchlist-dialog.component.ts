@@ -31,8 +31,8 @@ import { TickerSelectedTableComponent } from '../ticker-selected-table/ticker-se
     AddTickersTableComponent,
     TickerSelectedTableComponent
   ],
-  templateUrl: './edit-watchlist-dialog.component.html',
-  styleUrl: './edit-watchlist-dialog.component.scss',
+  templateUrl: './manage-watchlist-dialog.component.html',
+  styleUrl: './manage-watchlist-dialog.component.scss',
   providers: [
     {
       provide: BaseWatchlistService,
@@ -45,11 +45,12 @@ import { TickerSelectedTableComponent } from '../ticker-selected-table/ticker-se
           : new CreateWatchlistService(watchlistService)
       },
       deps: [MAT_DIALOG_DATA, WatchlistService]
-    }
+    },
+    WatchlistService
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EditWatchlistDialogComponent {
+export class ManageWatchlistDialogComponent {
   public nameControl: FormControl | undefined
 
   private _$watchlistName: Signal<string | undefined> | undefined
@@ -58,7 +59,7 @@ export class EditWatchlistDialogComponent {
 
   constructor(
     private _baseWatchlistService: BaseWatchlistService,
-    private _dialogRef: MatDialogRef<EditWatchlistDialogComponent>,
+    private _dialogRef: MatDialogRef<ManageWatchlistDialogComponent>,
     private _snackBarService: SnackbarService,
     @Inject(MAT_DIALOG_DATA) private _dialogData: WatchDialogData
   ) {
@@ -72,6 +73,8 @@ export class EditWatchlistDialogComponent {
     this.initFormControl()
 
     this.initWatchlistNameEffect()
+
+    this.initWatchlistResultEffect()
   }
 
   public saveWatchList(): void {
@@ -79,8 +82,6 @@ export class EditWatchlistDialogComponent {
       return
     }
     this._baseWatchlistService.saveWatchList()
-    // TODO: wait for watchlist created signal value or error before closing
-    this._dialogRef.close()
   }
 
   private initFormControl(): void {
@@ -107,5 +108,20 @@ export class EditWatchlistDialogComponent {
       },
       { allowSignalWrites: true }
     )
+  }
+
+  private initWatchlistResultEffect(): void {
+    effect(() => {
+      const errorMessage = this._baseWatchlistService.watchlistResult?.error()
+      const watchlist = this._baseWatchlistService.watchlistResult?.value()
+      if (errorMessage) {
+        this._snackBarService.error(errorMessage as string)
+        return
+      }
+      if (!watchlist) {
+        return
+      }
+      this._dialogRef.close()
+    })
   }
 }

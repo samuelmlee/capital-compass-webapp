@@ -9,9 +9,7 @@ import { CreateWatchlistConfig, EditWatchlistConfig } from '../model/edit-watchl
 import { Watchlist } from '../model/watchlist'
 import { WatchlistCollectionResponse } from '../model/watchlist-collection-response'
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class WatchlistService {
   public watchlistsResult: Result<WatchlistCollectionResponse>
   public watchlistCreatedResult: Result<Watchlist>

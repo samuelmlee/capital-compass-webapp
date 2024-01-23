@@ -6,7 +6,7 @@ import { FormatKeyPipe } from 'src/app/shared/pipe/format-key.pipe'
 import { DailyBar, TickerSnapshotView, Watchlist, WatchlistView } from '../../model/watchlist'
 import { WatchDialogData } from '../../model/watchlist-dialog-data'
 import { DeleteWatchlistDialogComponent } from '../delete-watchlist-dialog/delete-watchlist-dialog.component'
-import { EditWatchlistDialogComponent } from '../edit-watchlist-dialog/edit-watchlist-dialog.component'
+import { ManageWatchlistDialogComponent } from '../edit-watchlist-dialog/manage-watchlist-dialog.component'
 
 @Component({
   selector: 'app-watchlist-table',
@@ -45,7 +45,7 @@ export class WatchlistTableComponent {
       watchlist: watchlistView
     }
 
-    this._dialog.open(EditWatchlistDialogComponent, {
+    this._dialog.open(ManageWatchlistDialogComponent, {
       width: '50vw',
       height: '90vh',
       hasBackdrop: true,

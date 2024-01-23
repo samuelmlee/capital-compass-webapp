@@ -1,10 +1,14 @@
 import { Injectable, signal } from '@angular/core'
+import { Result } from 'src/app/shared/model/result'
 import { TickersResult } from 'src/app/tickers/model/tickers-response'
 import { EditWatchlistState, WatchlistTicker } from '../model/edit-watchlist-config'
+import { Watchlist } from '../model/watchlist'
 import { WatchlistService } from './watchlist.service'
 
 @Injectable()
 export abstract class BaseWatchlistService {
+  public watchlistResult: Result<Watchlist> | undefined
+
   protected _$watchlistState = signal<EditWatchlistState>({
     name: '',
     tickersSelected: []

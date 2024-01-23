@@ -1,10 +1,14 @@
 import { Injectable } from '@angular/core'
+import { Result } from 'src/app/shared/model/result'
 import { EditWatchlistConfig } from '../model/edit-watchlist-config'
-import { WatchlistView } from '../model/watchlist'
+import { Watchlist, WatchlistView } from '../model/watchlist'
 import { BaseWatchlistService } from './base-watchlist.service'
 
 @Injectable()
 export class EditWatchlistService extends BaseWatchlistService {
+  public override watchlistResult: Result<Watchlist> | undefined =
+    this._watchlistService.watchlistUpdatedResult
+
   public updateStateWithWatchlist(watchlist: WatchlistView): void {
     this._$watchlistState.update(() => ({
       id: watchlist.id,
