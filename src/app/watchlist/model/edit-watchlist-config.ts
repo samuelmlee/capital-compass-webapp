@@ -3,6 +3,12 @@ export type WatchlistTicker = {
   symbol: string
 }
 
+export type WatchlistEdited = {
+  id: number
+  name: string
+  tickers: { Id: number; symbol: string }[]
+}
+
 export type EditWatchlistState = {
   id?: number
   name: string

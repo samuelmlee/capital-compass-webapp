@@ -9,6 +9,11 @@ import { MatIconModule } from '@angular/material/icon'
 import { MatInputModule } from '@angular/material/input'
 import { debounceTime, distinctUntilChanged, map } from 'rxjs'
 import { SnackbarService } from 'src/app/core/service/snack-bar.service'
+import {
+  CreateWatchlistConfig,
+  EditWatchlistConfig,
+  WatchlistEdited
+} from '../../model/edit-watchlist-config'
 import { WatchDialogData } from '../../model/watchlist-dialog-data'
 import { BaseWatchlistService } from '../../service/base-watchlist.service'
 import { CreateWatchlistService } from '../../service/create-watchlist.service'
@@ -45,8 +50,7 @@ import { TickerSelectedTableComponent } from '../ticker-selected-table/ticker-se
           : new CreateWatchlistService(watchlistService)
       },
       deps: [MAT_DIALOG_DATA, WatchlistService]
-    },
-    WatchlistService
+    }
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -112,17 +116,46 @@ export class ManageWatchlistDialogComponent {
 
   private initWatchlistResultEffect(): void {
     effect(() => {
+      const savedConfig = this._baseWatchlistService.$savedWatchlistConfig?.()
+      if (!savedConfig) {
+        return
+      }
       const errorMessage = this._baseWatchlistService.watchlistResult?.error()
       const watchlist = this._baseWatchlistService.watchlistResult?.value()
+      if (!errorMessage && !watchlist) {
+        return
+      }
       if (errorMessage) {
         this._snackBarService.error(errorMessage as string)
         return
       }
-      if (!watchlist) {
+      if (!this.isWatchlistConfigMatch(savedConfig, watchlist)) {
+        this._snackBarService.error('Unkown error updating Watchlist')
         return
       }
       this._snackBarService.success('Watchlist has been updated')
       this._dialogRef.close()
     })
+  }
+
+  private isWatchlistConfigMatch(
+    config: CreateWatchlistConfig | EditWatchlistConfig,
+    watchlist: WatchlistEdited | undefined
+  ): boolean {
+    if (!watchlist) {
+      return false
+    }
+    if (Object.keys(config).includes('id')) {
+      const editConfig = config as EditWatchlistConfig
+      return (
+        editConfig.id === watchlist.id &&
+        editConfig.name === watchlist.name &&
+        editConfig.tickerSymbols.size === watchlist.tickers.length
+      )
+    } else {
+      return (
+        config.name === watchlist.name && config.tickerSymbols.size === watchlist.tickers.length
+      )
+    }
   }
 }

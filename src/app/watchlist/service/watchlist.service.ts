@@ -6,15 +6,18 @@ import { LoadingService } from 'src/app/core/service/loading.service'
 import { Result } from 'src/app/shared/model/result'
 import { fromObsToSignal } from 'src/app/shared/utils/from-obs-to-signal'
 import { environment } from 'src/environments/environment'
-import { CreateWatchlistConfig, EditWatchlistConfig } from '../model/edit-watchlist-config'
-import { Watchlist } from '../model/watchlist'
+import {
+  CreateWatchlistConfig,
+  EditWatchlistConfig,
+  WatchlistEdited
+} from '../model/edit-watchlist-config'
 import { WatchlistCollectionResponse } from '../model/watchlist-collection-response'
 
-@Injectable()
+@Injectable({ providedIn: 'any' })
 export class WatchlistService {
   public watchlistsResult: Result<WatchlistCollectionResponse>
-  public watchlistCreatedResult: Result<Watchlist>
-  public watchlistUpdatedResult: Result<Watchlist>
+  public watchlistCreatedResult: Result<WatchlistEdited>
+  public watchlistUpdatedResult: Result<WatchlistEdited>
   public watchlistDeletedResult: Result<number>
 
   private _getTickersSubject = new Subject<void>()
@@ -37,12 +40,12 @@ export class WatchlistService {
       (e: HttpErrorResponse) => this._errorHandlingService.getErrorMessage(e, 'Watchlist')
     )
 
-    this.watchlistCreatedResult = fromObsToSignal<Watchlist>(
+    this.watchlistCreatedResult = fromObsToSignal<WatchlistEdited>(
       this._postWatchListSubject.pipe(switchMap((config) => this.postUserWatchList(config))),
       (e: HttpErrorResponse) => this._errorHandlingService.getErrorMessage(e, 'Watchlist')
     )
 
-    this.watchlistUpdatedResult = fromObsToSignal<Watchlist>(
+    this.watchlistUpdatedResult = fromObsToSignal<WatchlistEdited>(
       this._putWatchListSubject.pipe(switchMap((config) => this.putUserWatchList(config))),
       (e: HttpErrorResponse) => this._errorHandlingService.getErrorMessage(e, 'Watchlist')
     )
@@ -75,8 +78,8 @@ export class WatchlistService {
     })
   }
 
-  private postUserWatchList(config: CreateWatchlistConfig): Observable<Watchlist> {
-    return this._http.post<Watchlist>(
+  private postUserWatchList(config: CreateWatchlistConfig): Observable<WatchlistEdited> {
+    return this._http.post<WatchlistEdited>(
       `${this._apiUrl}/users/watchlists`,
       { ...config, tickerSymbols: [...config.tickerSymbols] },
       {
@@ -85,8 +88,8 @@ export class WatchlistService {
     )
   }
 
-  private putUserWatchList(config: EditWatchlistConfig): Observable<Watchlist> {
-    return this._http.put<Watchlist>(
+  private putUserWatchList(config: EditWatchlistConfig): Observable<WatchlistEdited> {
+    return this._http.put<WatchlistEdited>(
       `${this._apiUrl}/users/watchlists`,
       { ...config, tickerSymbols: [...config.tickerSymbols] },
       {
