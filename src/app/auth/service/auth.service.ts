@@ -4,7 +4,7 @@ import { EMPTY, Observable, Subject, catchError, switchMap, take } from 'rxjs'
 import { ErrorHandlingService } from 'src/app/core/service/error-handling.service'
 import { SnackbarService } from 'src/app/core/service/snack-bar.service'
 import { Result } from 'src/app/shared/model/result'
-import { fromObsToSignal } from 'src/app/shared/utils/fromObsToSignal'
+import { fromObsToSignal } from 'src/app/shared/utils/from-obs-to-signal'
 import { environment } from 'src/environments/environment'
 import { type User } from '../../users/model/user'
 
