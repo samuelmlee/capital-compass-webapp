@@ -1,4 +1,3 @@
-import { HttpErrorResponse } from '@angular/common/http'
 import { TestBed } from '@angular/core/testing'
 import { of } from 'rxjs'
 import { Result } from '../model/result'
@@ -8,7 +7,7 @@ describe('fromObsToSignal', () => {
   it('should accept an Observable as input and return a Result', () => {
     TestBed.runInInjectionContext(() => {
       const obsResponse = of('Response')
-      const processor = (e: HttpErrorResponse): string => {
+      const processor = (): string => {
         return 'Eror Processed'
       }
 
