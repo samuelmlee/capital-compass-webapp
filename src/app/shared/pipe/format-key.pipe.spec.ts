@@ -7,7 +7,7 @@ describe('FormatKeyPipe', () => {
     pipe = new FormatKeyPipe()
   })
 
-  it('should format Java property names correctly', () => {
+  it('should format camel case names correctly', () => {
     const result = pipe.transform('volumeWeightedPrice')
     expect(result).toBe('Volume Weighted Price')
   })
