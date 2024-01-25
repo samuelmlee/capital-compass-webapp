@@ -13,7 +13,7 @@ import {
 } from '../model/edit-watchlist-config'
 import { WatchlistCollectionResponse } from '../model/watchlist-collection-response'
 
-@Injectable({ providedIn: 'any' })
+@Injectable()
 export class WatchlistService {
   public watchlistsResult: Result<WatchlistCollectionResponse>
   public watchlistCreatedResult: Result<WatchlistEdited>
