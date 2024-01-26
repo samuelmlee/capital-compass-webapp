@@ -1,10 +1,10 @@
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Observable, Subject, map, merge, switchMap } from 'rxjs'
-import { ErrorHandlingService } from 'src/app/core/service/error-handling.service'
-import { Result } from 'src/app/shared/model/result'
-import { fromObsToSignal } from 'src/app/shared/utils/from-obs-to-signal'
-import { environment } from 'src/environments/environment'
+import { environment } from '../../../environments/environment'
+import { ErrorHandlingService } from '../../core/service/error-handling.service'
+import { Result } from '../../shared/model/result'
+import { fromObsToSignal } from '../../shared/utils/from-obs-to-signal'
 import { TickerDetailsResponse } from '../model/ticker-details-response'
 import { TickersTypesResponse as TickerTypesResponse } from '../model/ticker-types-response'
 import { TickersResponse, TickersResponseSource } from '../model/tickers-response'
@@ -64,12 +64,18 @@ export class TickersService {
   }
 
   private getTickersByConfig(searchConfig: TickersSearchConfig): Observable<TickersResponse> {
-    const options = {
-      params: new HttpParams()
-        .set('type', searchConfig?.type ?? '')
-        .set('searchTerm', searchConfig?.searchTerm ?? '')
-        .set('symbol', searchConfig?.symbol ?? '')
+    let params = new HttpParams()
+    if (searchConfig.type) {
+      params = params.set('type', searchConfig.type)
     }
+    if (searchConfig.searchTerm) {
+      params = params.set('searchTerm', searchConfig.searchTerm)
+    }
+    if (searchConfig.symbol) {
+      params = params.set('symbol', searchConfig.symbol)
+    }
+    const options = { params }
+
     return this._http
       .get<TickersResponse>(`${this._apiUrl}/stocks/reference/tickers`, options)
       .pipe(map((response) => ({ ...response, source: TickersResponseSource.CONFIG })))
