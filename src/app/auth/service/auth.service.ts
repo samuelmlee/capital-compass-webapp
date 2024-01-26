@@ -7,8 +7,7 @@ import { SnackbarService } from '../../core/service/snack-bar.service'
 import { Result } from '../../shared/model/result'
 import { fromObsToSignal } from '../../shared/utils/from-obs-to-signal'
 import { type User } from '../../users/model/user'
-
-type LogOutApiResponse = { logoutUrl: string; idToken: string }
+import { LogOutApiResponse } from '../model/logout-api-response'
 
 @Injectable({
   providedIn: 'root'
@@ -52,7 +51,7 @@ export class AuthService {
       .pipe(
         take(1),
         catchError(() => {
-          this._snackBarService.error('Error occured during logout')
+          this._snackBarService.error('Error occurred during logout')
           return EMPTY
         })
       )
