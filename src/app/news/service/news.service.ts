@@ -1,10 +1,10 @@
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Observable, Subject, switchMap } from 'rxjs'
-import { ErrorHandlingService } from 'src/app/core/service/error-handling.service'
-import { Result } from 'src/app/shared/model/result'
-import { fromObsToSignal } from 'src/app/shared/utils/from-obs-to-signal'
-import { environment } from 'src/environments/environment'
+import { environment } from '../../../environments/environment'
+import { ErrorHandlingService } from '../../core/service/error-handling.service'
+import { Result } from '../../shared/model/result'
+import { fromObsToSignal } from '../../shared/utils/from-obs-to-signal'
 import { NewsResponse } from '../model/news-response'
 
 @Injectable({
