@@ -28,8 +28,8 @@ describe('EditWatchlistService', () => {
       id: 1,
       name: 'My Watchlist',
       tickerSnapshotViews: [
-        { id: 1, name: 'Apple Inc.', symbol: 'AAPL', dailyBar: {} as DailyBar, updated: 123 },
-        { id: 2, name: 'Google LLC', symbol: 'GOOG', dailyBar: {} as DailyBar, updated: 123 }
+        { name: 'Apple Inc.', symbol: 'AAPL', dailyBar: {} as DailyBar, updated: 123 },
+        { name: 'Google LLC', symbol: 'GOOG', dailyBar: {} as DailyBar, updated: 123 }
       ]
     }
 

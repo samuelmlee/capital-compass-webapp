@@ -11,11 +11,11 @@ import {
   EditWatchlistConfig,
   WatchlistEdited
 } from '../model/edit-watchlist-config'
-import { WatchlistCollectionResponse } from '../model/watchlist-collection-response'
+import { Watchlist } from '../model/watchlist'
 
 @Injectable()
 export class WatchlistService {
-  public watchlistsResult: Result<WatchlistCollectionResponse>
+  public watchlistsResult: Result<Watchlist[]>
   public watchlistCreatedResult: Result<WatchlistEdited>
   public watchlistUpdatedResult: Result<WatchlistEdited>
   public watchlistDeletedResult: Result<number>
@@ -35,7 +35,7 @@ export class WatchlistService {
     private _errorHandlingService: ErrorHandlingService,
     private _loadingService: LoadingService
   ) {
-    this.watchlistsResult = fromObsToSignal<WatchlistCollectionResponse>(
+    this.watchlistsResult = fromObsToSignal<Watchlist[]>(
       this._getTickersSubject.pipe(switchMap(() => this.getUserWatchLists())),
       (e: HttpErrorResponse) => this._errorHandlingService.getErrorMessage(e, 'Watchlist')
     )
@@ -72,8 +72,8 @@ export class WatchlistService {
     this._deleteWatchListSubject.next(id)
   }
 
-  private getUserWatchLists(): Observable<WatchlistCollectionResponse> {
-    return this._http.get<WatchlistCollectionResponse>(this._getWatchListsUrl, {
+  private getUserWatchLists(): Observable<Watchlist[]> {
+    return this._http.get<Watchlist[]>(this._getWatchListsUrl, {
       withCredentials: true
     })
   }

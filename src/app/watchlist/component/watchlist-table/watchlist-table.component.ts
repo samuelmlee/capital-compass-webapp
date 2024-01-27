@@ -95,7 +95,6 @@ export class WatchlistTableComponent {
       .sort((a, b) => (a.symbol > b.symbol ? 1 : -1))
       .map((snapShot) => {
         return {
-          id: snapShot.id,
           symbol: snapShot.symbol,
           name: snapShot.name,
           updated: snapShot.updated,
