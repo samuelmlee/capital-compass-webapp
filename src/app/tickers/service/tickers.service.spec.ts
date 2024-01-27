@@ -88,10 +88,10 @@ describe('TickersService', () => {
 
     const mockResponse: TickersResponse = {
       results: [mockTickersResult],
-      nextCursor: 'cursor',
+      nextCursor: 'cursor2',
       source: TickersResponseSource.CURSOR
     }
-    const cursor = 'cursor'
+    const cursor = 'cursor1'
     service.fetchTickersByCursor(cursor)
 
     const req = httpTestingController.expectOne(
@@ -102,6 +102,23 @@ describe('TickersService', () => {
 
     const response = service.tickersResult.value()
     expect(response).toEqual(mockResponse)
+  })
+
+  it('should handle error while fetching tickers by cursor', () => {
+    const cursor = 'cursor'
+
+    service.fetchTickersByCursor(cursor)
+
+    const req = httpTestingController.expectOne(
+      `${service['_apiUrl']}/stocks/reference/tickers/cursor/${cursor}`
+    )
+    req.error(new ProgressEvent('Network Error'), {
+      status: 500,
+      statusText: 'Internal Server Error'
+    })
+
+    const error: unknown = service.tickersResult.error()
+    expect(error).toEqual(`Server error occurred for Tickers.`)
   })
 
   it('should fetch ticker types', () => {
@@ -127,6 +144,21 @@ describe('TickersService', () => {
 
     const response = service.tickerTypesResult.value()
     expect(response).toEqual(mockResponse)
+  })
+
+  it('should handle error while fetching ticker types', () => {
+    service.fetchTickerTypes()
+
+    const req = httpTestingController.expectOne(
+      `${service['_apiUrl']}/stocks/reference/tickers/types`
+    )
+    req.error(new ProgressEvent('Network Error'), {
+      status: 500,
+      statusText: 'Internal Server Error'
+    })
+
+    const error: unknown = service.tickerTypesResult.error()
+    expect(error).toEqual(`Server error occurred for Tickers.`)
   })
 
   it('should fetch ticker details', () => {
@@ -161,5 +193,21 @@ describe('TickersService', () => {
 
     const response = service.tickerDetailsResult.value()
     expect(response).toEqual(mockResponse)
+  })
+
+  it('should handle error while fetching ticker details', () => {
+    const tickerSymbol = 'AAPL'
+    service.fetchTickerDetails(tickerSymbol)
+
+    const req = httpTestingController.expectOne(
+      `${service['_apiUrl']}/stocks/reference/tickers/details/${tickerSymbol}`
+    )
+    req.error(new ProgressEvent('Network Error'), {
+      status: 500,
+      statusText: 'Internal Server Error'
+    })
+
+    const error: unknown = service.tickerDetailsResult.error()
+    expect(error).toEqual(`Server error occurred for Tickers.`)
   })
 })
