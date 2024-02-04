@@ -4,14 +4,15 @@ import {
   Component,
   OnInit,
   ViewContainerRef,
-  computed
+  computed,
+  effect
 } from '@angular/core'
 import { MatButtonModule } from '@angular/material/button'
 import { MatDialog } from '@angular/material/dialog'
 import { MatSnackBarModule } from '@angular/material/snack-bar'
 import { ErrorMessageComponent } from 'src/app/shared/component/error-message/error-message.component'
 import { LoadingIndicatorComponent } from 'src/app/shared/component/loading-indicator/loading-indicator.component'
-import { TickerSubscriptionMessageDTO } from '../../model/ticker-subscription-message'
+import { TickerWebsocketService } from 'src/app/shared/service/ticker-websocket.service'
 import { WatchlistService } from '../../service/watchlist.service'
 import { ManageWatchlistDialogComponent } from '../manage-watchlist-dialog/manage-watchlist-dialog.component'
 import { WatchlistTableComponent } from '../watchlist-table/watchlist-table.component'
@@ -27,7 +28,7 @@ import { WatchlistTableComponent } from '../watchlist-table/watchlist-table.comp
     MatSnackBarModule,
     WatchlistTableComponent
   ],
-  providers: [WatchlistService],
+  providers: [WatchlistService, TickerWebsocketService],
   templateUrl: './watchlist-panel.component.html',
   styleUrl: './watchlist-panel.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -45,18 +46,20 @@ export class WatchlistPanelComponent implements OnInit {
   constructor(
     private _dialog: MatDialog,
     private _watchlistService: WatchlistService,
-    private _viewContainerRef: ViewContainerRef
+    private _viewContainerRef: ViewContainerRef,
+    private _tickerWebsocketService: TickerWebsocketService
   ) {}
   public ngOnInit(): void {
     this._watchlistService.fetchWatchLists()
 
-    // this._rxStompService.watch('/topic/ticker-price').subscribe((message: unknown) => {
-    //   console.log('Message from /topic/ticker-price :', message)
-    // })
+    // const subMessage: Partial<TickerSubscriptionMessageDTO> = {
+    //   symbols: ['AAPL', 'MSFT']
+    // }
 
-    const subMessage: TickerSubscriptionMessageDTO = {
-      symbols: ['AAPL', 'MSFT']
-    }
+    effect(() => {
+      const tickerMessage = this._tickerWebsocketService.$messageReceived()
+      console.log('Message received from ticker-sub web socket :', tickerMessage)
+    })
   }
 
   public openCreateDialog(): void {
