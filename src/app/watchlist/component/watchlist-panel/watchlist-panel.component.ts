@@ -38,10 +38,25 @@ export class WatchlistPanelComponent implements OnInit {
     const watchlists = this._watchlistService.watchlistsResult.value()
     return watchlists?.sort((a, b) => (a.name < b.name ? -1 : 1))
   })
+  public $tickerMessage = this._tickerWebsocketService.$tickerMessage
 
   public $watchlistsError = this._watchlistService.watchlistsResult.error
-
   public loading$ = this._watchlistService.fetchWatchListsLoading
+
+  private _$watchlistSymbols = computed(() => {
+    const watchlists = this._watchlistService.watchlistsResult.value()
+    return watchlists?.flatMap((watchlist) =>
+      watchlist.tickerSnapshots.map((snapshot) => snapshot.symbol)
+    )
+  })
+
+  private _sendSubscriptionMessageEffect = effect(() => {
+    const watchlistSymbols = this._$watchlistSymbols()
+    if (!watchlistSymbols?.length) {
+      return
+    }
+    this._tickerWebsocketService.sendSubscriptionMessage(watchlistSymbols)
+  })
 
   constructor(
     private _dialog: MatDialog,
@@ -51,15 +66,6 @@ export class WatchlistPanelComponent implements OnInit {
   ) {}
   public ngOnInit(): void {
     this._watchlistService.fetchWatchLists()
-
-    // const subMessage: Partial<TickerSubscriptionMessageDTO> = {
-    //   symbols: ['AAPL', 'MSFT']
-    // }
-
-    effect(() => {
-      const tickerMessage = this._tickerWebsocketService.$messageReceived()
-      console.log('Message received from ticker-sub web socket :', tickerMessage)
-    })
   }
 
   public openCreateDialog(): void {

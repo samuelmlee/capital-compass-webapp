@@ -19,7 +19,10 @@
   } @else {
     <app-error-message [errorMessage]="$watchlistsError()"></app-error-message>
     @for (watchlist of $watchlists(); track watchlist.id) {
-      <app-watchlist-table [watchlist]="watchlist"></app-watchlist-table>
+      <app-watchlist-table
+        [watchlist]="watchlist"
+        [tickerMessage]="$tickerMessage()"
+      ></app-watchlist-table>
     }
   }
 </div>

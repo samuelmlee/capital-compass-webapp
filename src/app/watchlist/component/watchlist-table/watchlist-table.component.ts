@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, signal } from '@angular/core
 import { MatButtonModule } from '@angular/material/button'
 import { MatDialog } from '@angular/material/dialog'
 import { RouterModule } from '@angular/router'
+import { TickerMessage } from 'src/app/shared/model/ticker-message'
 import { FormatKeyPipe } from 'src/app/shared/pipe/format-key.pipe'
 import { DailyBar, TickerSnapshotView, Watchlist, WatchlistView } from '../../model/watchlist'
 import { WatchDialogData } from '../../model/watchlist-dialog-data'
@@ -22,6 +23,14 @@ export class WatchlistTableComponent {
   public set watchlist(watchlist: Watchlist) {
     const watchlistView = this.fromWatchlistToWatchlistView(watchlist)
     this._$watchlist.set(watchlistView)
+  }
+
+  @Input()
+  public set tickerMessage(tickerMessage: TickerMessage | null) {
+    if (!tickerMessage) {
+      return
+    }
+    this.updateWatchlistWithMessage(tickerMessage)
   }
 
   public tableColumns: string[] = [
@@ -102,5 +111,30 @@ export class WatchlistTableComponent {
         }
       })
     return { id: watchlist.id, name: watchlist.name, tickerSnapshotViews: snapShotViews }
+  }
+
+  private updateWatchlistWithMessage(tickerMessage: TickerMessage): void {
+    const watchlistUpdated = this._$watchlist()
+    const snapshot = watchlistUpdated?.tickerSnapshotViews.find(
+      (snapshot) => snapshot.symbol === tickerMessage.symbol
+    )
+    if (!snapshot) {
+      return
+    }
+    const updatedDailyBar: DailyBar = this.buildDailyBarWithMessage(snapshot, tickerMessage)
+    snapshot.dailyBar = updatedDailyBar
+    this._$watchlist.set(watchlistUpdated)
+  }
+
+  private buildDailyBarWithMessage(
+    snapshot: TickerSnapshotView,
+    tickerMessage: TickerMessage
+  ): DailyBar {
+    return {
+      ...snapshot.dailyBar,
+      openPrice: tickerMessage.openingTickPrice,
+      closePrice: tickerMessage.closingTickPrice,
+      tradingVolume: tickerMessage.volume
+    }
   }
 }

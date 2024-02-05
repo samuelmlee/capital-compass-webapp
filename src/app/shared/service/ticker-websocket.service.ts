@@ -9,11 +9,12 @@ import { TickerSubscriptionMessageDTO } from '../model/ticker-subscription-messa
 
 @Injectable()
 export class TickerWebsocketService {
-  public $messageReceived = signal<TickerMessage | null>(null)
+  public $tickerMessage = signal<TickerMessage | null>(null)
 
-  private _client: RSocketClient<unknown, Encodable>
+  private _client: RSocketClient<TickerSubscriptionMessageDTO, Encodable>
   private _socket: ReactiveSocket<unknown, Encodable> | undefined
   private _userId: string | null
+  private _tickerSubEndpoint = 'ticker-sub'
 
   constructor(
     private _authService: AuthService,
@@ -31,31 +32,21 @@ export class TickerWebsocketService {
     }
   }
 
-  public sendMessage(message: TickerSubscriptionMessageDTO): void {
-    console.log('sending subscription message:' + message)
-    if (!this._socket) {
-      return
+  public sendSubscriptionMessage(tickerSymbols: string[]): void {
+    if (!this._userId) {
+      console.log('User id not defined to send TickerSubscriptionMessageDTO')
     }
-    this._socket.requestStream({
-      data: message,
-      metadata: String.fromCharCode('ticker-sub'.length) + 'ticker-sub'
-    })
+
+    const subscriptionMessage: TickerSubscriptionMessageDTO = {
+      symbols: [...new Set(tickerSymbols)],
+      userId: this._userId!
+    }
+
+    console.log('Sending subscription message:' + JSON.stringify(subscriptionMessage))
+    this.sendTickerSubscriptionMessage(subscriptionMessage)
   }
 
-  private connectWithSocket(): void {
-    this._client.connect().subscribe({
-      onComplete: (socket) => {
-        this._socket = socket
-        this.sendSubscriptionRequest(socket)
-      },
-      onError: (error) => {
-        console.log('Connection has been refused due to:: ' + error)
-        this._snackBarService.error('Failed to connect to get ticker prices')
-      }
-    })
-  }
-
-  private initRSocketClient(): RSocketClient<unknown, Encodable> {
+  private initRSocketClient(): RSocketClient<TickerSubscriptionMessageDTO, Encodable> {
     return new RSocketClient({
       serializers: {
         data: JsonSerializer,
@@ -73,11 +64,27 @@ export class TickerWebsocketService {
     })
   }
 
-  private sendSubscriptionRequest(socket: ReactiveSocket<unknown, Encodable>): void {
-    socket
+  private connectWithSocket(): void {
+    this._client.connect().subscribe({
+      onComplete: (socket) => {
+        this._socket = socket
+      },
+      onError: (error) => {
+        console.log('Connection has been refused due to: ' + error)
+        this._snackBarService.error('Failed to connect to get ticker prices')
+      }
+    })
+  }
+
+  private sendTickerSubscriptionMessage(subscriptionMessage: TickerSubscriptionMessageDTO): void {
+    if (!this._socket) {
+      console.log('No socket available to send message')
+      return
+    }
+    this._socket
       .requestStream({
-        data: { symbols: [], userId: this._userId },
-        metadata: String.fromCharCode('ticker-sub'.length) + 'ticker-sub'
+        data: subscriptionMessage,
+        metadata: String.fromCharCode(this._tickerSubEndpoint.length) + this._tickerSubEndpoint
       })
       .subscribe({
         onNext: (payload) => {
@@ -96,7 +103,7 @@ export class TickerWebsocketService {
   }
 
   private emitMessage(newMessage: TickerMessage): void {
-    console.log('received message:' + JSON.stringify(newMessage))
-    this.$messageReceived.set(newMessage)
+    console.log('Received Ticker Message:', newMessage)
+    this.$tickerMessage.set(newMessage)
   }
 }
