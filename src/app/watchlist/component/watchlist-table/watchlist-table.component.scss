@@ -1,0 +1,18 @@
+.price-up {
+  color: green;
+  animation: flash 3s;
+}
+
+.price-down {
+  color: red;
+  animation: flash 3s;
+}
+
+@keyframes flash {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

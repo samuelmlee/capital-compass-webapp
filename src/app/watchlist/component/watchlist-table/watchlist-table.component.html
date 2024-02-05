@@ -20,7 +20,16 @@
             <a [routerLink]="'/ticker-details/' + snapshot.symbol">{{ snapshot.name }}</a>
           </td>
           @for (column of tableColumns; track column) {
-            <td>{{ resolveDailyBarValue(snapshot.dailyBar, column) }}</td>
+            @if (resolveDailyBarValue(snapshot.dailyBarView, column); as priceChange) {
+              <td
+                [ngClass]="{
+                  'price-up': priceChange.change === 'up',
+                  'price-down': priceChange.change === 'down'
+                }"
+              >
+                {{ priceChange.value }}
+              </td>
+            }
           }
         </tr>
       }

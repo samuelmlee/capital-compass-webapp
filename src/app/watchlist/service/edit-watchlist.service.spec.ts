@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing'
 import { EditWatchlistConfig } from '../model/edit-watchlist-config'
-import { DailyBar, WatchlistView } from '../model/watchlist'
+import { DailyBarView, WatchlistView } from '../model/watchlist'
 import { EditWatchlistService } from './edit-watchlist.service'
 import { WatchlistService } from './watchlist.service'
 
@@ -28,8 +28,8 @@ describe('EditWatchlistService', () => {
       id: 1,
       name: 'My Watchlist',
       tickerSnapshotViews: [
-        { name: 'Apple Inc.', symbol: 'AAPL', dailyBar: {} as DailyBar, updated: 123 },
-        { name: 'Google LLC', symbol: 'GOOG', dailyBar: {} as DailyBar, updated: 123 }
+        { name: 'Apple Inc.', symbol: 'AAPL', dailyBarView: {} as DailyBarView, updated: 123 },
+        { name: 'Google LLC', symbol: 'GOOG', dailyBarView: {} as DailyBarView, updated: 123 }
       ]
     }
 

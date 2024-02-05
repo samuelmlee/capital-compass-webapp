@@ -44,7 +44,6 @@ export class TickerWebsocketService {
       userId: this._userId!
     }
 
-    console.log('Sending subscription message:' + JSON.stringify(subscriptionMessage))
     this._subscriptionMessagesSub.next(subscriptionMessage)
   }
 
@@ -127,7 +126,6 @@ export class TickerWebsocketService {
   }
 
   private emitMessage(newMessage: TickerMessage): void {
-    console.log('Received Ticker Message:', newMessage)
     this.$tickerMessage.set(newMessage)
   }
 }

@@ -7,12 +7,26 @@ export type DailyBar = {
   volumeWeightedPrice: number
 }
 
+export type PriceChange = {
+  value: number
+  change?: 'up' | 'down'
+}
+
+export type DailyBarView = {
+  closePrice: PriceChange
+  openPrice: PriceChange
+  highestPrice: PriceChange
+  lowestPrice: PriceChange
+  tradingVolume: PriceChange
+  volumeWeightedPrice: PriceChange
+}
+
 export type TickerSnapshot = {
   updated: number
   symbol: string
   name: string
-  day: DailyBar
-  prevDay: DailyBar
+  day: DailyBar | undefined
+  prevDay: DailyBar | undefined
 }
 
 export type Watchlist = {
@@ -25,7 +39,7 @@ export type TickerSnapshotView = {
   updated: number
   symbol: string
   name: string
-  dailyBar: DailyBar
+  dailyBarView: DailyBarView | null
 }
 
 export type WatchlistView = {
