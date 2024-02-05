@@ -1,7 +1,9 @@
 import { Injectable, signal } from '@angular/core'
 import { Encodable, IdentitySerializer, JsonSerializer, RSocketClient } from 'rsocket-core'
-import { ReactiveSocket } from 'rsocket-types'
+import { Flowable } from 'rsocket-flowable'
+import { Payload, ReactiveSocket } from 'rsocket-types'
 import RSocketWebSocketClient from 'rsocket-websocket-client'
+import { Subject } from 'rxjs'
 import { AuthService } from 'src/app/auth/service/auth.service'
 import { SnackbarService } from 'src/app/core/service/snack-bar.service'
 import { TickerMessage } from '../model/ticker-message'
@@ -12,7 +14,7 @@ export class TickerWebsocketService {
   public $tickerMessage = signal<TickerMessage | null>(null)
 
   private _client: RSocketClient<TickerSubscriptionMessageDTO, Encodable>
-  private _socket: ReactiveSocket<unknown, Encodable> | undefined
+  private _subscriptionMessagesSub = new Subject<TickerSubscriptionMessageDTO>()
   private _userId: string | null
   private _tickerSubEndpoint = 'ticker-sub'
 
@@ -43,7 +45,7 @@ export class TickerWebsocketService {
     }
 
     console.log('Sending subscription message:' + JSON.stringify(subscriptionMessage))
-    this.sendTickerSubscriptionMessage(subscriptionMessage)
+    this._subscriptionMessagesSub.next(subscriptionMessage)
   }
 
   private initRSocketClient(): RSocketClient<TickerSubscriptionMessageDTO, Encodable> {
@@ -67,7 +69,7 @@ export class TickerWebsocketService {
   private connectWithSocket(): void {
     this._client.connect().subscribe({
       onComplete: (socket) => {
-        this._socket = socket
+        this.openTickerMessagesChannel(socket)
       },
       onError: (error) => {
         console.log('Connection has been refused due to: ' + error)
@@ -76,16 +78,14 @@ export class TickerWebsocketService {
     })
   }
 
-  private sendTickerSubscriptionMessage(subscriptionMessage: TickerSubscriptionMessageDTO): void {
-    if (!this._socket) {
+  private openTickerMessagesChannel(socket: ReactiveSocket<unknown, Encodable>): void {
+    if (!socket) {
       console.log('No socket available to send message')
       return
     }
-    this._socket
-      .requestStream({
-        data: subscriptionMessage,
-        metadata: String.fromCharCode(this._tickerSubEndpoint.length) + this._tickerSubEndpoint
-      })
+    socket
+      .requestChannel(this.fromSubjectToFlowable(this._subscriptionMessagesSub))
+
       .subscribe({
         onNext: (payload) => {
           console.log(payload)
@@ -100,6 +100,30 @@ export class TickerWebsocketService {
           subscription.request(1000000)
         }
       })
+  }
+
+  private fromSubjectToFlowable(
+    subject: Subject<TickerSubscriptionMessageDTO>
+  ): Flowable<Payload<unknown, Encodable>> {
+    return new Flowable((subscriber) => {
+      const subscription = subject.subscribe({
+        next: (value) => {
+          subscriber.onNext({
+            data: value,
+            metadata: String.fromCharCode(this._tickerSubEndpoint.length) + this._tickerSubEndpoint
+          })
+        },
+        error: (error) => subscriber.onError(error),
+        complete: () => subscriber.onComplete()
+      })
+
+      subscriber.onSubscribe({
+        cancel: () => {
+          subscription.unsubscribe()
+        },
+        request: (n) => {}
+      })
+    })
   }
 
   private emitMessage(newMessage: TickerMessage): void {
