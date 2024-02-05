@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, Component, Input, signal } from '@angular/core'
 import { MatButtonModule } from '@angular/material/button'
 import { MatDialog } from '@angular/material/dialog'
-import { RouterModule } from '@angular/router'
 import { TickerMessage } from 'src/app/shared/model/ticker-message'
 import { FormatKeyPipe } from 'src/app/shared/pipe/format-key.pipe'
 import {
@@ -17,11 +16,12 @@ import { WatchDialogData } from '../../model/watchlist-dialog-data'
 import { WatchlistService } from '../../service/watchlist.service'
 import { DeleteWatchlistDialogComponent } from '../delete-watchlist-dialog/delete-watchlist-dialog.component'
 import { ManageWatchlistDialogComponent } from '../manage-watchlist-dialog/manage-watchlist-dialog.component'
+import { WatchlistTableRowComponent } from './watchlist-table-row/watchlist-table-row.component'
 
 @Component({
   selector: 'app-watchlist-table',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, RouterModule, FormatKeyPipe],
+  imports: [CommonModule, MatButtonModule, FormatKeyPipe, WatchlistTableRowComponent],
   templateUrl: './watchlist-table.component.html',
   styleUrl: './watchlist-table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -98,13 +98,6 @@ export class WatchlistTableComponent {
     dialogRef.afterClosed().subscribe(() => {
       this._watchlistService.fetchWatchLists()
     })
-  }
-
-  public resolveDailyBarValue(dailyBarView: DailyBarView | null, key: string): PriceChange {
-    if (!dailyBarView) {
-      return { value: 0 }
-    }
-    return dailyBarView[key as keyof DailyBarView]
   }
 
   private fromWatchlistToWatchlistView(watchlist: Watchlist): WatchlistView {

@@ -1,0 +1,19 @@
+@for (snapshot of $tickerSnapshotViews(); track snapshot.symbol) {
+  <tr class="w-100">
+    <td class="w-25">
+      <a [routerLink]="'/ticker-details/' + snapshot.symbol">{{ snapshot.name }}</a>
+    </td>
+    @for (column of $tableColumns(); track column) {
+      @if (resolveDailyBarValue(snapshot.dailyBarView, column); as priceChange) {
+        <td
+          [ngClass]="{
+            'price-up': priceChange.change === 'up',
+            'price-down': priceChange.change === 'down'
+          }"
+        >
+          {{ priceChange.value }}
+        </td>
+      }
+    }
+  </tr>
+}

@@ -87,7 +87,6 @@ export class TickerWebsocketService {
 
       .subscribe({
         onNext: (payload) => {
-          console.log(payload)
           this.emitMessage(payload.data as TickerMessage)
         },
         onError: (error) => {

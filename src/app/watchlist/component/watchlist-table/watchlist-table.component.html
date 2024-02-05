@@ -14,24 +14,12 @@
       </tr>
     </thead>
     <tbody>
-      @for (snapshot of $watchlist()?.tickerSnapshotViews; track snapshot.symbol) {
-        <tr>
-          <td class="w-25">
-            <a [routerLink]="'/ticker-details/' + snapshot.symbol">{{ snapshot.name }}</a>
-          </td>
-          @for (column of tableColumns; track column) {
-            @if (resolveDailyBarValue(snapshot.dailyBarView, column); as priceChange) {
-              <td
-                [ngClass]="{
-                  'price-up': priceChange.change === 'up',
-                  'price-down': priceChange.change === 'down'
-                }"
-              >
-                {{ priceChange.value }}
-              </td>
-            }
-          }
-        </tr>
+      @if ($watchlist()?.tickerSnapshotViews?.length) {
+        <app-watchlist-table-row
+          class="display-contents"
+          [tickerSnapshotViews]="$watchlist()?.tickerSnapshotViews!"
+          [tableColumns]="tableColumns"
+        ></app-watchlist-table-row>
       }
     </tbody>
   </table>
