@@ -14,10 +14,10 @@
       </tr>
     </thead>
     <tbody>
-      @if ($watchlist()?.tickerSnapshotViews?.length) {
+      @for (snapshot of $watchlist()?.tickerSnapshots; track snapshot.symbol) {
         <app-watchlist-table-row
           class="display-contents"
-          [tickerSnapshotViews]="$watchlist()?.tickerSnapshotViews!"
+          [tickerSnapshot]="snapshot"
           [tableColumns]="tableColumns"
         ></app-watchlist-table-row>
       }

@@ -38,7 +38,6 @@ export class WatchlistPanelComponent implements OnInit {
     const watchlists = this._watchlistService.watchlistsResult.value()
     return watchlists?.sort((a, b) => (a.name < b.name ? -1 : 1))
   })
-  public $tickerMessage = this._tickerWebsocketService.$tickerMessage
 
   public $watchlistsError = this._watchlistService.watchlistsResult.error
   public loading$ = this._watchlistService.fetchWatchListsLoading

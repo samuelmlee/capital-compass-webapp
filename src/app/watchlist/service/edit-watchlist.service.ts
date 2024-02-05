@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core'
 import { Result } from 'src/app/shared/model/result'
 import { EditWatchlistConfig, WatchlistEdited } from '../model/edit-watchlist-config'
-import { WatchlistView } from '../model/watchlist'
+import { Watchlist } from '../model/watchlist'
 import { BaseWatchlistService } from './base-watchlist.service'
 
 @Injectable()
@@ -9,11 +9,11 @@ export class EditWatchlistService extends BaseWatchlistService {
   public override watchlistResult: Result<WatchlistEdited> | undefined =
     this._watchlistService.watchlistUpdatedResult
 
-  public updateStateWithWatchlist(watchlist: WatchlistView): void {
+  public updateStateWithWatchlist(watchlist: Watchlist): void {
     this._$watchlistState.update(() => ({
       id: watchlist.id,
       name: watchlist.name,
-      tickersSelected: watchlist.tickerSnapshotViews.map((snapshot) => ({
+      tickersSelected: watchlist.tickerSnapshots.map((snapshot) => ({
         name: snapshot.name,
         symbol: snapshot.symbol
       }))

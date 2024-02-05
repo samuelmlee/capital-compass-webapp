@@ -1,5 +1,5 @@
-import { WatchlistView } from './watchlist'
+import { Watchlist } from './watchlist'
 
 export type WatchDialogData = {
-  watchlist: WatchlistView
+  watchlist: Watchlist
 }

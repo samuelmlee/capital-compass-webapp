@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core'
+import { Injectable } from '@angular/core'
 import { Encodable, IdentitySerializer, JsonSerializer, RSocketClient } from 'rsocket-core'
 import { Flowable } from 'rsocket-flowable'
 import { Payload, ReactiveSocket } from 'rsocket-types'
@@ -11,12 +11,13 @@ import { TickerSubscriptionMessageDTO } from '../model/ticker-subscription-messa
 
 @Injectable()
 export class TickerWebsocketService {
-  public $tickerMessage = signal<TickerMessage | null>(null)
-
   private _client: RSocketClient<TickerSubscriptionMessageDTO, Encodable>
   private _subscriptionMessagesSub = new Subject<TickerSubscriptionMessageDTO>()
   private _userId: string | null
   private _tickerSubEndpoint = 'ticker-sub'
+  private _tickerMessageSub = new Subject<TickerMessage>()
+
+  public tickerMessage$ = this._tickerMessageSub.asObservable()
 
   constructor(
     private _authService: AuthService,
@@ -125,6 +126,6 @@ export class TickerWebsocketService {
   }
 
   private emitMessage(newMessage: TickerMessage): void {
-    this.$tickerMessage.set(newMessage)
+    this._tickerMessageSub.next(newMessage)
   }
 }

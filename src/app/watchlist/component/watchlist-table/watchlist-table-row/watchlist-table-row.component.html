@@ -1,4 +1,4 @@
-@for (snapshot of $tickerSnapshotViews(); track snapshot.symbol) {
+@if ($tickerSnapshotView(); as snapshot) {
   <tr class="w-100">
     <td class="w-25">
       <a [routerLink]="'/ticker-details/' + snapshot.symbol">{{ snapshot.name }}</a>
