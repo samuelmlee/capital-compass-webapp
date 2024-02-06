@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common'
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, signal } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input, computed, signal } from '@angular/core'
 import { RouterModule } from '@angular/router'
-import { Subscription } from 'rxjs'
 import { TickerMessage } from 'src/app/shared/model/ticker-message'
 import { TickerWebsocketService } from 'src/app/shared/service/ticker-websocket.service'
 import {
@@ -20,11 +19,11 @@ import {
   styleUrl: './watchlist-table-row.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class WatchlistTableRowComponent implements OnInit, OnDestroy {
+export class WatchlistTableRowComponent {
   @Input()
   public set tickerSnapshot(tickerSnapshot: TickerSnapshot) {
     const snapshotView = this.fromSnapshotToSnapshotView(tickerSnapshot)
-    this._$tickerSnapshotView.set(snapshotView)
+    this._$tickerSnapshotPreUpdate.set(snapshotView)
   }
 
   @Input()
@@ -32,24 +31,34 @@ export class WatchlistTableRowComponent implements OnInit, OnDestroy {
     this._$tableColumns.set(columns)
   }
 
-  private _$tickerSnapshotView = signal<TickerSnapshotView | null>(null)
+  private _$tickerSnapshotPreUpdate = signal<TickerSnapshotView | null>(null)
   private _$tableColumns = signal<string[]>([])
-  private _messageSubscription: Subscription | undefined
 
-  public $tickerSnapshotView = this._$tickerSnapshotView.asReadonly()
   public $tableColumns = this._$tableColumns.asReadonly()
+
+  public $tickerSnapshotView = computed(() => {
+    const snapshotView = this._$tickerSnapshotPreUpdate()
+    const tickerMessage = this._tickerWebsocketService.$tickerMessage()
+
+    if (snapshotView?.symbol === tickerMessage?.symbol && snapshotView!.dailyBarView) {
+      snapshotView!.dailyBarView = this.updateDailyBarWithMessage(
+        snapshotView!.dailyBarView,
+        tickerMessage!
+      )
+    }
+    return { ...snapshotView }
+  })
 
   constructor(private _tickerWebsocketService: TickerWebsocketService) {}
 
-  public ngOnInit(): void {
-    this._messageSubscription = this._tickerWebsocketService.tickerMessage$.subscribe((message) => {
-      console.log('Message received in table row :', message)
-      this.updateSnapshotWithMessage(message)
-    })
-  }
-
-  public ngOnDestroy(): void {
-    this._messageSubscription?.unsubscribe()
+  public resolveDailyBarValue(
+    dailyBarView: DailyBarView | null | undefined,
+    key: string
+  ): PriceChange {
+    if (!dailyBarView) {
+      return { value: 0 }
+    }
+    return dailyBarView[key as keyof DailyBarView]
   }
 
   private fromSnapshotToSnapshotView(snapshot: TickerSnapshot): TickerSnapshotView {
@@ -68,13 +77,6 @@ export class WatchlistTableRowComponent implements OnInit, OnDestroy {
     }
   }
 
-  public resolveDailyBarValue(dailyBarView: DailyBarView | null, key: string): PriceChange {
-    if (!dailyBarView) {
-      return { value: 0 }
-    }
-    return dailyBarView[key as keyof DailyBarView]
-  }
-
   private fromDailyBarToDailyBarView(dailyBar: DailyBar): DailyBarView {
     const barView: Partial<DailyBarView> = {}
 
@@ -87,32 +89,6 @@ export class WatchlistTableRowComponent implements OnInit, OnDestroy {
 
   private initPriceChange(price: number): PriceChange {
     return { value: price }
-  }
-
-  private updateSnapshotWithMessage(tickerMessage: TickerMessage): void {
-    const snapshotView = this._$tickerSnapshotView()
-    if (!snapshotView || snapshotView.symbol !== tickerMessage.symbol) {
-      return
-    }
-    let updatedDailyBar: DailyBarView
-    if (!snapshotView.dailyBarView) {
-      updatedDailyBar = this.initDailyBarWithMessage(tickerMessage)
-    } else {
-      updatedDailyBar = this.updateDailyBarWithMessage(snapshotView.dailyBarView, tickerMessage)
-    }
-    snapshotView.dailyBarView = updatedDailyBar
-    this._$tickerSnapshotView.set({ ...snapshotView })
-  }
-
-  private initDailyBarWithMessage(tickerMessage: TickerMessage): DailyBarView {
-    return {
-      closePrice: { value: tickerMessage.closingTickPrice },
-      tradingVolume: { value: tickerMessage.accumulatedVolume },
-      volumeWeightedPrice: { value: tickerMessage.volumeWeightedPrice },
-      openPrice: { value: 0 },
-      highestPrice: { value: 0 },
-      lowestPrice: { value: 0 }
-    }
   }
 
   private updateDailyBarWithMessage(
