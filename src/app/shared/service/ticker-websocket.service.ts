@@ -16,6 +16,7 @@ export class TickerWebsocketService {
   private _userId: string | null
   private _tickerSubEndpoint = 'ticker-sub'
   private _$tickerMessage = signal<TickerMessage | null>(null)
+  private _isClosingConnection = false
 
   public $tickerMessage = this._$tickerMessage.asReadonly()
 
@@ -30,6 +31,7 @@ export class TickerWebsocketService {
   }
 
   public ngOnDestroy(): void {
+    this._isClosingConnection = true
     if (this._client) {
       this._client.close()
     }
@@ -91,7 +93,10 @@ export class TickerWebsocketService {
           this.emitMessage(payload.data as TickerMessage)
         },
         onError: (error) => {
-          console.log('Connection has been closed due to:: ' + error)
+          if (this._isClosingConnection) {
+            return
+          }
+          console.log('Connection has been closed due to: ' + error)
           this._snackBarService.error('Error getting ticker prices')
         },
         onComplete: () => console.log('complete'),

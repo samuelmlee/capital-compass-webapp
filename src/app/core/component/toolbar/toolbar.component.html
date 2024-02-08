@@ -1,8 +1,13 @@
 <mat-toolbar class="p-4">
-  <div class="d-flex justify-content-between w-100 align-items-baseline">
-    <a routerLink="/" class="text-decoration-none">
-      <div class="ms-5 text-black-50 fs-4 fst-italic">{{ title }}</div>
-    </a>
+  <div class="d-flex justify-content-between w-100 align-items-center">
+    <div class="ms-5">
+      <a routerLink="/" class="text-decoration-none">
+        <div class="d-flex align-items-center">
+          <img class="logo-image" src="/assets/compass-icon.svg" />
+          <div class="ms-2 text-muted fs-4 fst-italic">{{ title }}</div>
+        </div>
+      </a>
+    </div>
 
     <div class="d-flex">
       @if ($user()) {

@@ -1,10 +1,12 @@
-.price-up {
+.value-up {
   color: green;
-  animation: flash 3s;
 }
 
-.price-down {
+.value-down {
   color: red;
+}
+
+.blink {
   animation: flash 3s;
 }
 

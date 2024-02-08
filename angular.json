@@ -26,6 +26,11 @@
             "inlineStyleLanguage": "scss",
             "assets": ["src/favicon.ico", "src/assets"],
             "styles": ["src/styles.scss"],
+            "allowedCommonJsDependencies": [
+              "rsocket-core",
+              "rsocket-websocket-client",
+              "rsocket-flowable"
+            ],
             "scripts": []
           },
           "configurations": {

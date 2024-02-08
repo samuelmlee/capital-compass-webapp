@@ -7,18 +7,19 @@ export type DailyBar = {
   volumeWeightedPrice: number
 }
 
-export type PriceChange = {
+export type ValueChange = {
+  initialValue: number
+  prevValue: number
   value: number
-  change?: 'up' | 'down'
 }
 
 export type DailyBarView = {
-  closePrice: PriceChange
-  openPrice: PriceChange
-  highestPrice: PriceChange
-  lowestPrice: PriceChange
-  tradingVolume: PriceChange
-  volumeWeightedPrice: PriceChange
+  closePrice: ValueChange
+  openPrice: ValueChange
+  highestPrice: ValueChange
+  lowestPrice: ValueChange
+  tradingVolume: ValueChange
+  volumeWeightedPrice: ValueChange
 }
 
 export type TickerSnapshot = {

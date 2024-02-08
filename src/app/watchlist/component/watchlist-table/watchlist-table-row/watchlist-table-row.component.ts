@@ -3,18 +3,19 @@ import { ChangeDetectionStrategy, Component, Input, computed, signal } from '@an
 import { RouterModule } from '@angular/router'
 import { TickerMessage } from 'src/app/shared/model/ticker-message'
 import { TickerWebsocketService } from 'src/app/shared/service/ticker-websocket.service'
+import { PriceChangeBlinkDirective } from 'src/app/watchlist/directive/price-change-blink.directive'
 import {
   DailyBar,
   DailyBarView,
-  PriceChange,
   TickerSnapshot,
-  TickerSnapshotView
+  TickerSnapshotView,
+  ValueChange
 } from 'src/app/watchlist/model/watchlist'
 
 @Component({
   selector: 'app-watchlist-table-row',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, PriceChangeBlinkDirective],
   templateUrl: './watchlist-table-row.component.html',
   styleUrl: './watchlist-table-row.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -54,9 +55,9 @@ export class WatchlistTableRowComponent {
   public resolveDailyBarValue(
     dailyBarView: DailyBarView | null | undefined,
     key: string
-  ): PriceChange {
+  ): ValueChange {
     if (!dailyBarView) {
-      return { value: 0 }
+      return { value: 0, prevValue: 0, initialValue: 0 }
     }
     return dailyBarView[key as keyof DailyBarView]
   }
@@ -82,13 +83,13 @@ export class WatchlistTableRowComponent {
 
     Object.keys(dailyBar).forEach((key) => {
       const barKey = key as keyof DailyBar
-      barView[key as keyof DailyBarView] = this.initPriceChange(dailyBar[barKey])
+      barView[key as keyof DailyBarView] = this.initValueChange(dailyBar[barKey])
     })
     return barView as DailyBarView
   }
 
-  private initPriceChange(price: number): PriceChange {
-    return { value: price }
+  private initValueChange(price: number): ValueChange {
+    return { value: price, prevValue: price, initialValue: price }
   }
 
   private updateDailyBarWithMessage(
@@ -97,29 +98,21 @@ export class WatchlistTableRowComponent {
   ): DailyBarView {
     return {
       ...dailyBarView,
-      closePrice: this.updatePriceChange(
-        dailyBarView?.openPrice?.value,
-        tickerMessage.closingTickPrice
-      ),
-      tradingVolume: this.updatePriceChange(
-        dailyBarView?.tradingVolume?.value,
-        tickerMessage.accumulatedVolume
-      ),
-      volumeWeightedPrice: this.updatePriceChange(
-        dailyBarView?.openPrice?.value,
-        tickerMessage.volumeWeightedPrice
-      )
+      closePrice: {
+        initialValue: dailyBarView.openPrice.initialValue,
+        prevValue: dailyBarView.closePrice.value,
+        value: tickerMessage.closingTickPrice
+      },
+      tradingVolume: {
+        initialValue: dailyBarView.tradingVolume.initialValue,
+        prevValue: dailyBarView.tradingVolume.value,
+        value: tickerMessage.accumulatedVolume
+      },
+      volumeWeightedPrice: {
+        initialValue: dailyBarView.openPrice.initialValue,
+        prevValue: dailyBarView.volumeWeightedPrice.value,
+        value: tickerMessage.volumeWeightedPrice
+      }
     }
-  }
-
-  private updatePriceChange(prevValue: number, newValue: number): PriceChange {
-    let change: 'up' | 'down' | undefined
-    if (prevValue && newValue > prevValue) {
-      change = 'up'
-    }
-    if (prevValue && newValue < prevValue) {
-      change = 'down'
-    }
-    return { value: newValue, change }
   }
 }
