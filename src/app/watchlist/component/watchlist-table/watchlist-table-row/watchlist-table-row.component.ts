@@ -13,7 +13,7 @@ import {
 } from 'src/app/watchlist/model/watchlist'
 
 @Component({
-  selector: 'app-watchlist-table-row',
+  selector: '[app-watchlist-table-row]',
   standalone: true,
   imports: [CommonModule, RouterModule, PriceChangeBlinkDirective],
   templateUrl: './watchlist-table-row.component.html',

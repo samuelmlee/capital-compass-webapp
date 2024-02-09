@@ -15,11 +15,12 @@
     </thead>
     <tbody>
       @for (snapshot of $watchlist()?.tickerSnapshots; track snapshot.symbol) {
-        <app-watchlist-table-row
-          class="display-contents"
+        <tr
+          class="w-100"
+          app-watchlist-table-row
           [tickerSnapshot]="snapshot"
           [tableColumns]="tableColumns"
-        ></app-watchlist-table-row>
+        ></tr>
       }
     </tbody>
   </table>

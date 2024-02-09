@@ -1,14 +1,12 @@
 @if ($tickerSnapshotView(); as snapshot) {
-  <tr class="w-100">
-    <td class="w-25">
-      <a [routerLink]="'/ticker-details/' + snapshot.symbol">{{ snapshot.name }}</a>
-    </td>
-    @for (column of $tableColumns(); track column) {
-      @if (resolveDailyBarValue(snapshot.dailyBarView, column); as valueChange) {
-        <td appPriceChangeBlink [valueChange]="valueChange">
-          {{ valueChange.value }}
-        </td>
-      }
+  <td class="w-25">
+    <a [routerLink]="'/ticker-details/' + snapshot.symbol">{{ snapshot.name }}</a>
+  </td>
+  @for (column of $tableColumns(); track column) {
+    @if (resolveDailyBarValue(snapshot.dailyBarView, column); as valueChange) {
+      <td appPriceChangeBlink [valueChange]="valueChange">
+        {{ valueChange.value }}
+      </td>
     }
-  </tr>
+  }
 }

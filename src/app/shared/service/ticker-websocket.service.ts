@@ -6,6 +6,7 @@ import RSocketWebSocketClient from 'rsocket-websocket-client'
 import { Subject } from 'rxjs'
 import { AuthService } from 'src/app/auth/service/auth.service'
 import { SnackbarService } from 'src/app/core/service/snack-bar.service'
+import { environment } from 'src/environments/environment'
 import { TickerMessage } from '../model/ticker-message'
 import { TickerSubscriptionMessageDTO } from '../model/ticker-subscription-message'
 
@@ -17,6 +18,7 @@ export class TickerWebsocketService {
   private _tickerSubEndpoint = 'ticker-sub'
   private _$tickerMessage = signal<TickerMessage | null>(null)
   private _isClosingConnection = false
+  private _webSocketUrl = environment.webSocketUrl
 
   public $tickerMessage = this._$tickerMessage.asReadonly()
 
@@ -31,8 +33,8 @@ export class TickerWebsocketService {
   }
 
   public ngOnDestroy(): void {
-    this._isClosingConnection = true
     if (this._client) {
+      this._isClosingConnection = true
       this._client.close()
     }
   }
@@ -63,7 +65,7 @@ export class TickerWebsocketService {
         metadataMimeType: 'message/x.rsocket.routing.v0'
       },
       transport: new RSocketWebSocketClient({
-        url: 'wss://localhost:8443/rsocket'
+        url: this._webSocketUrl
       })
     })
   }
