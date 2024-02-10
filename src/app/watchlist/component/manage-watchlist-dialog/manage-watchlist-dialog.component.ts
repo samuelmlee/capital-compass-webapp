@@ -9,6 +9,7 @@ import { MatIconModule } from '@angular/material/icon'
 import { MatInputModule } from '@angular/material/input'
 import { debounceTime, distinctUntilChanged, map } from 'rxjs'
 import { SnackbarService } from 'src/app/core/service/snack-bar.service'
+import { CLOSE_DIALOG_SOURCE } from '../../model/edit-watchlist-config'
 import { WatchDialogData } from '../../model/watchlist-dialog-data'
 import { BaseWatchlistService } from '../../service/base-watchlist.service'
 import { CreateWatchlistService } from '../../service/create-watchlist.service'
@@ -122,7 +123,7 @@ export class ManageWatchlistDialogComponent {
         return
       }
       this._snackBarService.success('Watchlist has been updated')
-      this._dialogRef.close()
+      this._dialogRef.close(CLOSE_DIALOG_SOURCE.SAVE)
     })
   }
 }

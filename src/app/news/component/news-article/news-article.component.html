@@ -12,7 +12,7 @@
         <div class="mb-2">
           By {{ newsResult.author }} - {{ newsResult.publishedUtc | date: 'medium' }}
         </div>
-        <div class="mb-2">{{ newsResult.description }}</div>
+        <div class="mb-2 news-article">{{ newsResult.description }}</div>
         <div>
           <span>{{ newsResult.tickers.length > 1 ? 'Tickers' : 'Ticker' }} : </span>
           @for (ticker of newsResult.tickers; track ticker; let idx = $index) {

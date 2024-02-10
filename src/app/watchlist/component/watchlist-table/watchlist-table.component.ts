@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, Input, signal } from '@angular/core
 import { MatButtonModule } from '@angular/material/button'
 import { MatDialog } from '@angular/material/dialog'
 import { FormatKeyPipe } from 'src/app/shared/pipe/format-key.pipe'
+import { CLOSE_DIALOG_SOURCE } from '../../model/edit-watchlist-config'
 import { Watchlist } from '../../model/watchlist'
 import { WatchDialogData } from '../../model/watchlist-dialog-data'
 import { WatchlistService } from '../../service/watchlist.service'
@@ -50,7 +51,11 @@ export class WatchlistTableComponent {
       watchlist: watchlist
     }
 
-    const dialogRef = this._dialog.open(ManageWatchlistDialogComponent, {
+    const dialogRef = this._dialog.open<
+      ManageWatchlistDialogComponent,
+      WatchDialogData,
+      CLOSE_DIALOG_SOURCE
+    >(ManageWatchlistDialogComponent, {
       width: '50vw',
       height: '90vh',
       hasBackdrop: true,
@@ -58,8 +63,10 @@ export class WatchlistTableComponent {
       disableClose: true
     })
 
-    dialogRef.afterClosed().subscribe(() => {
-      this._watchlistService.fetchWatchLists()
+    dialogRef.afterClosed().subscribe((result: CLOSE_DIALOG_SOURCE | undefined) => {
+      if (result === CLOSE_DIALOG_SOURCE.SAVE) {
+        this._watchlistService.fetchWatchLists()
+      }
     })
   }
 

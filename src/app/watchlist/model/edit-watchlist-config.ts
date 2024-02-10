@@ -23,3 +23,8 @@ export type CreateWatchlistConfig = {
 export type EditWatchlistConfig = CreateWatchlistConfig & {
   id: number
 }
+
+export enum CLOSE_DIALOG_SOURCE {
+  SAVE,
+  CANCEL
+}

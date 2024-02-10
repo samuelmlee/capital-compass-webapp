@@ -13,6 +13,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar'
 import { ErrorMessageComponent } from 'src/app/shared/component/error-message/error-message.component'
 import { LoadingIndicatorComponent } from 'src/app/shared/component/loading-indicator/loading-indicator.component'
 import { TickerWebsocketService } from 'src/app/shared/service/ticker-websocket.service'
+import { CLOSE_DIALOG_SOURCE } from '../../model/edit-watchlist-config'
 import { WatchlistService } from '../../service/watchlist.service'
 import { ManageWatchlistDialogComponent } from '../manage-watchlist-dialog/manage-watchlist-dialog.component'
 import { WatchlistTableComponent } from '../watchlist-table/watchlist-table.component'
@@ -68,16 +69,21 @@ export class WatchlistPanelComponent implements OnInit {
   }
 
   public openCreateDialog(): void {
-    const dialogRef = this._dialog.open(ManageWatchlistDialogComponent, {
-      width: '50vw',
-      height: '95vh',
-      hasBackdrop: true,
-      disableClose: true,
-      viewContainerRef: this._viewContainerRef
-    })
+    const dialogRef = this._dialog.open<ManageWatchlistDialogComponent, null, CLOSE_DIALOG_SOURCE>(
+      ManageWatchlistDialogComponent,
+      {
+        width: '50vw',
+        height: '95vh',
+        hasBackdrop: true,
+        disableClose: true,
+        viewContainerRef: this._viewContainerRef
+      }
+    )
 
-    dialogRef.afterClosed().subscribe(() => {
-      this._watchlistService.fetchWatchLists()
+    dialogRef.afterClosed().subscribe((result: CLOSE_DIALOG_SOURCE | undefined) => {
+      if (result === CLOSE_DIALOG_SOURCE.SAVE) {
+        this._watchlistService.fetchWatchLists()
+      }
     })
   }
 }
