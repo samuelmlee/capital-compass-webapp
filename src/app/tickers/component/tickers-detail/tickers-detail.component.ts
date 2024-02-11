@@ -1,6 +1,7 @@
 import { DecimalPipe } from '@angular/common'
 import { ChangeDetectionStrategy, Component, OnInit, Signal, computed } from '@angular/core'
-import { ActivatedRoute } from '@angular/router'
+import { MatButtonModule } from '@angular/material/button'
+import { ActivatedRoute, RouterModule } from '@angular/router'
 import { ErrorMessageComponent } from 'src/app/shared/component/error-message/error-message.component'
 import { FormatKeyPipe } from 'src/app/shared/pipe/format-key.pipe'
 import { TickerDetailsResult } from '../../model/ticker-details-response'
@@ -14,7 +15,7 @@ type TickerDetailView = {
 @Component({
   selector: 'app-tickers-detail',
   standalone: true,
-  imports: [ErrorMessageComponent, DecimalPipe, FormatKeyPipe],
+  imports: [MatButtonModule, RouterModule, ErrorMessageComponent, DecimalPipe, FormatKeyPipe],
   templateUrl: './tickers-detail.component.html',
   styleUrl: './tickers-detail.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

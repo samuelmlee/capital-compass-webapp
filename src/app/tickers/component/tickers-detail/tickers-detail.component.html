@@ -2,7 +2,7 @@
 @if ($tickerDetails()?.result; as tickerDetails) {
   <h2 class="mb-3">{{ tickerDetails.name }} ({{ tickerDetails.symbol }})</h2>
 
-  <div class="d-flex">
+  <div class="d-flex mb-3">
     <div class="flex-grow-1 flex-basis-0 me-3">
       @for (detail of $primaryDetails(); track detail.key) {
         <div class="mb-3">
@@ -22,3 +22,5 @@
     </div>
   </div>
 }
+
+<button mat-raised-button color="primary" routerLink="/search">Back</button>
