@@ -4,9 +4,9 @@ import { Flowable } from 'rsocket-flowable'
 import { Payload, ReactiveSocket } from 'rsocket-types'
 import RSocketWebSocketClient from 'rsocket-websocket-client'
 import { Subject } from 'rxjs'
-import { AuthService } from 'src/app/auth/service/auth.service'
-import { SnackbarService } from 'src/app/core/service/snack-bar.service'
-import { environment } from 'src/environments/environment'
+import { environment } from '../../../environments/environment'
+import { AuthService } from '../../auth/service/auth.service'
+import { SnackbarService } from '../../core/service/snack-bar.service'
 import { TickerMessage } from '../model/ticker-message'
 import { TickerSubscriptionMessageDTO } from '../model/ticker-subscription-message'
 
@@ -41,7 +41,7 @@ export class TickerWebsocketService {
 
   public sendSubscriptionMessage(tickerSymbols: string[]): void {
     if (!this._userId) {
-      console.log('User id not defined to send TickerSubscriptionMessageDTO')
+      console.error('User id not defined to send TickerSubscriptionMessageDTO')
     }
 
     const subscriptionMessage: TickerSubscriptionMessageDTO = {
@@ -76,7 +76,7 @@ export class TickerWebsocketService {
         this.openTickerMessagesChannel(socket)
       },
       onError: (error) => {
-        console.log('Connection has been refused due to: ' + error)
+        console.error('Connection has been refused due to: ' + error)
         this._snackBarService.error('Failed to connect to get ticker prices')
       }
     })
@@ -84,7 +84,7 @@ export class TickerWebsocketService {
 
   private openTickerMessagesChannel(socket: ReactiveSocket<unknown, Encodable>): void {
     if (!socket) {
-      console.log('No socket available to send message')
+      console.error('No socket available to send message')
       return
     }
     socket
@@ -98,10 +98,10 @@ export class TickerWebsocketService {
           if (this._isClosingConnection) {
             return
           }
-          console.log('Connection has been closed due to: ' + error)
+          console.error('Connection has been closed due to: ' + error)
           this._snackBarService.error('Error getting ticker prices')
         },
-        onComplete: () => console.log('complete'),
+        onComplete: () => console.info('Connection to WebSocket server has completet'),
         onSubscribe: (subscription) => {
           subscription.request(1000000)
         }
@@ -127,7 +127,7 @@ export class TickerWebsocketService {
         cancel: () => {
           subscription.unsubscribe()
         },
-        request: (n) => {}
+        request: () => {}
       })
     })
   }
