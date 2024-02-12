@@ -4,7 +4,7 @@ import { ActivatedRouteSnapshot, DetachedRouteHandle, RouteReuseStrategy } from 
 @Injectable()
 export class CustomRouteReuseStrategy implements RouteReuseStrategy {
   private _routeStore = new Map<string, DetachedRouteHandle>()
-  private _currentRoute: ActivatedRouteSnapshot | undefined
+  private _futureRoute: ActivatedRouteSnapshot | undefined
 
   public shouldDetach(route: ActivatedRouteSnapshot): boolean {
     const path = route.routeConfig?.path
@@ -12,8 +12,7 @@ export class CustomRouteReuseStrategy implements RouteReuseStrategy {
       return false
     }
     const isSearchRoute = path === 'search'
-
-    const navigatingToDetails = this._currentRoute?.routeConfig?.path === 'ticker-details/:ticker'
+    const navigatingToDetails = this._futureRoute?.routeConfig?.path === 'ticker-details/:ticker'
 
     if (isSearchRoute && navigatingToDetails) {
       return true
@@ -34,7 +33,7 @@ export class CustomRouteReuseStrategy implements RouteReuseStrategy {
     if (!path) {
       return false
     }
-    return ['search'].includes(path) && !!this._routeStore.get(path)
+    return ['search'].includes(path) && this._routeStore.get(path) != null
   }
 
   public retrieve(route: ActivatedRouteSnapshot): DetachedRouteHandle | null {
@@ -50,7 +49,7 @@ export class CustomRouteReuseStrategy implements RouteReuseStrategy {
   }
 
   public shouldReuseRoute(future: ActivatedRouteSnapshot, curr: ActivatedRouteSnapshot): boolean {
-    this._currentRoute = future
+    this._futureRoute = future
     return future.routeConfig === curr.routeConfig
   }
 }
