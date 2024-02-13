@@ -88,25 +88,22 @@ export class TickerWebsocketService {
       console.error('No socket available to send message')
       return
     }
-    socket
-      .requestChannel(this.fromSubjectToFlowable(this._subscriptionMessagesSub))
-
-      .subscribe({
-        onNext: (payload) => {
-          this.emitMessage(payload.data as TickerMessage)
-        },
-        onError: (error) => {
-          if (this._isClosingConnection) {
-            return
-          }
-          console.error('Connection has been closed due to: ' + error)
-          this._snackBarService.error('Error getting ticker prices')
-        },
-        onComplete: () => console.info('Connection to WebSocket server has completet'),
-        onSubscribe: (subscription) => {
-          subscription.request(1000000)
+    socket.requestChannel(this.fromSubjectToFlowable(this._subscriptionMessagesSub)).subscribe({
+      onNext: (payload) => {
+        this.emitMessage(payload.data as TickerMessage)
+      },
+      onError: (error) => {
+        if (this._isClosingConnection) {
+          return
         }
-      })
+        console.error('Connection has been closed due to: ' + error)
+        this._snackBarService.error('Error getting ticker prices')
+      },
+      onComplete: () => console.info('Connection to WebSocket server has completet'),
+      onSubscribe: (subscription) => {
+        subscription.request(1000000)
+      }
+    })
   }
 
   private fromSubjectToFlowable(

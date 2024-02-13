@@ -13,7 +13,7 @@ import { LogOutApiResponse } from '../model/logout-api-response'
   providedIn: 'root'
 })
 export class AuthService {
-  private _userResult: Result<User>
+  public userResult: Result<User>
 
   private readonly _authUrl = environment.authUrl
   private readonly _clientId = environment.gatewayClientId
@@ -25,14 +25,10 @@ export class AuthService {
     private _errorHandlingService: ErrorHandlingService,
     private _snackBarService: SnackbarService
   ) {
-    this._userResult = fromObsToSignal<User>(
+    this.userResult = fromObsToSignal<User>(
       this._authenticateSubject.pipe(switchMap(() => this.getUserDetails())),
       (e: HttpErrorResponse) => this._errorHandlingService.getErrorMessage(e, 'User Profile')
     )
-  }
-
-  public get userResult(): Result<User> {
-    return this._userResult
   }
 
   public authenticate(): void {
