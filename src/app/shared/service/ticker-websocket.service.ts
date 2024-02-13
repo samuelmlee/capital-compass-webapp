@@ -14,7 +14,6 @@ import { TickerSubscriptionMessageDTO } from '../model/ticker-subscription-messa
 export class TickerWebsocketService {
   private _client: RSocketClient<TickerSubscriptionMessageDTO, Encodable>
   private _subscriptionMessagesSub = new Subject<TickerSubscriptionMessageDTO>()
-  private _userId: string | null
   private _tickerSubEndpoint = 'ticker-sub'
   private _$tickerMessage = signal<TickerMessage | null>(null)
   private _isClosingConnection = false
@@ -26,9 +25,7 @@ export class TickerWebsocketService {
     private _authService: AuthService,
     private _snackBarService: SnackbarService
   ) {
-    this._userId = this._authService.userResult.value()?.username ?? null
     this._client = this.initRSocketClient()
-
     this.connectWithSocket()
   }
 
@@ -40,14 +37,15 @@ export class TickerWebsocketService {
   }
 
   public sendSubscriptionMessage(tickerSymbols: string[]): void {
-    if (!this._userId) {
+    const userId = this._authService.userResult.value()?.username
+    if (!userId) {
       console.error('User id not defined to send TickerSubscriptionMessageDTO')
       return
     }
 
     const subscriptionMessage: TickerSubscriptionMessageDTO = {
       symbols: [...new Set(tickerSymbols)],
-      userId: this._userId!
+      userId
     }
 
     this._subscriptionMessagesSub.next(subscriptionMessage)

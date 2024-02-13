@@ -79,9 +79,13 @@ describe('TickerWebsocketService', () => {
     nextSpy.mockReset()
   })
 
-  // TODO: fix stub
-  xit('should not update sendSubscriptionMessage if no userId is available', () => {
-    Object.defineProperty(mockAuthService, 'userResult', { value: signal<Partial<User>>({}) })
+  it('should not update sendSubscriptionMessage if no userId is available', () => {
+    Object.defineProperty(mockAuthService, 'userResult', {
+      get: jest.fn(() => ({
+        value: jest.fn(() => signal<Partial<User>>({})),
+        error: signal(null)
+      }))
+    })
 
     const nextSpy = jest.spyOn(service['_subscriptionMessagesSub'], 'next')
 
