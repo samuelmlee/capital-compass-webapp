@@ -42,6 +42,7 @@ export class TickerWebsocketService {
   public sendSubscriptionMessage(tickerSymbols: string[]): void {
     if (!this._userId) {
       console.error('User id not defined to send TickerSubscriptionMessageDTO')
+      return
     }
 
     const subscriptionMessage: TickerSubscriptionMessageDTO = {
