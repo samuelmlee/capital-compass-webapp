@@ -51,11 +51,8 @@ export class WatchlistPanelComponent implements OnInit {
   })
 
   private _sendSubscriptionMessageEffect = effect(() => {
-    const watchlistSymbols = this._$watchlistSymbols()
-    if (!watchlistSymbols?.length) {
-      return
-    }
-    this._tickerWebsocketService.sendSubscriptionMessage(watchlistSymbols)
+    const watchlistSymbols = this._$watchlistSymbols()?.length ? this._$watchlistSymbols() : []
+    this._tickerWebsocketService.sendSubscriptionMessage(watchlistSymbols!)
   })
 
   constructor(
